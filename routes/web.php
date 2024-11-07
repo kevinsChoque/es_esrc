@@ -34,9 +34,14 @@ Route::get('format2/edit', [Format2Controller::class, 'actEdit']);
 Route::post('format2/fillReclaimWeb', [Format2Controller::class, 'actFillReclaimWeb']);
 
 
-
 // reclamo form
 Route::post('format2/searchReclaim', [Format2Controller::class, 'actSearchReclaim']);
+Route::post('format2/searchData', [Format2Controller::class, 'actSearchData']);
+Route::post('format2/searchName', [Format2Controller::class, 'actSearchName']);
+Route::post('format2/searchIns', [Format2Controller::class, 'actSearchIns']);
+
+
+
 Route::get('court/start',[HomeController::class, 'actStart'])->name('formatThree');//no porq pero vota error por esto
 
 Route::post('ins/gethora',[InspectionsController::class, 'obtenerHorariosDisponiblesPorHora']);

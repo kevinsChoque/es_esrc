@@ -76,7 +76,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
                         </div>
-                        <input type="text" id="dataSearch" name="dataSearch" class="form-control" placeholder="Ingrese la informacion" value="00131291">
+                        <input type="text" id="dins" name="dins" class="form-control onlyNumbers" placeholder="Ingrese la informacion" maxlength="8">
                     </div>
                 </div>
                 <div class="form-group col-lg-5">
@@ -85,17 +85,32 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Mzn:</span>
                         </div>
-                        <input type="text" name="smzn" id="smzn" class="form-control onlyNumbers" maxlength="2">
+                        <input type="text" name="dmzn" id="dmzn" class="form-control onlyNumbers" maxlength="2">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Lote</span>
                         </div>
-                        <input type="text" name="slote" id="slote" class="form-control onlyNumbers" maxlength="4">
+                        <input type="text" name="dlote" id="dlote" class="form-control onlyNumbers" maxlength="4">
                     </div>
                 </div>
                 <div class="form-group col-lg-3">
                     <label class="m-0"></label>
                     <div class="form-control p-0" style="border: none;">
-                        <button class="btn btn-outline-secondary w-100"><i class="fa fa-search"></i> Buscar usuario</button>
+                        <button class="btn btn-outline-secondary w-100 searchData"><i class="fa fa-search"></i> Buscar usuario</button>
+                    </div>
+                </div>
+                <div class="form-group col-lg-9">
+                    <label class="m-0">Usuario:</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
+                        </div>
+                        <input type="text" id="userSearch" name="userSearch" class="form-control" placeholder="Ingrese el nombre y apellidos">
+                    </div>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label class="m-0"></label>
+                    <div class="form-control p-0" style="border: none;">
+                        <button class="btn btn-outline-secondary w-100 searchName"><i class="fa fa-search"></i> Buscar usuario</button>
                     </div>
                 </div>
             </div>
@@ -110,18 +125,18 @@
             <table class="table table-bordered">
                 <tr>
                     <td colspan="8" class="align-middle"><strong>CÓDIGO DE RECLAMO N°</strong></td>
-                    <td colspan="4" class="p-1"><input type="text" name="codRec" id="codRec" class="form-control w-100" disabled></td>
+                    <td colspan="4" class="p-1"><input type="text" name="codRec" id="codRec" class="form-control w-100 input" disabled></td>
                 </tr>
                 <tr>
                     <td colspan="2" class="align-middle"><strong>N° DE SUMINISTRO</strong></td>
-                    <td colspan="4" class="p-1"><input type="text" name="suministro" id="suministro" class="form-control w-100" disabled></td>
+                    <td colspan="4" class="p-1"><input type="text" name="suministro" id="suministro" class="form-control w-100 input" disabled></td>
                     <td colspan="2" class="align-middle"><strong>Teléfono</strong></td>
-                    <td colspan="4" class="p-1"><input type="text" class="form-control w-100 dptelefono" disabled></td>
+                    <td colspan="4" class="p-1"><input type="text" class="form-control w-100 dptelefono input" disabled></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="p-1"><input type="text" name="nombres" id="nombres" class="form-control w-100"></td>
-                    <td colspan="6" class="p-1"><input type="text" name="app" id="app" class="form-control w-100"></td>
-                    <td colspan="2" class="p-1"><input type="text" name="apm" id="apm" class="form-control w-100"></td>
+                    <td colspan="4" class="p-1"><input type="text" name="nombres" id="nombres" class="form-control w-100 input"></td>
+                    <td colspan="6" class="p-1"><input type="text" name="app" id="app" class="form-control w-100 input"></td>
+                    <td colspan="2" class="p-1"><input type="text" name="apm" id="apm" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>nombres</strong></td>
@@ -130,20 +145,20 @@
                 </tr>
                 <tr>
                     <td colspan="8" class="align-middle"><strong>Numero de documento de identidad (DNI, LE, CI) razon social</strong></td>
-                    <td colspan="4" class="align-middle p-1"><input type="text" name="numIde" id="numIde" class="form-control w-100"></td>
+                    <td colspan="4" class="align-middle p-1"><input type="text" name="numIde" id="numIde" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>Razon social</strong></td>
-                    <td colspan="8" class="p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="8" class="p-1"><input type="text" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="12" class="align-middle"><strong>Ubicacion del predio</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="p-1"><input type="text" name="upcjb" id="upcjb" class="form-control w-100 urbanizacion"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="9" class="p-1"><input type="text" name="upcjb" id="upcjb" class="form-control w-100 urbanizacion input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="upn" id="upn" class="form-control w-100 input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="upmz" id="upmz" class="form-control w-100 input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="uplote" id="uplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="9" class="align-middle"><strong>(calle, jiron, avenida)</strong></td>
@@ -152,9 +167,9 @@
                     <td colspan="1" class="align-middle"><strong>Lote</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="p-1"><input type="text" class="form-control w-100 urbanizacion"></td>
-                    <td colspan="6" class="p-1"><input type="text" class="form-control w-100" value="Abancay"></td>
-                    <td colspan="2" class="p-1"><input type="text" class="form-control w-100" value="Abancay"></td>
+                    <td colspan="4" class="p-1"><input type="text" name="upub" id="upub" class="form-control w-100 urbanizacion input"></td>
+                    <td colspan="6" class="p-1"><input type="text" name="upp" id="upp" class="form-control w-100 input" value="Abancay"></td>
+                    <td colspan="2" class="p-1"><input type="text" name="upd" id="upd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>(urbanizacion, barrio)</strong></td>
@@ -166,10 +181,10 @@
                     <td colspan="12"><strong>Domicilio procesal</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="p-1"><input type="text" class="form-control w-100 urbanizacion"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="9" class="p-1"><input type="text" name="dpcja" id="dpcja" class="form-control w-100 urbanizacion input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="dpn" id="dpn" class="form-control w-100 input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="dpmz" id="dpmz" class="form-control w-100 input"></td>
+                    <td colspan="1" class="p-1"><input type="text" name="dplote" id="dplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="9" class="align-middle"><strong>(calle, jiron, avenida)</strong></td>
@@ -178,9 +193,9 @@
                     <td colspan="1" class="align-middle"><strong>Lote</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="p-1"><input type="text" class="form-control w-100 urbanizacion"></td>
-                    <td colspan="6" class="p-1"><input type="text" class="form-control w-100" value="Abancay"></td>
-                    <td colspan="2" class="p-1"><input type="text" class="form-control w-100" value="Abancay"></td>
+                    <td colspan="4" class="p-1"><input type="text" name="dpub" id="dpub" class="form-control w-100 urbanizacion input"></td>
+                    <td colspan="6" class="p-1"><input type="text" name="dpp" id="dpp" class="form-control w-100 input" value="Abancay"></td>
+                    <td colspan="2" class="p-1"><input type="text" name="dpd" id="dpd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>(urbanizacion, barrio)</strong></td>
@@ -188,9 +203,9 @@
                     <td colspan="2" class="align-middle"><strong>distrito</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="p-1"><input type="text" class="form-control w-100" value="03001"></td>
-                    <td colspan="6" class="p-1"><input type="text" name="dptelefono" id="dptelefono" class="form-control w-100 dptelefono"></td>
-                    <td colspan="2" class="p-1"><input type="text" name="dpcorreo" id="dpcorreo" class="form-control w-100"></td>
+                    <td colspan="4" class="p-1"><input type="text" name="dpcp" id="dpcp" class="form-control w-100 input" value="03001"></td>
+                    <td colspan="6" class="p-1"><input type="text" name="dptelefono" id="dptelefono" class="form-control w-100 input dptelefono"></td>
+                    <td colspan="2" class="p-1"><input type="text" name="dpcorreo" id="dpcorreo" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>Codigo postal</strong></td>
@@ -208,11 +223,11 @@
                         <div class="form-group m-0">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="sendNotify" id="sendNotifySi" value="1" checked>
-                                <label class="form-check-label" for="radio1">SI</label>
+                                <label class="form-check-label" for="sendNotifySi">SI</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sendNotify" id="sendNotifyNo" value="2">
-                                <label class="form-check-label" for="radio2">NO</label>
+                                <input class="form-check-input" type="radio" name="sendNotify" id="sendNotifyNo" value="0">
+                                <label class="form-check-label" for="sendNotifyNo">NO</label>
                             </div>
                         </div>
                     </td>
@@ -257,19 +272,19 @@
                 <tr>
                     <td colspan="12" class="p-1">
                         <div class="form-group m-0">
-                            <textarea class="form-control" name="descripcion" id="descripcion" rows="4" placeholder="Descripcion aquí..."></textarea>
+                            <textarea class="form-control input" name="descripcion" id="descripcion" rows="4" placeholder="Descripcion aquí..."></textarea>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>SUCURSAL / ZONAL</strong></td>
-                    <td colspan="8" class="p-1"><input type="text" class="form-control w-100" value="Abancay"></td>
+                    <td colspan="8" class="p-1"><input type="text" name="sucursal" id="sucursal" class="form-control w-100" value="Abancay"></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>ATENDIDO POR</strong></td>
                     <td colspan="6" class="p-1"><input type="text" name="atendido" id="atendido" class="form-control w-100" value="jamilet cruz" disabled></td>
-                    <td colspan="1" class="align-middle"><strong>FIRMA</strong></td>
-                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td>
+                    {{-- <td colspan="1" class="align-middle"><strong>FIRMA</strong></td>
+                    <td colspan="1" class="p-1"><input type="text" class="form-control w-100"></td> --}}
                 </tr>
                 <tr>
                     <td colspan="12" class="align-middle"><strong>FUNDAMENTO DEL RECLAMO (En caso de ser necesario, se podran adjuntar paginas adicionales)</strong></td>
@@ -277,7 +292,7 @@
                 <tr>
                     <td colspan="12" class="p-1">
                         <div class="form-group m-0">
-                            <textarea class="form-control" name="fundamento" id="fundamento" rows="4" placeholder="Fundamento aquí..."></textarea>
+                            <textarea class="form-control input" name="fundamento" id="fundamento" rows="4" placeholder="Fundamento aquí..."></textarea>
                         </div>
                     </td>
                 </tr>
@@ -294,11 +309,11 @@
                         <div class="form-group m-0">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="sendBooklet" id="sendBookletSi" value="1" checked>
-                                <label class="form-check-label" for="radio1">SI</label>
+                                <label class="form-check-label" for="sendBookletSi">SI</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sendBooklet" id="sendBookletNo" value="2">
-                                <label class="form-check-label" for="radio2">NO</label>
+                                <input class="form-check-input" type="radio" name="sendBooklet" id="sendBookletNo" value="0">
+                                <label class="form-check-label" for="sendBookletNo">NO</label>
                             </div>
                         </div>
                     </td>
@@ -310,12 +325,12 @@
                     <td colspan="2" class="text-center">
                         <div class="form-group m-0">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sendBooklet" id="sendBookletSi" value="1" checked>
-                                <label class="form-check-label" for="radio1">SI</label>
+                                <input class="form-check-input" type="radio" name="sendReclaim" id="sendReclaimSi" value="1" checked>
+                                <label class="form-check-label" for="sendReclaimSi">SI</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sendBooklet" id="sendBookletNo" value="2">
-                                <label class="form-check-label" for="radio2">NO</label>
+                                <input class="form-check-input" type="radio" name="sendReclaim" id="sendReclaimNo" value="0">
+                                <label class="form-check-label" for="sendReclaimNo">NO</label>
                             </div>
                         </div>
                     </td>
@@ -325,23 +340,23 @@
                 </tr>
                 <tr>
                     <td colspan="3" class="align-middle"><strong style="font-size: .8rem">INSPECCION INTERNA Y EXTERNA, FECHA:</strong></td>
-                    <td colspan="5" class="align-middle p-1"><input type="date" name="dateIns" id="dateIns" class="form-control w-100"></td>
+                    <td colspan="5" class="align-middle p-1"><input type="date" name="dateIns" id="dateIns" class="form-control w-100 input"></td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA (RANGO DE 2 HORAS):</strong></td>
                     <td colspan="2" class="align-middle p-1">
                         <span class="badge badge-info hourInspection"></span>
-                        <input type="text" name="startTime" id="startTime" class="form-control w-100">
+                        <input type="text" name="startTime" id="startTime" class="form-control w-100 input">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3" class="align-middle"><strong style="font-size: .8rem">CITACION A REUNION DE CONCILIACION, FECHA:</strong></td>
-                    <td colspan="5" class="align-middle p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="5" class="align-middle p-1"><input type="text" class="form-control w-100 input"></td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA:</strong></td>
-                    <td colspan="2" class="align-middle p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="2" class="align-middle p-1"><input type="text" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="9" class="align-middle"><strong>FECHA MAXIMA DE NOTIFICACION DE LA RESOLUCION</strong></td>
                     <td colspan="1" class="align-middle"><strong>(DD/MM/AA)</strong></td>
-                    <td colspan="2" class="p-1"><input type="text" class="form-control w-100"></td>
+                    <td colspan="2" class="p-1"><input type="text" class="form-control w-100 input"></td>
                 </tr>
                 {{-- <tr class="shaded">
                     <td><input type="text" placeholder="apellido paterno"></td>
@@ -374,11 +389,41 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="searchResultsModal" tabindex="-1" role="dialog" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchResultsModalLabel"><i class="fa fa-list"></i> Resultados de la búsqueda</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12 containerRecords table-responsive">
+                    <table id="records" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Identificadores</th>
+                                <th>Apellidos y Nombres</th>
+                                <th>Direccion</th>
+                                <th>Opc.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
+    var according=true;
+    var tableRecords;
     $(document).ready( function () {
+        tableRecords=$('.containerRecords').html();
         $('.overlayPagina').css("display","none");
         $('.oveCard').css("display","none");
         initFv('fvclaim',rules());
@@ -386,14 +431,18 @@
         fillReclaimWeb();
     });
     $('.searchReclaim').on('click',function(){searchReclaim()})
+    $('.searchData').on('click',function(){searchData()})
+    $('.searchName').on('click',function(){searchName()})
     $('.saveClaim').on('click',function(){saveClaim()})
     $('.canalInfo').on('click',function(){
+        clearForm()
         if($(this).attr('data-canal')=='web')
         {
             $('.cardWeb').css('display','block')
             $('.cardNew').css('display','none')
             $('.canalInfoNew').removeClass('bg-info').addClass('bg-light')
             $('.canalInfoWeb').removeClass('bg-light').addClass('bg-info')
+            according=true
         }
         else
         {
@@ -401,8 +450,147 @@
             $('.cardNew').css('display','block')
             $('.canalInfoWeb').removeClass('bg-info').addClass('bg-light')
             $('.canalInfoNew').removeClass('bg-light').addClass('bg-info')
+            according=false
         }
     });
+    function buildTable()
+    {
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
+    }
+    function searchName()
+    {
+        if(isEmpty($('#userSearch').val()))
+            msgImportantShow('Advertencia!','Ingrese el nombre y apellidos','warning')
+        $('.overlayPagina').css("display","flex");
+        jQuery.ajax(
+        {
+            url: "{{ url('format2/searchName') }}",
+            method: 'post',
+            data:{name:$('#userSearch').val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function(r){
+                clearForm()
+                buildTable();
+                if(r.state)
+                {
+                    let html
+                    for (var i = 0; i < r.data.length; i++)
+                    {
+                        html += '<tr class="'+r.data[i].InscriNro+'">' +
+                            '<td class="align-middle">(' + novDato(r.data[i].PreMzn) + '-' + novDato(r.data[i].PreLote) +') '+ novDato(r.data[i].InscriNro) + '</td>' +
+                            '<td class="align-middle">' + novDato(r.data[i].Clilelx) + ' ' + novDato(r.data[i].Clinomx) + '</td>' +
+                            '<td class="align-middle">' + novDato(r.data[i].CalTip) + ' ' + novDato(r.data[i].CalDes) + '</td>' +
+                            '<td class="align-middle text-center">' +
+                                '<div class="btn-group btn-group-sm" role="group">'+
+                                    '<button type="button" class="btn text-info f4" title="Formato 4" ondblclick="userSelected(\''+r.data[i].InscriNro+'\');"><i class="fa fa-hand-pointer"></i> Elegir</button>'+
+                                '</div>'+
+                            '</td>' +
+                        '</tr>';
+                    }
+                    $('#data').html(html);
+                    initDatatable('records');
+                    $('#searchResultsModal').modal('show')
+                }
+                else
+                    msgImportantShow(r.message,'','warning')
+                $('.overlayPagina').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
+                $('.overlayPagina').css("display","none")
+            }
+        });
+    }
+    function userSelected(ins)
+    {
+        $('.overlayPagina').css("display","flex");
+        jQuery.ajax(
+        {
+            url: "{{ url('format2/searchIns') }}",
+            method: 'post',
+            data:{ins:ins},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function(r){
+                clearForm()
+                if(r.state)
+                {
+                    let arrayName = r.data.Clinomx.split(',')
+                    let nameAp = arrayName[0].split(' ')
+                    let name = arrayName[1].trim()
+                    $('#codRec').val(r.codRec)
+                    $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
+                    $('.dptelefono ').val(r.data.Clitelx)
+                    $('#nombres').val(name)
+                    $('#app').val(nameAp[0].trim())
+                    $('#apm').val(nameAp[1].trim())
+                    $('#numIde').val(r.data.Clilelx.trim())
+                    $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
+                    $('#searchResultsModal').modal('hide')
+                }
+                else
+                    msgImportantShow(r.message,'','error')
+                $('.overlayPagina').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
+                $('.overlayPagina').css("display","none")
+            }
+        });
+    }
+    function searchData()
+    {
+        // if(isEmpty($('#dins').val()) && isEmpty($('#dmzn').val()) && isEmpty($('#dlote').val()))
+        if((isEmpty($('#dins').val()) && isEmpty($('#dmzn').val()) && isEmpty($('#dlote').val())) ||
+            (isEmpty($('#dins').val()) && !isEmpty($('#dmzn').val()) && isEmpty($('#dlote').val())) ||
+            (isEmpty($('#dins').val()) && isEmpty($('#dmzn').val()) && !isEmpty($('#dlote').val())))
+            msgImportantShow('Advertencia!','Ingrese la informacion','warning')
+        $('.overlayPagina').css("display","flex");
+        jQuery.ajax(
+        {
+            url: "{{ url('format2/searchData') }}",
+            method: 'post',
+            data:{inscription:$('#dins').val(),preMzn:$('#dmzn').val(),preLote:$('#dlote').val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function(r){
+                clearForm()
+                // 00193808
+                if(r.state)
+                {
+                    let arrayName = r.data.Clinomx.split(',')
+                    let nameAp = arrayName[0].split(' ')
+                    let name = arrayName[1].trim()
+                    $('#codRec').val(r.codRec)
+                    $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
+                    $('.dptelefono ').val(r.data.Clitelx)
+                    $('#nombres').val(name)
+                    $('#app').val(nameAp[0].trim())
+                    $('#apm').val(nameAp[1].trim())
+                    $('#numIde').val(r.data.Clilelx.trim())
+                    $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
+                }
+                else
+                    msgImportantShow('Usuario: '+$('#dins').val()+' '+$('#dmzn').val()+'-'+$('#dlote').val(),'No se encontro al usuario','warning')
+                $('.overlayPagina').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
+                $('.overlayPagina').css("display","none")
+            }
+        });
+    }
+    function clearForm()
+    {
+        $('.input').val('');
+        $('#tipoReclamo').val(0)
+        $('input[name="sendNotify"][value="1"]').prop('checked', true);
+        $('input[name="sendBooklet"][value="1"]').prop('checked', true);
+        $('input[name="sendReclaim"][value="1"]').prop('checked', true);
+
+    }
     function fillReclaimWeb()
     {
         jQuery.ajax({
@@ -411,26 +599,15 @@
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                console.log(typeof r.data)
-                // if (r.state)
-                //     msgForm(r);
-                // else
-                // {
-                //     msgForm(r);
-                // }
-                // $('.oveCard').css("display","none");
-                // $('.saveClaim').prop('disabled',false);
-// ------------------------
                 let name;
                 $.each(r.data,function(indice,fila){
                     name = fila.nombres+' '+fila.app+' '+fila.apm;
-                    // let name = fila.nombres;
                     $('#claims').append("<option value='"+fila.pnumIns+"'>"+fila.pnumIns+' | '+name+' | Tipo reclamo: '+fila.tipoReclamo+"</option>");
                 });
                 $('#claims').select2();
             },
             error: function (xhr, status, error) {
-                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
             }
         });
     }
@@ -441,6 +618,8 @@
         var formData = new FormData($("#fvclaim")[0]);
         formData.append('codRec', $('#codRec').val());
         formData.append('suministro', $('#suministro').val());
+        formData.append('atendido', $('#atendido').val());
+        formData.append('according', according);
 
         $('.saveClaim').prop('disabled',true);
         $('.oveCard').css("display","flex");
@@ -455,10 +634,13 @@
             success: function (r) {
                 console.log(r)
                 if (r.state)
-                    msgForm(r);
+                {
+                    clearForm()
+                    msgImportant(r)
+                }
                 else
                 {
-                    msgForm(r);
+                    msgImportant(r)
                 }
                 $('.oveCard').css("display","none");
                 $('.saveClaim').prop('disabled',false);
@@ -470,12 +652,12 @@
             }
         });
     }
+    var ppp
     function searchReclaim()
     {
         if(isEmpty($('#claims').val()))
-        {
             msgImportantShow('Advertencia!','Seleccione reclamo','warning')
-        }
+        $('.overlayPagina').css("display","flex");
         jQuery.ajax(
         {
             url: "{{ url('format2/searchReclaim') }}",
@@ -484,8 +666,9 @@
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                console.log(r)
                 console.log('aki ajax')
+                ppp=r
+                clearForm()
                 $('#codRec').val(r.fo2.codRec)
                 $('#nombres').val(r.fo2.nombres)
                 $('#app').val(r.fo2.app)
@@ -495,21 +678,24 @@
                 $('.dptelefono').val(r.fo2.dptelefono)
                 $('.dptelefono').val(r.fo2.dptelefono)
                 $('#dpcorreo').val(r.fo2.dpcorreo)
+                if (r.fo2.declaracionReclamo == '0')
+                    $('#sendNotifyNo').prop('checked', true)
+                else
+                    $('#sendNotifySi').prop('checked', true)
                 $('#tipoReclamo').val(r.fo2.tipoReclamo)
                 $('#fundamento').val(r.fo2.fundamento)
-
+                if (r.fo2.declaracion == '0')
+                    $('#sendReclaimNo').prop('checked', true)
+                else
+                    $('#sendReclaimSi').prop('checked', true)
                 $('#dateIns').val(r.ins.dateIns)
                 $('.hourInspection').html(r.ins.startTime+'-'+r.ins.endTime)
-
                 // console.log(r)
                 $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
                 $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
-
-
-
                 // dptelefono
                 // dpcorreo
-
+                $('.overlayPagina').css("display","none");
 
                 // $.each(r.data,function(indice,fila){
                 //     $('#reclaimPortal').append("<option value='"+fila.idFo2+"'>"+fila.app+' '+fila.apm+' '+fila.nombres+"</option>");

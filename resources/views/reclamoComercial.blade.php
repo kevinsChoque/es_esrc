@@ -159,11 +159,11 @@
                                     <div class="col-sm-6">
                                         <div class="form-group clearfix">
                                             <div class="icheck-primary d-inline float-right">
-                                                <input type="radio" id="radioDrn" name="dro" checked>
+                                                <input type="radio" id="radioDrn" name="dro" value="1" checked>
                                                 <label for="radioDrn">SI</label>
                                             </div>
                                             <div class="icheck-primary d-inline float-left">
-                                                <input type="radio" id="radioDrs" name="dro">
+                                                <input type="radio" id="radioDrs" name="dro" value="0">
                                                 <label for="radioDrs">NO</label>
                                             </div>
                                         </div>
@@ -263,11 +263,11 @@
                                     <div class="col-sm-6">
                                         <div class="form-group clearfix">
                                             <div class="icheck-primary d-inline float-right">
-                                                <input type="radio" id="radio1Drn" name="dro1">
+                                                <input type="radio" id="radio1Drn" name="dro1" value="1">
                                                 <label for="radio1Drn">SI</label>
                                             </div>
                                             <div class="icheck-primary d-inline float-left">
-                                                <input type="radio" id="radio1Drs" name="dro1" checked>
+                                                <input type="radio" id="radio1Drs" name="dro1" value="0" checked>
                                                 <label for="radio1Drs">NO</label>
                                             </div>
                                         </div>
@@ -712,11 +712,13 @@
         if($('#fvclaim').valid()==false)
         {return true;}
         if($('#fileEvidence')[0].files.length==0)
-        {alert("No se subio el documento de la EVIDENCIA.");return true;}
+        {msgImportant({'state':false,'message':'No se subio el documento de la EVIDENCIA.'});return true;}
         if(isEmpty($('#fechaIns').val()))
-        {alert("Ingrese la fecha de inspeccion.");return true;}
+        {msgImportant({'state':false,'message':'Ingrese la fecha de inspeccion.'});return true;}
         if(isEmpty($('#hourIns').val()))
-        {alert("Ingrese la hora de inspeccion.");return true;}
+        {msgImportant({'state':false,'message':'Ingrese la hora de inspeccion.'});return true;}
+        if(isEmpty($('#meses').val()))
+        {msgImportant({'state':false,'message':'Seleccione los meses de reclamo.'});return true;}
         return false;
     }
     function rules()

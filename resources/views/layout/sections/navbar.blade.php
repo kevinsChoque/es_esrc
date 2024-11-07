@@ -4,7 +4,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item border-right infraccionPmsNavbar">
-            <a class="nav-link border-right" href="{{url('cotizacion/registrar')}}" title="Registrar infraccion">
+            <a class="nav-link border-right" href="{{url('format2/form')}}" title="Registrar infraccion">
                 <i class="fas fa-plus d-none d-sm-inline-block"></i>
                 <span class="description-text">f2</span>
             </a>
