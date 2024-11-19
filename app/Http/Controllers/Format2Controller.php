@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+// ---
+use setasign\Fpdi\Fpdi;
+
+use Illuminate\Support\Facades\File;
+// ---
 use Carbon\Carbon;
 use DB;
 
@@ -27,6 +33,7 @@ class Format2Controller extends Controller
     public function actSavePortal(Request $r)
     {
         $conSql = $this->connectionSql();
+        $codRecNum = $this->getNumberClaim();
         if($conSql)
         {
             $script = "select * from CONEXION c
@@ -40,25 +47,25 @@ class Format2Controller extends Controller
         $existReclaim = TFormat2::where('pnumIns',$r->ins)->where('process','1')->exists();
         if($existReclaim)
             return response()->json(['state'=>false,'message'=>"El usuario ya cuenta con un reclamo en proceso."]);
-
         if($r->hasFile('fileEvidence') && $r->file('fileEvidence')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
-
-        $nameFile = Carbon::now()->format('Ymd_His') . '_' . $this->cleanNameFile($r->file('fileEvidence')->getClientOriginalName());
-        $pathFile = 'evidencias';
+        if(!$codRecNum)
+            return response()->json(['state' => false, 'message' => 'No fue posible obtener codigo de reclamo.']);
+        $codRec = Carbon::now()->year.'-'.$codRecNum;
+        // $nameFile = Carbon::now()->format('Ymd_His') . '_' . $this->cleanNameFile($r->file('fileEvidence')->getClientOriginalName());
+        $nameFile = $codRec.'_evidencias.pdf';
+        $pathFile = 'reclamos/'.$codRec;
 
         $pathFile = $this->saveFile($r, $nameFile, $pathFile);
 
-        $codRec = $this->getNumberClaim();
-        if(!$codRec)
-            return response()->json(['state' => false, 'message' => 'No fue posible obtener codigo de reclamo.']);
+
         DB::beginTransaction();
         try {
             if($pathFile)
             {
                 $r->merge([
                     'pnumIns' => $r->ins,
-                    'codRec' => Carbon::now()->year.'-'.$codRec,
+                    'codRec' => $codRec,
                     'numIde' => $r->docIde,
                     'nombres' => $r->nombres,
                     'app' => $r->app,
@@ -96,7 +103,7 @@ class Format2Controller extends Controller
                     $ins->dateIns = $r->fechaIns;
                     $ins->startTime = $r->hourIns;
                     $ins->endTime =  Carbon::createFromFormat('H:i', $r->hourIns)->addHours(env('HOURS_INSPECTION'))->format('H:i');
-                    if($ins->save() && $this->updateNumberClaim($codRec))
+                    if($ins->save() && $this->updateNumberClaim($codRecNum))
                     {
                         DB::commit();
                         return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
@@ -133,6 +140,40 @@ class Format2Controller extends Controller
     }
     private function accordingWeb($r)
     {
+        // dd($r->all());
+        // guardar archivo combinado
+        $fo2 = TFormat2::where('codRec',$r->codRec)->first();
+        $rutaArchivoExistente = storage_path('app/public/'.$fo2->ppdfFile);
+        $archivoFormulario = $r->file('evidenceFile');
+        $pdf = new Fpdi();
+        function agregarPaginas($pdf, $rutaArchivo) {
+            $totalPaginas = $pdf->setSourceFile($rutaArchivo);
+            for ($pagina = 1; $pagina <= $totalPaginas; $pagina++) {
+                $tplIdx = $pdf->importPage($pagina);
+                $pdf->AddPage();
+                $pdf->useTemplate($tplIdx);
+            }
+        }
+        agregarPaginas($pdf, $rutaArchivoExistente);
+        agregarPaginas($pdf, $archivoFormulario->path());
+            // Guardar el PDF combinado en el almacenamiento de Laravel
+        $nombreArchivoCombinado = $r->codRec.'_evidencias.pdf';
+        // $directorioArchivoCombinado = 'public/' . $r->codRec;
+        $rutaArchivoCombinado = 'public/reclamos/'.$r->codRec.'/' . $nombreArchivoCombinado;
+
+        // Verificar y crear el directorio si no existe
+        // if (!Storage::exists($directorioArchivoCombinado)) {
+        //     Storage::makeDirectory($directorioArchivoCombinado);
+        // }
+
+        // Guarda el PDF combinado en una ruta accesible en storage
+        $tempFilePath = storage_path('app/' . $rutaArchivoCombinado);
+        $pdf->Output($tempFilePath, 'F');
+
+        if (!file_exists($tempFilePath))
+            return response()->json(['state' => false, 'message' => 'No fue posible guardar el archivo combinado.']);
+
+
         $fo2 = TFormat2::where('codRec', $r->codRec)->first();
         $r->merge([
             'codRec' => $r->codRec,
@@ -176,6 +217,8 @@ class Format2Controller extends Controller
     }
     private function accordingNew($r)
     {
+        // dd($r->all());
+
         $conSql = $this->connectionSql();
         if($conSql)
         {
@@ -192,13 +235,19 @@ class Format2Controller extends Controller
             if($existReclaim)
                 return response()->json(['state'=>false,'message'=>"El usuario ya cuenta con un reclamo en proceso."]);
         }
+        // ---
+
+        // ---
+
         $r->merge([
+            'pnumIns' => $ins,
             'codRec' => $r->codRec,
             'numSum' => $r->suministro,
             'nombres' => $r->nombres,
             'app' => $r->app,
             'apm' => $r->apm,
-            'numIde' => $ins,
+            'numIde' => $r->numIde,
+            'razonSocial' => $r->razonSocial,
             'upcjb' => $r->upcjb,
             'upn' => $r->upn,
             'upmz' => $r->upmz,
@@ -217,6 +266,7 @@ class Format2Controller extends Controller
             'dptelefono' => $r->dptelefono,
             'dpcorreo' => $r->dpcorreo,
             'declaracionReclamo' => $r->sendNotify,
+            'pmeses' => implode(",",$r->meses),
             'tipoReclamo' => $r->tipoReclamo,
             'descripcion' => $r->descripcion,
             'sucursal' => $r->sucursal,
@@ -233,7 +283,25 @@ class Format2Controller extends Controller
         {
             $codRec = explode('-',$r->codRec)[1];
             if($this->updateNumberClaim($codRec))
+            {
+                if ($r->hasFile('evidenceFile'))
+                {
+                    if ($r->file('evidenceFile')->getClientMimeType() !== 'application/pdf')
+                        return response()->json(['state' => false, 'message' => 'Se guardo el reclamo pero la evidencia no es un archivo valido.']);
+                    $nameFile = $r->codRec . '_' . 'evidencias.'.$r->file('evidenceFile')->getClientOriginalExtension();
+                    $pathFile = $this->saveFileReg($r, 'evidenceFile', $nameFile, $r->codRec);
+                    if ($pathFile)
+                    {
+                        if($tf2->update(['ppdfFile' => $pathFile]))
+                            return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
+                        else
+                            return response()->json(['state' => false, 'message' => 'Se guardo correctamente, pero no pudo guardar la ruta del archivo.']);
+                    }
+                    else
+                        return response()->json(['state' => false, 'message' => 'No fue posible guardar el archivo de la evidencia.']);
+                }
                 return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
+            }
             else
                 return response()->json(['state' => false, 'message' => 'No fue posible actualizar el numero de reclamo.']);
         }
@@ -375,6 +443,31 @@ class Format2Controller extends Controller
             })->orderBy('codRec', 'desc')->get();
         return response()->json(['state'=>true,'data'=>$list]);
     }
+
+    // public function actShowEvidence(Request $r)
+    public function actShowEvidence($idFo2)
+    {
+        // dd($r->all());
+        // $rec = TFormat2::find($r->idFo2);
+        // if ($rec && $rec->ppdfFile) {
+        //     // Obtener la URL pública del archivo
+        //     $url = Storage::url($rec->ppdfFile);
+        //     return response()->json(['state'=>false, 'url' => $url]);
+        // }
+        // return response()->json(['state'=>false,'message'=>'No se encontro el archivo']);
+        $rec = TFormat2::find($idFo2);
+// dd('entro');
+        // $tPro = Session::get('proveedor');
+    	// $cadena = explode("_", $nombreArchivo);
+    	// $tCrp = TCotrecpro::find($cadena[0]);
+        $rutaArchivo = storage_path('app/public/'.$rec->ppdfFile);
+        // dd($rutaArchivo);
+        if (file_exists($rutaArchivo))
+            return response()->file($rutaArchivo);
+        else
+            abort(404);
+    }
+
 
 
 }

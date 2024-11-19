@@ -3,7 +3,7 @@
 <head>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<title>GOBIERNO REGIONAL DE APURIMAC</title>
+  	<title>EMUSAP</title>
     <!-- icono de la pagina -->
     <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
 	<!-- Google Font: Source Sans Pro -->

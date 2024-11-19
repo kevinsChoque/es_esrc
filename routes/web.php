@@ -5,6 +5,7 @@ use App\Http\Controllers\PortalController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Format2Controller;
+use App\Http\Controllers\F2Controller;
 use App\Http\Controllers\Format3Controller;
 use App\Http\Controllers\InspectionsController;
 use App\Http\Controllers\InspectionController;
@@ -39,6 +40,9 @@ Route::post('format2/searchReclaim', [Format2Controller::class, 'actSearchReclai
 Route::post('format2/searchData', [Format2Controller::class, 'actSearchData']);
 Route::post('format2/searchName', [Format2Controller::class, 'actSearchName']);
 Route::post('format2/searchIns', [Format2Controller::class, 'actSearchIns']);
+// Route::post('format2/showEvidence', [Format2Controller::class, 'actShowEvidence']);
+Route::get('format2/showEvidence/{idFo2?}',[Format2Controller::class, 'actShowEvidence'])->name('detalle-archivo');
+Route::get('format2/f2/{idFo2?}',[F2Controller::class, 'actF2'])->name('f2');
 
 
 

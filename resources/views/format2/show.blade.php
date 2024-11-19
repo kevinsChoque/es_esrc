@@ -45,6 +45,7 @@
                                         <th class="text-center" data-priority="4">Conciliacion</th>
                                         <th class="text-center" data-priority="4">Resolucion</th>
                                         <th class="text-center" data-priority="4">Desde</th>
+                                        <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
                                 </thead>
@@ -61,6 +62,7 @@
                                         <th class="text-center" data-priority="4">Conciliacion</th>
                                         <th class="text-center" data-priority="4">Resolucion</th>
                                         <th class="text-center" data-priority="4">Desde</th>
+                                        <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
                                 </tfoot>
@@ -101,12 +103,14 @@
                 let inspection;
                 let from;
                 let options;
+                let evidence;
                 for (var i = 0; i < r.data.length; i++)
                 {
                     nombres=r.data[i].numIde+' '+r.data[i].nombres+' '+r.data[i].app+' '+r.data[i].apm;
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
                     inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
+                    evidence = isEmpty(r.data[i].ppdfFile)?'':'<a class="btn btn-link" target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.data[i].idFo2+'"><i class="fa fa-file"></i></a>';
                     if(r.data[i].verify=='1')
                     {
                         from = '<pan class="badge badge-info">aprobado</span>';
@@ -119,6 +123,7 @@
                         from = '<pan class="badge badge-warning">web</span>';
                         options = '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
                     }
+
                     html += '<tr>' +
                         '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].numSum) + '</td>' +
@@ -130,7 +135,11 @@
                         '<td class="align-middle">' + novDato(r.data[i].notificacion) +'</td>' +
                         '<td class="align-middle">' + from +'</td>' +
                         '<td class="align-middle text-center">' +
+                            '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f2') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F2</a>' +
+                        '</td>' +
+                        '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
+                                evidence+
                                 options+
                             '</div>'+
                         '</td>' +

@@ -122,6 +122,7 @@
         </div>
         <div class="card-boy">
             <form id="fvclaim">
+                {{-- <input type="hidden" name="idFo2" id="idFo2"> --}}
             <table class="table table-bordered">
                 <tr>
                     <td colspan="8" class="align-middle"><strong>CÓDIGO DE RECLAMO N°</strong></td>
@@ -149,7 +150,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="align-middle"><strong>Razon social</strong></td>
-                    <td colspan="8" class="p-1"><input type="text" class="form-control w-100 input"></td>
+                    <td colspan="8" class="p-1"><input type="text" name="razonSocial" id="razonSocial" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="12" class="align-middle"><strong>Ubicacion del predio</strong></td>
@@ -203,7 +204,7 @@
                     <td colspan="2" class="align-middle"><strong>distrito</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="p-1"><input type="text" name="dpcp" id="dpcp" class="form-control w-100 input" value="03001"></td>
+                    <td colspan="4" class="p-1"><input type="text" name="dpcp" id="dpcp" class="form-control w-100 input onlyNumbers" value="03001" maxlength="5"></td>
                     <td colspan="6" class="p-1"><input type="text" name="dptelefono" id="dptelefono" class="form-control w-100 input dptelefono"></td>
                     <td colspan="2" class="p-1"><input type="text" name="dpcorreo" id="dpcorreo" class="form-control w-100 input"></td>
                 </tr>
@@ -271,9 +272,27 @@
                 </tr>
                 <tr>
                     <td colspan="12" class="p-1">
+                        <div class="form-group col-lg-12 p-0 mb-1">
+                            <select class="form-control w-100" id="meses" name="meses[]" multiple="multiple">
+                                <option value="0" disabled>Seleccione meses</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
+                            </select>
+                        </div>
                         <div class="form-group m-0">
                             <textarea class="form-control input" name="descripcion" id="descripcion" rows="4" placeholder="Descripcion aquí..."></textarea>
                         </div>
+
                     </td>
                 </tr>
                 <tr>
@@ -300,7 +319,20 @@
                     <td colspan="12" class="align-middle"><strong>RELACION DE PRUEBAS QUE SE PRESENTAN ADJUNTAS</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="12" class="p-1"><strong>AQUI LA CARGA DE ARCHIVOS cascsacasc</strong></td>
+                    <td colspan="12">
+                        <strong>AQUI LA CARGA DE ARCHIVOS <i class="fas fa-broom text-info cleanEvidence"></i></strong>
+                        <div class="col-lg-12 containerEvidence">
+                            {{-- <button class="btn btn-link showEvidence"><i class="fa fa-file"></i> Ver evidencias cargadas por el usuario</button> --}}
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                <h5 class="font-italic font-weight-bold m-auto nameFile">Subir evidencias</h5>
+                                <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                            </div>
+                            <input type="file" id="evidenceFile" name="evidenceFile" class="pdfFile" style="display: none;" data-name="ARCHIVO DE EVIDENCIAS">
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="10" class="align-middle"><strong>LA EMPRESA PRESTADORA ENTREGA CARTILLA INFORMATIVA</strong>
@@ -429,6 +461,10 @@
         initFv('fvclaim',rules());
         // fillReclaim();
         fillReclaimWeb();
+        $('#meses').select2({
+            placeholder: 'Selecciona los meses',
+            allowClear: true,
+        });
     });
     $('.searchReclaim').on('click',function(){searchReclaim()})
     $('.searchData').on('click',function(){searchData()})
@@ -450,9 +486,50 @@
             $('.cardNew').css('display','block')
             $('.canalInfoWeb').removeClass('bg-info').addClass('bg-light')
             $('.canalInfoNew').removeClass('bg-light').addClass('bg-info')
+
+            $('.containerEvidence').html('')
             according=false
         }
     });
+    $('.boxFile').on('click',function(){
+        $(this).parent().find('input.pdfFile').click();
+    });
+    $('.pdfFile').on('change',function(){
+        loadFile(this,true);
+    });
+    $('.cleanEvidence').on('click',function(){
+        loadFile($('#evidenceFile'),false);
+    });
+    function loadFile(ele,ban)
+    {
+        if(ban)
+        {
+            let nameFile = $(ele).val().split('\\').pop();
+            if (/\.(pdf)$/i.test(nameFile))
+            {
+                $(ele).parent().find('.nameFile').html($(ele).attr('data-name')+': '+nameFile);
+                // $(ele).parent().find('.msgClick').remove();
+                $(ele).parent().find('.msgClick').css('display','none');
+                $(ele).parent().find('i').removeClass('fa fa-upload fa-lg');
+                $(ele).parent().find('i').addClass('fa fa-file-pdf fa-lg');
+                $(ele).parent().find('.boxFile').css('border','4px solid #000');
+            }
+            else
+            {
+                $(ele).val('');
+                alert('Selecciona un archivo PDF válido.');
+            }
+        }
+        else
+        {
+            $(ele).parent().find('.nameFile').html('ARCHIVO DE EVIDENCIAS');
+            $(ele).parent().find('.msgClick').css('display','block');
+            $(ele).parent().find('i').removeClass('fa fa-file-pdf fa-lg');
+            $(ele).parent().find('i').addClass('fa fa-upload fa-lg');
+            $(ele).parent().find('.boxFile').css('border','4px dashed #000');
+            $(ele).val('');
+        }
+    }
     function buildTable()
     {
         $('.containerRecords>div').remove();
@@ -611,9 +688,19 @@
             }
         });
     }
+    function validateForm()
+    {
+        if(isEmpty($('#codRec').val()) || isEmpty($('#suministro').val()))
+        {msgImportantShow('Seleccione o busque un registro de conexion.','Advertencia','warning');return true;}
+        if(isEmpty($('#meses').val()))
+        {msgImportantShow('Seleccione los meses de reclamo.','Advertencia','warning');return true;}
+        if($('#fvclaim').valid()==false) {return true;}
+        return false;
+
+    }
     function saveClaim()
     {
-        if($('#fvclaim').valid()==false)
+        if(validateForm())
         {return;}
         var formData = new FormData($("#fvclaim")[0]);
         formData.append('codRec', $('#codRec').val());
@@ -636,6 +723,7 @@
                 if (r.state)
                 {
                     clearForm()
+                    $('#fvclaim').find('.form-control').removeClass('is-valid is-invalid')
                     msgImportant(r)
                 }
                 else
@@ -669,21 +757,25 @@
                 console.log('aki ajax')
                 ppp=r
                 clearForm()
+                // $('#idFo2').val(r.fo2.idFo2)
                 $('#codRec').val(r.fo2.codRec)
                 $('#nombres').val(r.fo2.nombres)
                 $('#app').val(r.fo2.app)
                 $('#apm').val(r.fo2.apm)
                 $('#numIde').val(r.fo2.numIde)
                 $('.dptelefono').val(r.fo2.dptelefono)
-                $('.dptelefono').val(r.fo2.dptelefono)
-                $('.dptelefono').val(r.fo2.dptelefono)
+                // $('.dptelefono').val(r.fo2.dptelefono)
+                // $('.dptelefono').val(r.fo2.dptelefono)
                 $('#dpcorreo').val(r.fo2.dpcorreo)
                 if (r.fo2.declaracionReclamo == '0')
                     $('#sendNotifyNo').prop('checked', true)
                 else
                     $('#sendNotifySi').prop('checked', true)
                 $('#tipoReclamo').val(r.fo2.tipoReclamo)
+                $('#meses').val(r.fo2.pmeses.split(",")).trigger('change');
                 $('#fundamento').val(r.fo2.fundamento)
+                var ttt ='<a class="btn btn-link" target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.fo2.idFo2+'"><i class="fa fa-file-pdf"></i> Ver evidencias cargadas por el usuario</a>';
+                $('.containerEvidence').html(ttt)
                 if (r.fo2.declaracion == '0')
                     $('#sendReclaimNo').prop('checked', true)
                 else
@@ -741,8 +833,25 @@
     function rules()
     {
         return {
+            nombres: {required: true,},
+            app: {required: true,},
+            apm: {required: true,},
+            numIde: {required: true,},
+            upcjb: {required: true,},
+            upub: {required: true,},
+            upp: {required: true,},
+            upd: {required: true,},
+            dpcja: {required: true,},
+            dpub: {required: true,},
+            dpp: {required: true,},
+            dpd: {required: true,},
+            dpcp: {required: true,},
             dptelefono: {required: true,},
+            // dpcorreo: {required: true,},
+            tipoReclamo: {required: true,},
             descripcion: {required: true,},
+            sucursal: {required: true,},
+            fundamento: {required: true,},
         };
     }
 </script>
