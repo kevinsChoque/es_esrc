@@ -65,39 +65,13 @@ class Format2Controller extends Controller
 
     public function actSavePortal(Request $r)
     {
-        // $conSql = $this->connectionSql();
-
-        // if($conSql)
-        // {
-        //     $script = "select * from CONEXION c
-        //     left outer join rzcalle rz ON rz.calcod = c.precalle
-        //     where c.InscriNro='".$r->ins."'";
-        //     $stmt = sqlsrv_query($conSql, $script);
-        //     $reg = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC);
-        //     if(!$reg)
-        //         return response()->json(['state'=>false,'message'=>"No existe el usuario con el numero de inscripcion: ".$r->ins]);
-        // }
-        // $existReclaim = TFormat2::where('pnumIns',$r->ins)->where('process','1')->exists();
         if (!$this->validateUserRegistration($r))
             return response()->json(['state' => false, 'message' => 'Usuario no válido o reclamo en proceso.']);
-        // if($r->validateCarPod)
-        // {
-        //     if($r->hasFile('fileCarPod') && $r->file('fileCarPod')->getClientMimeType() !== 'application/pdf')
-        //         return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido de su CARTA PODER.']);
-        // }
-        // if($existReclaim)
-        //     return response()->json(['state'=>false,'message'=>"El usuario ya cuenta con un reclamo en proceso."]);
-
-        // if($r->hasFile('fileDocPer') && $r->file('fileDocPer')->getClientMimeType() !== 'application/pdf')
-        //     return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido de su DOCUMENTO.']);
-        // if($r->hasFile('fileEvidence') && $r->file('fileEvidence')->getClientMimeType() !== 'application/pdf')
-        //     return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido de la EVIDENCIA.']);
         if (!$this->validateUploadedFiles($r))
             return response()->json(['state' => false, 'message' => 'Archivos no válidos.']);
         $codRecNum = $this->getNumberClaim();
         if(!$codRecNum)
             return response()->json(['state' => false, 'message' => 'No fue posible obtener codigo de reclamo.']);
-
         $files = array_filter([
             $r->file('fileDocPer'),
             $r->file('fileCarPod'),
@@ -108,12 +82,9 @@ class Format2Controller extends Controller
         $codRec = Carbon::now()->year.'-'.$codRecNum;
         $nameFile = $codRec.'_evidencias.pdf';
         $pathFile = 'reclamos/'.$codRec;
-        // $outputPath = $this->combinePDFs($files,$pathFile);
         if(!$this->combinePDFs($files,$pathFile,$nameFile))
             return response()->json(['state' => false, 'message' => 'No fue posible guardar los archivos.']);
-        // $pathFile = $pathFile.'/'.$nameFile;
         $pathFile .= '/' . $nameFile;
-        // dd($outputPath);
         // $pathFile = $this->saveFile($r, $nameFile, $pathFile);
         DB::beginTransaction();
         try {
@@ -123,28 +94,6 @@ class Format2Controller extends Controller
                 throw new \Exception('No posible actualizar el NUMERO DE RECLAMO.');
             DB::commit();
             return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente.']);
-            // $ids = DB::table('tecnical')->get()->pluck('idTec')->toArray();
-            // if(is_null($r->hoursAvailable))
-            //     $idTecnical = $ids[array_rand($ids)];
-            // else
-            //     $idTecnical = explode('-',$r->hoursAvailable)[0];
-            // $ins = new TIns();
-            // $ins->idFo2 = $idFo2;
-            // $ins->idTec = $idTecnical;
-            // $ins->dateIns = $r->fechaIns;
-            // $ins->startTime = $r->hourIns;
-            // $ins->endTime =  Carbon::createFromFormat('H:i', $r->hourIns)->addHours(env('HOURS_INSPECTION'))->format('H:i');
-            // if($ins->save() && $this->updateNumberClaim($codRecNum))
-            // {
-            //     DB::commit();
-            //     return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
-            // }
-            // else
-            // {
-            //     DB::rollBack();
-            //     return response()->json(['state' => false, 'message' => 'No fue posible registrar la fecha de inspeccion seleccionada.']);
-            // }
-
         } catch (\Exception $e) {
             // throw new \Exception('No fue posible registrar la evidencia del RECLAMO');
             DB::rollBack();
