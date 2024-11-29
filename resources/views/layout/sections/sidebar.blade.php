@@ -25,11 +25,11 @@
                         <i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{url('format2/form')}}" class="nav-link sba6">
                         <i class="nav-icon fas fa-building"></i><p>Formato a</p>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="sbd1 nav-item">
                     <a href="#" class="nav-link">

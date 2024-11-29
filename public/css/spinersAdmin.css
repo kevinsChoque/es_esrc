@@ -35,7 +35,7 @@
     color: #fff !important;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    margin-left: 0px !important; 
+    margin-left: 0px !important;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
     background-color: #6191d9 !important;
@@ -158,7 +158,7 @@ select.form-control-sm~.select2-container--default .select2-selection--single .s
   width: 75% !important;
 }
 /*------------------------------------------------------------------------finish spiner page*/
-.spinner 
+.spinner
 {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top: 4px solid #3498db;
@@ -167,8 +167,37 @@ select.form-control-sm~.select2-container--default .select2-selection--single .s
     height: 30px;
     animation: spin 1s linear infinite;
 }
-@keyframes spin 
+@keyframes spin
 {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+/* ------------------------------new   */
+/* Estilo del overlay */
+.overlayAllPage {
+    position: fixed; /* Cubre toda la ventana */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    z-index: 1000; /* Asegura que esté encima de otros elementos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenido dentro del overlay */
+.overlay-content {
+    /* background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center; */
+}
+
+/* Ejemplo de contenido de la página */
+.page-content {
+    padding: 20px;
+    height: 150vh; /* Altura para simular contenido largo */
 }

@@ -362,14 +362,18 @@
                 // let options;
                 let iconoF4;
                 let iconoF6;
+                let change;
                 for (var i = 0; i < r.data.length; i++)
                 {
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
                     inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
 
-                    iconoPdf = r.data[i].idFo4===null?'':'<button class="btn btn-secondary py-0 px-1"><i class="fa fa-file-pdf"></i> F4</button>';
+                    iconoPdf = r.data[i].idFo4===null?'':'<button class="btn btn-secondary py-0 px-1" onclick="download()"><i class="fa fa-file-pdf"></i> F4</button>';
                     iconoF4 = r.data[i].idFo4===null?'plus':'file';
                     iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
+                    change = r.data[i].f4 == '1'?
+                        '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
+                        '';
                     html += '<tr class="'+r.data[i].idFo2+'">' +
                         '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
                         '<td class="align-middle">' + recordsId(r.data[i]) + '</td>' +
@@ -377,11 +381,13 @@
                         '<td class="align-middle">' + locationProperty +'</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
                         '<td class="align-middle">' + inspection +'</td>' +
-                        '<td class="align-middle"><pan class="badge badge-info">aprobado</span></td>' +
+                        '<td class="align-middle text-center">'+
+                            '<span class="badge badge-info">Conciliacion</span>'+change+
+                        '</td>' +
                         '<td class="align-middle text-center">' +
-                            '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F2</button>' +
-                            '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
-                            '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
+                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F2</button>' +
+                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
+                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
                             iconoPdf +
                         '</td>' +
                         '<td class="align-middle text-center">' +
@@ -397,6 +403,58 @@
                 $('.overlayRegistros').css('display','none');
             }
         });
+    }
+    function changeProcess(codRec)
+    {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "El reclamo se declara como:",
+            input: "select",
+            inputOptions: {
+                fundado: "Reclamo FUNDADO",
+                infundado: "Reclamo INFUNDADO",
+                reconsideracion: "Solicito RECONSIDERACION",
+            },
+            inputPlaceholder: "Seleccione estado del reclamo",
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) =>
+                {
+                    if (value === "fundado" || value === "infundado" || value === "reconsideracion")
+                    {
+                        // alert('send')
+                        $(".containerSpinner").removeClass("d-none");
+                        $(".containerSpinner").addClass("d-flex");
+                        jQuery.ajax({
+                            url: "{{ url('format4/changeProcess') }}",
+                            method: 'POST',
+                            data: {state: value, codRec:codRec},
+                            dataType: 'json',
+                            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                            success: function (r) {
+                                console.log(r)
+                                msgImportant(r)
+                                // buildTable();
+                                // fillRecords();
+                            },
+                            error: function (xhr, status, error) {alert("Algo salio mal, porfavor contactese con el Administrador.");}
+                        });
+                        Swal.fire(`El reclamo se cambio a: un estado`);
+                    }
+                    else
+                        resolve("Seleccione un estado del reclamo");
+                });
+            }
+        });
+        // if (fruit)
+        // {
+        //     Swal.fire(`El reclamo se cambio a: ${fruit}`);
+        // }
+    }
+    function download()
+    {
+        alert('descargando formato4')
     }
     function userClaimant(reg)
     {

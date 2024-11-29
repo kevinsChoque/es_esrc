@@ -42,7 +42,7 @@
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
                                         <th class="text-center" data-priority="4">Inspeccion</th>
-                                        <th class="text-center" data-priority="4">Desde</th>
+                                        <th class="text-center" data-priority="4">Estado</th>
                                         <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
@@ -57,7 +57,7 @@
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
                                         <th class="text-center" data-priority="4">Inspeccion</th>
-                                        <th class="text-center" data-priority="4">Desde</th>
+                                        <th class="text-center" data-priority="4">Estado</th>
                                         <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
@@ -227,7 +227,7 @@
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
     var tableRecords;
-    console.log("{{ Storage::url('format5/20241001_173405_M-O_Inteligencia_artificial_esp_(1).pdf') }}")
+    // console.log("{{ Storage::url('format5/20241001_173405_M-O_Inteligencia_artificial_esp_(1).pdf') }}")
     $(document).ready( function () {
         // $('.containerRecords').css('display','block');
         // cascç
@@ -354,6 +354,7 @@
                 // let options;
                 let iconoF5;
                 let iconoF6;
+                let change;
                 for (var i = 0; i < r.data.length; i++)
                 {
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
@@ -361,6 +362,11 @@
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
                     iconoF5 = r.data[i].idFo5===null?'plus':'file';
                     iconoF6 = r.data[i].idFo6===null?'plus':'file';
+
+                    change = r.data[i].f5 == '1' && r.data[i].f6 == '1'?
+                        '<button type="button" class="btn text-info py-0 pr-0" title="Enviar a conciliacion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
+                        '';
+                        console.log(change)
                     // if(r.data[i].idFo5===null)
                     // {
                     //     options = '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-plus"></i> F5</button>'+
@@ -378,7 +384,9 @@
                         '<td class="align-middle">' + locationProperty +'</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
                         '<td class="align-middle">' + inspection +'</td>' +
-                        '<td class="align-middle"><pan class="badge badge-info">aprobado</span></td>' +
+                        '<td class="align-middle">' +
+                            '<span class="badge badge-info">Investigacion</span>'+change+
+                        '</td>'+
                         '<td class="align-middle text-center">' +
                             '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
                             '<button class="btn btn-secondary py-0 px-1"><i class="fa fa-file-pdf"></i> F6</button>' +
@@ -397,6 +405,46 @@
                 $('.overlayRegistros').css('display','none');
             }
         });
+    }
+    function changeProcess(codRec)
+    {
+        event.preventDefault();
+        Swal.fire({
+        title: "Esta seguro de pasar el reclamo "+codRec+" a conciliacion?",
+        text: "Confirme la accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, confirmar"
+        }).then((result) => {
+            if (result.isConfirmed)
+            {
+                $(".containerSpinner").removeClass("d-none");
+                $(".containerSpinner").addClass("d-flex");
+                jQuery.ajax({
+                    url: "{{ url('inspection/changeProcess') }}",
+                    method: 'POST',
+                    data: {codRec: codRec},
+                    dataType: 'json',
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    success: function (r) {
+                        console.log(r)
+                        msgImportant(r)
+                        buildTable();
+                        fillRecords();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Algo salio mal, porfavor contactese con el Administrador.");
+                    }
+                });
+            }
+        });
+    }
+    function buildTable()
+    {
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
     }
     function cleanF5()
     {

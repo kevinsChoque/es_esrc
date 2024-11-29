@@ -110,18 +110,24 @@
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
                     inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
-                    evidence = isEmpty(r.data[i].ppdfFile)?'':'<a class="btn btn-link" target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.data[i].idFo2+'"><i class="fa fa-file"></i></a>';
+                    evidence = isEmpty(r.data[i].ppdfFile)?
+                        '':
+                        '<a class="btn btn-link" title="Ver evidencias" target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.data[i].idFo2+'"><i class="fa fa-file"></i></a>';
                     if(r.data[i].verify=='1')
                     {
-                        from = '<pan class="badge badge-info">aprobado</span>';
-                        options = '<button type="button" class="btn text-info" title="Formato 3" onclick="format3(\''+r.data[i].pnumIns+'\');"><i class="fa fa-file-pdf"></i></button>'+
-                        '<button type="button" class="btn text-info" title="Editar registro" onclick="edit(\''+r.data[i].pnumIns+'\');"><i class="fa fa-edit"></i></button>'+
-                        '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
+                        from = r.data[i].process >= '2'?
+                            '<pan class="badge badge-info">Investigacion</span>':
+                            '<span class="badge badge-info">Recibido</span><button type="button" class="btn text-info py-0 pr-0" title="Enviar a actas de inspeccion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>';
+                        options = r.data[i].process >= '2'?
+                            '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>':
+                            '<button type="button" class="btn text-info" title="Formato 3" onclick="format3(\''+r.data[i].pnumIns+'\');"><i class="fa fa-file-pdf"></i></button>'+
+                            '<button type="button" class="btn text-info" title="Editar registro" onclick="edit(\''+r.data[i].pnumIns+'\');"><i class="fa fa-edit"></i></button>'+
+                            '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
                     }
                     else
                     {
-                        from = '<pan class="badge badge-warning">web</span>';
-                        options = '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
+                        from = '<pan class="badge badge-warning">Web</span>';
+                        options = '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
                     }
 
                     html += '<tr>' +
@@ -150,6 +156,67 @@
                 $('.overlayRegistros').css('display','none');
             }
         });
+    }
+
+    function deleteRecords(codRec)
+    {
+        event.preventDefault();
+        Swal.fire({
+        title: "Esta seguro de pasar el reclamo a investigacion?",
+        text: "Confirme la accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, confirmar"
+        }).then((result) => {
+            if (result.isConfirmed)
+                alert('eliminar registro')
+            else
+                alert('no!')
+        });
+    }
+    function changeProcess(codRec)
+    {
+        event.preventDefault();
+        Swal.fire({
+        title: "Esta seguro de pasar el reclamo a investigacion?",
+        text: "Confirme la accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, confirmar"
+        }).then((result) => {
+            if (result.isConfirmed)
+            {
+                $(".containerSpinner").removeClass("d-none");
+                $(".containerSpinner").addClass("d-flex");
+                jQuery.ajax({
+                    url: "{{ url('format2/changeProcess') }}",
+                    method: 'POST',
+                    data: {codRec: codRec},
+                    dataType: 'json',
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    success: function (r) {
+                        console.log(r)
+                        msgImportant(r)
+                        buildTable();
+                        fillRecords();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Algo salio mal, porfavor contactese con el Administrador.");
+                    }
+                });
+            }
+            // else
+                // $(ele).prop('checked', false);
+        });
+    }
+    function buildTable()
+    {
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
     }
     function format3(ins)
     {

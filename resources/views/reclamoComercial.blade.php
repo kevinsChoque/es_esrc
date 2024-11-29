@@ -55,6 +55,25 @@
 
 </head>
 <body class="hold-transition sidebar-mini">
+    {{-- <div class="overlayPagina">
+        <div class="loadingio-spinner-spin-i3d1hxbhik m-auto">
+            <div class="ldio-onxyanc9oyh">
+                <div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div>
+            </div>
+        </div>
+    </div> --}}
+    <div class="overlayAllPage">
+        <div class="overlay-content">
+            {{-- <h2>Este es el overlay</h2>
+            <p>Puedes añadir aquí cualquier contenido.</p> --}}
+            {{-- <button onclick="closeOverlay()">Cerrar</button> --}}
+            <div class="loadingio-spinner-spin-i3d1hxbhik m-auto">
+                <div class="ldio-onxyanc9oyh">
+                    <div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="#">
@@ -74,6 +93,7 @@
     </div>
     <div class="container-fluid pt-3" style="background-image: url('{{asset('img/bgg.jpg')}}')">
         <div class="row justify-content-center">
+
             <div class="col-lg-10">
                 <div class="card">
                     <div class="overlay overlayForm">
@@ -82,13 +102,23 @@
                     <div class="card-body">
                         <form id="fvclaim">
                             <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="callout callout-info py-2">
+                                        <h6 class="font-weight-bold"><i class="icon fas fa-info"></i> REGISTRAR RECLAMO:</h6>
+                                        <ul class="m-0">
+                                            <li>1.-Ingrese numero de inscripcion</li>
+                                            <li>2.-Ingrese numero de identidad</li>
+                                            <li>3.-Complete los datos del formulario</li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="form-group col-lg-4">
                                     <label class="m-0">Numero de inscripcion: <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-hashtag"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" id="ins" name="ins" maxlength="8">
+                                        <input type="text" class="form-control onlyNumbers input" id="ins" name="ins" maxlength="8">
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-4">
@@ -97,7 +127,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" placeholder="00000000" id="docIde" name="docIde">
+                                        <input type="text" class="form-control onlyNumbers input" placeholder="00000000" id="docIde" name="docIde">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary searchDocIde" type="button"><i class="fa fa-search"></i> Buscar</button>
                                         </div>
@@ -109,7 +139,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" id="nombres" name="nombres" disabled>
+                                        <input type="text" class="form-control input inputName" id="nombres" name="nombres" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-3">
@@ -118,7 +148,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" id="app" name="app" disabled>
+                                        <input type="text" class="form-control input inputName" id="app" name="app" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-3">
@@ -127,7 +157,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" id="apm" name="apm" disabled>
+                                        <input type="text" class="form-control input inputName" id="apm" name="apm" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-3">
@@ -136,7 +166,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-envelope"></i></span>
                                         </div>
-                                        <input type="text" class="form-control input" id="correo" name="correo">
+                                        <input type="text" class="form-control input validate" id="correo" name="correo">
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-3">
@@ -145,7 +175,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-phone"></i></span>
                                         </div>
-                                        <input type="text" class="form-control soloNumeros input" id="celular" name="celular" maxlength="9">
+                                        <input type="text" class="form-control onlyNumbers input validate" id="celular" name="celular" maxlength="9">
                                     </div>
                                 </div>
                                 <div class="col-lg-9">
@@ -176,7 +206,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-list"></i></span>
                                         </div>
-                                        <select name="tipo" id="tipo" class="form-control">
+                                        <select name="tipo" id="tipo" class="form-control validate">
                                             <option value="0" selected disabled>== SELECCIONE ==</option>
                                             <optgroup label="PROBLEMAS EN EL REGIMEN DE FACTURACION Y EL NIVEL DE CONSUMO">
                                                 <option value="1">CONSUMO MEDIDO</option>
@@ -200,7 +230,7 @@
                                 </div>
                                 <div class="form-group col-lg-5">
                                     <label class="m-0" for="meses">Meses de reclamo:</label>
-                                    <select class="form-control" id="meses" name="meses[]" multiple="multiple">
+                                    <select class="form-control validate" id="meses" name="meses[]" multiple="multiple">
                                         <option value="0" disabled>Seleccione meses</option>
                                         <option value="Enero">Enero</option>
                                         <option value="Febrero">Febrero</option>
@@ -250,7 +280,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-keyboard"></i></span>
                                         </div>
-                                        <input type="text" class="form-control input" id="fundamento" name="fundamento">
+                                        <input type="text" class="form-control input validate" id="fundamento" name="fundamento">
                                     </div>
                                 </div>
                                 <div class="col-lg-9">
@@ -294,7 +324,7 @@
                                         </div>
                                         <input type="text" id="fechaIns" name="fechaIns" class="form-control flatpickr" placeholder="Selecciona una fecha">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary checkAvailability" type="button"><i class="fa fa-search"></i> Verificar disponibilidad de tecnico</button>
+                                            <button class="btn btn-outline-secondary checkAvailability validate" type="button"><i class="fa fa-search"></i> Verificar disponibilidad de tecnico</button>
                                         </div>
                                     </div>
                                 </div>
@@ -311,6 +341,30 @@
                                         <input type="time" id="hourIns" name="hourIns" class="form-control hourIns">
                                     </div>
                                 </div>
+                                <div class="col-lg-12"></div>
+                                {{-- <div class="col-lg-6">
+                                    <div class="callout callout-info">
+                                        <h6 class=""><i class="icon fas fa-info"></i> Documentos personales:</h6>
+                                        <p class="m-0">Si la persona quien realiza el reclamo es el titular subir el la copia de DNI<br>
+                                            Si la persona es el representante subir la copia de DNI y la carta poder</p>
+                                    </div>
+                                </div> --}}
+                                <div class="col-lg-6 mb-3 containerDi" style="display: none;">
+                                    <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                        <h5 class="font-italic font-weight-bold m-auto nameFile">DOCUMENTO DE IDENTIDAD</h5>
+                                        <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                        <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                                    </div>
+                                    <input type="file" id="fileDocPer" name="fileDocPer" class="pdfFile" style="display: none;" data-name="ARCHIVO DE DOCUMENTO DE IDENTIDAD">
+                                </div>
+                                <div class="col-lg-6 mb-3 containerCp" style="display: none;">
+                                    <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                        <h5 class="font-italic font-weight-bold m-auto nameFile">CARTA PODER</h5>
+                                        <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                        <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                                    </div>
+                                    <input type="file" id="fileCarPod" name="fileCarPod" class="pdfFile" style="display: none;" data-name="ARCHIVO DE CARTA PODER">
+                                </div>
                                 <div class="col-lg-12 mb-3">
                                     <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
                                         <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE EVIDENCIA</h5>
@@ -323,7 +377,7 @@
                         </form>
                     </div>
                     <div class="card-footer py-1 border-transparent">
-                        <button type="button" class="btn btn-success float-right saveClaim ml-2 w-100"><i class="fa fa-save"></i> Guardar Reclamo</button>
+                        <button type="button" class="btn btn-success float-right saveClaim ml-2 w-100 validate"><i class="fa fa-save"></i> Guardar Reclamo</button>
                     </div>
                 </div>
             </div>
@@ -403,8 +457,10 @@
 <script>
     var ppp;
     var hourSelected = null;
+    var validateCarPod=false;
     $(document).ready( function () {
-        $('.overlayPagina').css("display","none");
+        $('.validate').attr('disabled',true)
+        $('.overlayAllPage').css("display","none");
         $('.overlayForm').css("display","none");
         initFv('fvclaim',rules());
         flatpickr("#fechaIns", {
@@ -439,6 +495,9 @@
         else
             validateHourAvailable(this)
     });
+    $('#ins').on('blur',function(){
+        // alert('verificr')
+    });
     function validateHour(ele)
     {
         var horaSeleccionada = $(ele).val();
@@ -470,7 +529,8 @@
                 $(ele).val(''); // Limpiar el input
             }
         } else {
-            alert('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.');
+            // alert('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.');
+            msgImportantShow('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.','Reclamo','error')
             $(ele).val(''); // Limpiar el input
         }
     }
@@ -628,7 +688,7 @@
             {
                 $(ele).parent().find('.nameFile').html($(ele).attr('data-name')+': '+nameFile);
                 // $(ele).parent().find('.msgClick').remove();
-                $(ele).parent().find('.msgClick').css('display','none');
+                // $(ele).parent().find('.msgClick').css('display','none');
                 $(ele).parent().find('i').removeClass('fa fa-upload fa-lg');
                 $(ele).parent().find('i').addClass('fa fa-file-pdf fa-lg');
                 $(ele).parent().find('.boxFile').css('border','4px solid #000');
@@ -641,8 +701,9 @@
         }
         else
         {
-            $(ele).parent().find('.nameFile').html('ARCHIVO DE EVIDENCIA');
-            $(ele).parent().find('.msgClick').css('display','block');
+            // $(ele).parent().find('.nameFile').html('ARCHIVO DE EVIDENCIA');
+            $(ele).parent().find('.nameFile').html($(ele).attr('data-name'));
+            // $(ele).parent().find('.msgClick').css('display','block');
             $(ele).parent().find('i').removeClass('fa fa-file-pdf fa-lg');
             $(ele).parent().find('i').addClass('fa fa-upload fa-lg');
             $(ele).parent().find('.boxFile').css('border','4px dashed #000');
@@ -650,27 +711,110 @@
         }
     }
     $('.searchDocIde').on('click',function(){
-        if($('#docIde').val().length == 8)
+        if(isEmpty($('#ins').val()))
         {
-            $.ajax({
-                url: "https://dniruc.apisperu.com/api/v1/dni/"+$('#docIde').val(),
-                method: "GET",
-                data: {
-                    token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtldmlucy5jaG9xdWVAZ21haWwuY29tIn0.3TXCDSPb9Db392-2yR8M3wDOxctai_TBj4pn4OMi-as"
-                },
-                success: function(r) {
-                    $('#app').val(r.apellidoPaterno)
-                    $('#apm').val(r.apellidoMaterno)
-                    $('#nombres').val(r.nombres)
-                },
-                error: function(error) {
-                    $('#resultado').html('<p>Ocurrió un error al realizar la consulta.</p>');
-                    console.error("Error:", error);
-                }
-            });
+            msgImportantShow('Primero debe ingresar el numero de inscripcion.','Numero de inscripcion','info');
+            return;
         }
-        else
-            alert('mal')
+        if($('#docIde').val().length != 8)
+        {
+            msgImportantShow('Ingrese un numero de identidad valido.','Documento de identidad','info');
+            return;
+        }
+        $('.overlayAllPage').css("display","flex");
+        jQuery.ajax({
+            url: "{{ url('pformat2/verifyData') }}",
+            method: 'POST',
+            data: {inscription:$('#ins').val(),dni:$('#docIde').val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                $('.inputName').val('')
+                if(r.state)
+                {
+                    if(r.found)
+                    {
+                        let nameString = r.reg['Clinomx'].trim()
+                        nameString = nameString.split(',')
+                        let name = nameString[1]
+                        let lastName = nameString[0].split(' ')
+                        $('#nombres').val(name)
+                        $('#app').val(lastName[0])
+                        $('#apm').val(lastName[1])
+                        $('.validate').attr('disabled',false)
+                        $('.containerDi').removeClass('col-lg-6').addClass('col-lg-12')
+                        $('.containerDi').css('display','block')
+                        $('.containerCp').css('display','none')
+                        $('.overlayAllPage').css("display","none");
+                        $('.inputName').attr('disabled',true)
+                        validateCarPod=false
+                    }
+                    else
+                    {
+                        $.ajax({
+                            url: "https://dniruc.apisperu.com/api/v1/dni/"+$('#docIde').val(),
+                            method: "GET",
+                            data: {
+                                token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtldmlucy5jaG9xdWVAZ21haWwuY29tIn0.3TXCDSPb9Db392-2yR8M3wDOxctai_TBj4pn4OMi-as"
+                            },
+                            success: function(r) {
+                                if(r.success)
+                                {
+                                    $('#app').val(r.apellidoPaterno)
+                                    $('#apm').val(r.apellidoMaterno)
+                                    $('#nombres').val(r.nombres)
+                                    $('.inputName').attr('disabled',true)
+                                }
+                                else
+                                {
+                                    $('.inputName').attr('disabled',false)
+                                }
+                                validateCarPod=true
+                                $('.containerDi').removeClass('col-lg-12').addClass('col-lg-6')
+                                $('.containerDi').css('display','block')
+                                $('.containerCp').css('display','block')
+                                $('.validate').attr('disabled',false)
+                                $('.overlayAllPage').css("display","none")
+                            },
+                            error: function(error) {
+                                msgImportantShow('No fue posible establecer conexion en la busqueda.','No se encontro','error')
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    $('.overlayAllPage').css("display","none");
+                    msgImportant(r)
+                }
+
+            },
+            error: function (xhr, status, error) {
+                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
+            }
+        });
+
+        // if($('#docIde').val().length == 8)
+        // {
+        //     $.ajax({
+        //         url: "https://dniruc.apisperu.com/api/v1/dni/"+$('#docIde').val(),
+        //         method: "GET",
+        //         data: {
+        //             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtldmlucy5jaG9xdWVAZ21haWwuY29tIn0.3TXCDSPb9Db392-2yR8M3wDOxctai_TBj4pn4OMi-as"
+        //         },
+        //         success: function(r) {
+        //             $('#app').val(r.apellidoPaterno)
+        //             $('#apm').val(r.apellidoMaterno)
+        //             $('#nombres').val(r.nombres)
+        //         },
+        //         error: function(error) {
+        //             $('#resultado').html('<p>Ocurrió un error al realizar la consulta.</p>');
+        //             console.error("Error:", error);
+        //         }
+        //     });
+        // }
+        // else
+        //     alert('mal')
     })
     function saveClaim()
     {
@@ -680,6 +824,7 @@
         formData.append('nombres',$('#nombres').val());
         formData.append('app',$('#app').val());
         formData.append('apm',$('#apm').val());
+        formData.append('validateCarPod',validateCarPod);
         $('.save').prop('disabled',true);
         $('.overlayForm').css("display","flex");
         jQuery.ajax({
@@ -711,14 +856,20 @@
     {
         if($('#fvclaim').valid()==false)
         {return true;}
-        if($('#fileEvidence')[0].files.length==0)
-        {msgImportant({'state':false,'message':'No se subio el documento de la EVIDENCIA.'});return true;}
+        if(isEmpty($('#meses').val()))
+        {msgImportant({'state':false,'message':'Seleccione los meses de reclamo.'});return true;}
         if(isEmpty($('#fechaIns').val()))
         {msgImportant({'state':false,'message':'Ingrese la fecha de inspeccion.'});return true;}
         if(isEmpty($('#hourIns').val()))
         {msgImportant({'state':false,'message':'Ingrese la hora de inspeccion.'});return true;}
-        if(isEmpty($('#meses').val()))
-        {msgImportant({'state':false,'message':'Seleccione los meses de reclamo.'});return true;}
+        if($('#fileDocPer')[0].files.length==0)
+        {msgImportantShow("No se subio los Documentos Personales.",'Reclamo','warning');return true;}
+        if(validateCarPod && $('#fileCarPod')[0].files.length==0)
+        {msgImportantShow("No se subio la CARTA PODER.",'Reclamo','warning');return true;}
+        if($('#fileEvidence')[0].files.length==0)
+        {msgImportantShow("No se subio el Documento de la EVIDENCIA.",'Reclamo','warning');return true;}
+
+
         return false;
     }
     function rules()
@@ -743,7 +894,9 @@
         $('.input').val('');
         $('#tipo').val('0');
         $('#meses').val('').change()
-        loadFile($('.pdfFile'),false);
+        loadFile($('#fileEvidence'),false);
+        loadFile($('#fileDocPer'),false);
+        loadFile($('#fileCarPod'),false);
     }
 </script>
 </body>

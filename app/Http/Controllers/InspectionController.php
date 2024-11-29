@@ -21,6 +21,7 @@ class InspectionController extends Controller
         //     ->get();
         // dd('aki');
         $list = TFormat2::where('format2.verify', '=', 1)
+            ->where('format2.process', '=', '2')
             ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
             ->leftjoin('format5', 'format5.idFo2', '=', 'format2.idFo2')
             ->leftjoin('format6', 'format6.idFo2', '=', 'format2.idFo2')
@@ -28,5 +29,14 @@ class InspectionController extends Controller
             ->get();
 // dd('all');
         return response()->json(['data' => $list]);
+    }
+    public function actChangeProcess(Request $r)
+    {
+        $f2 = TFormat2::where('codRec',$r->codRec)->first();
+        $f2->process = '3';
+        if($f2->save())
+            return response()->json(['state'=>true,'message'=>'El reclamo '.$r->codRec.' paso a la etapa de conciliacion.']);
+        else
+            return response()->json(['state'=>false,'message'=>'Error al cambiar el proceso']);
     }
 }

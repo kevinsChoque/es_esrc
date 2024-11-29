@@ -18,9 +18,7 @@ class Format4Controller extends Controller
     }
     public function actList()
     {
-        $list = TFormat2::where('format2.f5', '=', 1)
-            ->where('format2.f5', '=', 1)
-            ->where('format2.f6', '=', 1)
+        $list = TFormat2::where('format2.process', '=', '3')
             ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
             ->select('format2.*','format4.idFo4')
             ->get();
@@ -126,5 +124,22 @@ class Format4Controller extends Controller
             return response()->file($pathFile);
         else
             abort(404);
+    }
+    public function actChangeProcess(Request $r)
+    {
+        $state = $r->state=='fundado'?'4':($r->state=='infundado'?'5':'6');
+        $f2 = TFormat2::where('codRec',$r->codRec)->first();
+        $f2->process = $state;
+        if($f2->save())
+            return response()->json(['state'=>true,'message'=>'El reclamo '.$r->codRec.' se declaro como '.$r->state]);
+        else
+            return response()->json(['state'=>false,'message'=>'Ocurrio un error, porfavor contactese con el administrador']);
+        // return response()->json(['state'=>false,'message'=>$r->state]);
+        // $f2 = TFormat2::where('codRec',$r->codRec)->first();
+        // $f2->process = '2';
+        // if($f2->save())
+        //     return response()->json(['state'=>true,'message'=>'El reclamo paso a la etapa de inspeccion.']);
+        // else
+        //     return response()->json(['state'=>false,'message'=>'Error al cambiar el proceso']);
     }
 }

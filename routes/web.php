@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Pformat2Controller;
 use App\Http\Controllers\Format2Controller;
 use App\Http\Controllers\F2Controller;
 use App\Http\Controllers\Format3Controller;
@@ -23,6 +24,8 @@ Route::get('home/home',[HomeController::class, 'actHome']);
 // reclamo portal
 Route::post('format2/savePortal',[Format2Controller::class, 'actSavePortal']);
 Route::post('format2/searchInscription',[Format2Controller::class, 'actSearchInscription']);
+Route::post('pformat2/verifyData', [Pformat2Controller::class, 'actVerifyData']);
+//
 // Route::get('format2/show',[Format2Controller::class, 'actShow']);
 
 
@@ -42,7 +45,11 @@ Route::post('format2/searchName', [Format2Controller::class, 'actSearchName']);
 Route::post('format2/searchIns', [Format2Controller::class, 'actSearchIns']);
 // Route::post('format2/showEvidence', [Format2Controller::class, 'actShowEvidence']);
 Route::get('format2/showEvidence/{idFo2?}',[Format2Controller::class, 'actShowEvidence'])->name('detalle-archivo');
+Route::post('format2/changeProcess',[Format2Controller::class, 'actChangeProcess']);
+
+
 Route::get('format2/f2/{idFo2?}',[F2Controller::class, 'actF2'])->name('f2');
+
 
 
 
@@ -58,6 +65,8 @@ Route::get('format3/show/{ins}',[Format3Controller::class, 'actShow']);
 // inspection interna y externa
 Route::get('inspection/show',[InspectionController::class, 'actShow']);
 Route::get('inspection/list', [InspectionController::class, 'actList']);
+Route::post('inspection/changeProcess', [InspectionController::class, 'actChangeProcess']);
+
 // formato 5
 
 Route::post('format5/save', [Format5Controller::class, 'actSave']);
@@ -76,4 +85,5 @@ Route::post('format4/save', [Format4Controller::class, 'actSave']);
 Route::post('format4/f4', [Format4Controller::class, 'actF4']);
 Route::post('format4/saveFile', [Format4Controller::class, 'actSaveFile']);
 Route::get('format4/file/{idFo4}', [Format4Controller::class, 'actFile'])->name('format4-file');
+Route::post('format4/changeProcess', [Format4Controller::class, 'actChangeProcess']);
 
