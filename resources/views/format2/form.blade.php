@@ -2,6 +2,7 @@
 @section('nombreContenido', '----')
 @section('pageTitle')
 {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2-bootstrap4.min.css" rel="stylesheet"> --}}
+
 <div class="content-header pb-0 pt-2">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -140,9 +141,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="apm" id="apm" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle"><strong>nombres</strong></td>
-                    <td colspan="6" class="align-middle"><strong>apellido paterno</strong></td>
-                    <td colspan="2" class="align-middle"><strong>apellido materno</strong></td>
+                    <td colspan="4" class="align-middle py-0"><strong>nombres</strong></td>
+                    <td colspan="6" class="align-middle py-0"><strong>apellido paterno</strong></td>
+                    <td colspan="2" class="align-middle py-0"><strong>apellido materno</strong></td>
                 </tr>
                 <tr>
                     <td colspan="8" class="align-middle"><strong>Numero de documento de identidad (DNI, LE, CI) razon social</strong></td>
@@ -162,10 +163,10 @@
                     <td colspan="1" class="p-1"><input type="text" name="uplote" id="uplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="align-middle"><strong>(calle, jiron, avenida)</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Nª</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Mz.</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Lote</strong></td>
+                    <td colspan="9" class="align-middle py-0"><strong>(calle, jiron, avenida)</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Nª</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Mz.</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Lote</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="upub" id="upub" class="form-control w-100 urbanizacion input"></td>
@@ -173,9 +174,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="upd" id="upd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle"><strong>(urbanizacion, barrio)</strong></td>
-                    <td colspan="6" class="align-middle"><strong>provincia</strong></td>
-                    <td colspan="2" class="align-middle"><strong>distrito</strong></td>
+                    <td colspan="4" class="align-middle py-0"><strong>(urbanizacion, barrio)</strong></td>
+                    <td colspan="6" class="align-middle py-0"><strong>provincia</strong></td>
+                    <td colspan="2" class="align-middle py-0"><strong>distrito</strong></td>
                 </tr>
                 {{-- --- --}}
                 <tr>
@@ -188,10 +189,10 @@
                     <td colspan="1" class="p-1"><input type="text" name="dplote" id="dplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="align-middle"><strong>(calle, jiron, avenida)</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Nª</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Mz.</strong></td>
-                    <td colspan="1" class="align-middle"><strong>Lote</strong></td>
+                    <td colspan="9" class="align-middle py-0"><strong>(calle, jiron, avenida)</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Nª</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Mz.</strong></td>
+                    <td colspan="1" class="align-middle py-0"><strong>Lote</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="dpub" id="dpub" class="form-control w-100 urbanizacion input"></td>
@@ -199,9 +200,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="dpd" id="dpd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle"><strong>(urbanizacion, barrio)</strong></td>
-                    <td colspan="6" class="align-middle"><strong>provincia</strong></td>
-                    <td colspan="2" class="align-middle"><strong>distrito</strong></td>
+                    <td colspan="4" class="align-middle py-0"><strong>(urbanizacion, barrio)</strong></td>
+                    <td colspan="6" class="align-middle py-0"><strong>provincia</strong></td>
+                    <td colspan="2" class="align-middle py-0"><strong>distrito</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="dpcp" id="dpcp" class="form-control w-100 input onlyNumbers" value="03001" maxlength="5"></td>
@@ -209,9 +210,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="dpcorreo" id="dpcorreo" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle"><strong>Codigo postal</strong></td>
-                    <td colspan="6" class="align-middle"><strong>Telefono / Celular</strong></td>
-                    <td colspan="2" class="align-middle"><strong>Correo electronico</strong></td>
+                    <td colspan="4" class="align-middle py-0"><strong>Codigo postal</strong></td>
+                    <td colspan="6" class="align-middle py-0"><strong>Telefono / Celular</strong></td>
+                    <td colspan="2" class="align-middle py-0"><strong>Correo electronico</strong></td>
                 </tr>
                 <tr>
                     <td colspan="12" class="align-middle"><strong>Declaracion del reclamante (Fijacion de correo electronico como domicilio procesal)</strong></td>
@@ -371,48 +372,75 @@
                     <td colspan="12" class="align-middle"><strong>INFORMACION A SER COMPLETADA POR LA EMPRESA PRESTADORA</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="align-middle"><strong style="font-size: .8rem">INSPECCION INTERNA Y EXTERNA, FECHA:</strong></td>
-                    <td colspan="5" class="align-middle p-1"><input type="date" name="dateIns" id="dateIns" class="form-control w-100 input"></td>
+                    <td colspan="3" class="align-middle py-0">
+                        <strong style="font-size: .8rem">
+                            <a class="btn btn-link p-0 changeInspections" style="display: none;"><i class="fa fa-edit fa-2x text-info"></i></a>
+                             INSPECCION INTERNA Y EXTERNA, FECHA:
+                        </strong>
+                    </td>
+                    <td colspan="5" class="align-middle p-1">
+                        <input type="date" name="dateIns" id="dateIns" class="form-control w-100 input">
+                        {{-- new --}}
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
+                                </div>
+                                <input type="text" id="nfechaIns" name="nfechaIns" class="form-control flatpickr input" placeholder="Selecciona una fecha">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary ncheckAvailability validate" type="button"><i class="fa fa-search"></i> Verificar disponibilidad de tecnico</button>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- new --}}
+                    </td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA (RANGO DE 2 HORAS):</strong></td>
                     <td colspan="2" class="align-middle p-1">
-                        <span class="badge badge-info hourInspection"></span>
                         <input type="text" name="startTime" id="startTime" class="form-control w-100 input">
+                        <div class="form-group nconteinerHoursAvailable">
+                            <label for="nhoursAvailable" class="m-0">Horas disponibles:</label>
+                            <select id="nhoursAvailable" name="nhoursAvailable" class="form-control nhoursAvailable"></select>
+                        </div>
+                        <div class="form-group nconteinerHourIns" style="display: none;">
+                            <label for="nhourInsInicio" class="m-0">Hora de inicio: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                <input type="time" id="nhourInsInicio" name="nhourInsInicio" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group nconteinerHourIns" style="display: none;">
+                            <label for="nhourInsFin" class="m-0">Hora de finalizacion: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                <input type="time" id="nhourInsFin" name="nhourInsFin" class="form-control">
+                            </div>
+                            <small id="nerrorHourMessage" class="text-danger"></small>
+                        </div>
                     </td>
                 </tr>
+                {{-- <tr>
+                    <td colspan="3" class="align-middle py-0"><strong style="font-size: .8rem"><button class="btn btn-link p-0"><i class="fa fa-edit fa-2x text-info"></i></button> INSPECCION INTERNA Y EXTERNA, FECHA:</strong></td>
+                    <td colspan="5" class="align-middle p-1"><input type="date" class="form-control w-100 input"></td>
+                    <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA (RANGO DE 2 HORAS):</strong></td>
+                    <td colspan="2" class="align-middle p-1">
+                        <input type="text" class="form-control w-100 input">
+                    </td>
+                </tr> --}}
                 <tr>
                     <td colspan="3" class="align-middle"><strong style="font-size: .8rem">CITACION A REUNION DE CONCILIACION, FECHA:</strong></td>
-                    <td colspan="5" class="align-middle p-1"><input type="text" class="form-control w-100 input"></td>
+                    <td colspan="5" class="align-middle p-1"><input type="date" name="reunion" id="reunion" class="form-control w-100 input"></td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA:</strong></td>
-                    <td colspan="2" class="align-middle p-1"><input type="text" class="form-control w-100 input"></td>
+                    <td colspan="2" class="align-middle p-1"><input type="time" id="horaReunion" name="horaReunion" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="9" class="align-middle"><strong>FECHA MAXIMA DE NOTIFICACION DE LA RESOLUCION</strong></td>
                     <td colspan="1" class="align-middle"><strong>(DD/MM/AA)</strong></td>
-                    <td colspan="2" class="p-1"><input type="text" class="form-control w-100 input"></td>
+                    <td colspan="2" class="p-1"><input type="date" name="notificacion" id="notificacion" class="form-control w-100 input"></td>
                 </tr>
-                {{-- <tr class="shaded">
-                    <td><input type="text" placeholder="apellido paterno"></td>
-                    <td><input type="text" placeholder="apellido materno"></td>
-                    <td colspan="2"><input type="text"></td>
-                </tr>
-                <tr class="shaded">
-                    <td>Apellido Paterno</td>
-                    <td>Apellido Materno</td>
-                    <td colspan="2">Nombres</td>
-                </tr> --}}
-                {{-- <tr>
-                    <td colspan="4"><input type="text" style="width: 100%"></td>
-                </tr> --}}
-                {{-- <tr>
-                    <td>NÚMERO DE DOCUMENTO DE IDENTIDAD (DNI, LE, CI)</td>
-                    <td colspan="3"><input type="text"></td>
-                </tr>
-                <tr>
-                    <td colspan="4">RAZÓN SOCIAL</td>
-                </tr>
-                <tr>
-                    <td colspan="4"><input type="text" style="width: 100%"></td>
-                </tr> --}}
             </table>
             </form>
         </div>
@@ -448,7 +476,7 @@
         </div>
     </div>
 </div>
-
+@include('format2.changeInspection')
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -456,7 +484,7 @@
     var tableRecords;
     $(document).ready( function () {
         tableRecords=$('.containerRecords').html();
-        $('.overlayPagina').css("display","none");
+        $('.overlayAllPage').css("display","none");
         $('.oveCard').css("display","none");
         initFv('fvclaim',rules());
         // fillReclaim();
@@ -465,7 +493,78 @@
             placeholder: 'Selecciona los meses',
             allowClear: true,
         });
+        flatpickr("#nfechaIns", {
+            dateFormat: "Y-m-d"
+        });
     });
+    // ins new
+    $('.nhoursAvailable').on('change',function(){
+        $('.nconteinerHourIns').css('display','block');
+        hourSelected = $(this).val();
+        $('#nhourInsInicio').val('')
+        $('#nhourInsFin').val('')
+    });
+    $('.ncheckAvailability').on('click',function(){
+        $('.nconteinerHourIns').css('display','none')
+        $('.nconteinerHoursAvailable').css('display','none');
+        var fecha = $('#nfechaIns').val();
+        jQuery.ajax({
+            url: "{{ url('ins/getavailable') }}",
+            method: 'get',
+            data: {dateIns:$('#nfechaIns').val()},
+            dataType: 'json',
+            success: function (r) {
+                $('#nhourIns').val('')
+                hourSelected = null;
+                if(r.data.length>0)
+                {
+                    $('.nconteinerHourIns').css('display','block');
+                    $('.nconteinerHoursAvailable').css('display','none');
+                }
+                else
+                {
+                    $('.nconteinerHourIns').css('display','none')
+                    $('.nconteinerHoursAvailable').css('display','block');
+                    ngetAvailableHours($('#nfechaIns').val());
+                }
+            },
+            error: function (xhr, status, error) {
+                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
+            }
+        });
+    });
+    function ngetAvailableHours(fecha)
+    {
+        jQuery.ajax({
+            url: "{{ url('ins/gethora') }}",
+            method: 'POST',
+            data: {dateIns:$('#nfechaIns').val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                ppp=r
+                console.log(r)
+                var horarioSelect = $('#nhoursAvailable');
+                horarioSelect.empty();
+                if (r.data.length > 0) {
+                    horarioSelect.append("<option value='0' disabled selected>Seleccione un horario de inspeccion disponible</option>");
+                    $.each(r.data, function(index, horario) {
+                        var option = $('<option></option>')
+                            .val(`${horario.tecnical}-${horario.hora_inicio}-${horario.hora_fin}`)
+                            .text(`Tecnico ${horario.tecnical} | ${horario.hora_inicio} a ${horario.hora_fin}`);
+                        horarioSelect.append(option);
+                    });
+                } else {
+                    var option = $('<option></option>').val("").text("No hay técnicos disponibles");
+                    horarioSelect.append(option);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+            }
+        });
+    }
+    // ins new
     $('.searchReclaim').on('click',function(){searchReclaim()})
     $('.searchData').on('click',function(){searchData()})
     $('.searchName').on('click',function(){searchName()})
@@ -489,17 +588,48 @@
 
             $('.containerEvidence').html('')
             according=false
+            showDateRed()
         }
+        $('.changeInspections').css('display','none')
     });
     $('.boxFile').on('click',function(){
         $(this).parent().find('input.pdfFile').click();
     });
+
     $('.pdfFile').on('change',function(){
         loadFile(this,true);
     });
     $('.cleanEvidence').on('click',function(){
         loadFile($('#evidenceFile'),false);
     });
+    function showDateRed()
+    {
+        jQuery.ajax(
+        {
+            url: "{{ url('ins/getdate') }}",
+            method: 'get',
+            data:{name:'casc'},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function(r){
+                console.log(r)
+                flatpickr("#nfechaIns", {
+                    dateFormat: "Y-m-d",
+                    onDayCreate: function (dObj, dStr, fp, dayElem) {
+                        // itera sobre las fechas que necesito resaltar
+                        r.data.forEach(function (date) {
+                            if (dayElem.dateObj.toISOString().slice(0, 10) === date)
+                                dayElem.classList.add('highlighted-day');
+                        });
+                    },
+                });
+            },
+            error: function (xhr, status, error) {
+                msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
+                $('.overlayAllPage').css("display","none")
+            }
+        });
+    }
     function loadFile(ele,ban)
     {
         if(ban)
@@ -539,7 +669,7 @@
     {
         if(isEmpty($('#userSearch').val()))
             msgImportantShow('Advertencia!','Ingrese el nombre y apellidos','warning')
-        $('.overlayPagina').css("display","flex");
+        $('.overlayAllPage').css("display","flex");
         jQuery.ajax(
         {
             url: "{{ url('format2/searchName') }}",
@@ -572,17 +702,17 @@
                 }
                 else
                     msgImportantShow(r.message,'','warning')
-                $('.overlayPagina').css("display","none");
+                $('.overlayAllPage').css("display","none");
             },
             error: function (xhr, status, error) {
                 msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
-                $('.overlayPagina').css("display","none")
+                $('.overlayAllPage').css("display","none")
             }
         });
     }
     function userSelected(ins)
     {
-        $('.overlayPagina').css("display","flex");
+        $('.overlayAllPage').css("display","flex");
         jQuery.ajax(
         {
             url: "{{ url('format2/searchIns') }}",
@@ -609,11 +739,11 @@
                 }
                 else
                     msgImportantShow(r.message,'','error')
-                $('.overlayPagina').css("display","none");
+                $('.overlayAllPage').css("display","none");
             },
             error: function (xhr, status, error) {
                 msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
-                $('.overlayPagina').css("display","none")
+                $('.overlayAllPage').css("display","none")
             }
         });
     }
@@ -624,7 +754,7 @@
             (isEmpty($('#dins').val()) && !isEmpty($('#dmzn').val()) && isEmpty($('#dlote').val())) ||
             (isEmpty($('#dins').val()) && isEmpty($('#dmzn').val()) && !isEmpty($('#dlote').val())))
             msgImportantShow('Advertencia!','Ingrese la informacion','warning')
-        $('.overlayPagina').css("display","flex");
+        $('.overlayAllPage').css("display","flex");
         jQuery.ajax(
         {
             url: "{{ url('format2/searchData') }}",
@@ -635,27 +765,87 @@
             success: function(r){
                 clearForm()
                 // 00193808
+                let arrayName,name,app,apm;
                 if(r.state)
                 {
-                    let arrayName = r.data.Clinomx.split(',')
-                    let nameAp = arrayName[0].split(' ')
-                    let name = arrayName[1].trim()
-                    $('#codRec').val(r.codRec)
-                    $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
-                    $('.dptelefono ').val(r.data.Clitelx)
-                    $('#nombres').val(name)
-                    $('#app').val(nameAp[0].trim())
-                    $('#apm').val(nameAp[1].trim())
-                    $('#numIde').val(r.data.Clilelx.trim())
-                    $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
+                    // let clinomx = String(r.data.Clinomx); // Asegurarse de que sea una cadena
+                    // let arrayName;
+                    // let name = '', app = '', apm = '';
+
+                    // if (clinomx.includes(',')) {
+                    //     // Caso con coma
+                    //     arrayName = clinomx.split(',');
+                    //     let nameAp = arrayName[0].trim().split(' ');
+                    //     name = arrayName[1].trim();
+                    //     app = nameAp[0] ? nameAp[0].trim() : '';
+                    //     apm = nameAp[1] ? nameAp[1].trim() : '';
+                    // } else {
+                    //     // Caso sin coma
+                    //     arrayName = clinomx.trim().split(' ');
+                    //     app = arrayName[0] ? arrayName[0].trim() : '';
+                    //     apm = arrayName[1] ? arrayName[1].trim() : '';
+                    //     name = arrayName.slice(2).join(' '); // El resto de la cadena
+                    // }
+
+                    // // Asignar valores a los inputs
+                    // $('#codRec').val(r.codRec);
+                    // $('#suministro').val(r.data.PreMzn + '-' + r.data.PreLote);
+                    // $('.dptelefono').val(r.data.Clitelx);
+                    // $('#nombres').val(name);
+                    // $('#app').val(app);
+                    // $('#apm').val(apm);
+                    // $('#numIde').val(r.data.Clilelx.trim());
+                    // $('.urbanizacion').val(r.data.CalTip + ' ' + r.data.CalDes);
+                    try
+                    {
+                        let clinomx = String(r.data.Clinomx); // Asegurarse de que sea una cadena
+                        let arrayName;
+                        let name = '', app = '', apm = '';
+
+                        if (clinomx.includes(',')) {
+                            // Caso con coma
+                            arrayName = clinomx.split(',');
+                            let nameAp = arrayName[0].trim().split(' ');
+                            name = arrayName[1].trim();
+                            app = nameAp[0] ? nameAp[0].trim() : '';
+                            apm = nameAp[1] ? nameAp[1].trim() : '';
+                        } else {
+                            // Caso sin coma
+                            arrayName = clinomx.trim().split(' ');
+                            app = arrayName[0] ? arrayName[0].trim() : '';
+                            apm = arrayName[1] ? arrayName[1].trim() : '';
+                            name = arrayName.slice(2).join(' '); // El resto de la cadena
+                        }
+
+                        // Asignar valores a los inputs relacionados con el nombre
+                        $('#nombres').val(name);
+                        $('#app').val(app);
+                        $('#apm').val(apm);
+
+                    } catch (error) {
+                        console.error('Error procesando el nombre:', error);
+                        // Puedes asignar valores predeterminados si ocurre un error
+                        $('#nombres').val('');
+                        $('#app').val('');
+                        $('#apm').val('');
+                    }
+
+                    // Continuar con el resto del código
+                    $('#codRec').val(r.codRec);
+                    $('#suministro').val(r.data.PreMzn + '-' + r.data.PreLote);
+                    $('.dptelefono').val(r.data.Clitelx);
+                    $('#numIde').val(r.data.Clilelx.trim());
+                    $('.urbanizacion').val(r.data.CalTip + ' ' + r.data.CalDes);
+
+
                 }
                 else
                     msgImportantShow('Usuario: '+$('#dins').val()+' '+$('#dmzn').val()+'-'+$('#dlote').val(),'No se encontro al usuario','warning')
-                $('.overlayPagina').css("display","none");
+                $('.overlayAllPage').css("display","none");
             },
             error: function (xhr, status, error) {
                 msgImportant({'state':false,'message':'Algo salio mal, porfavor contactese con el Administrador.'})
-                $('.overlayPagina').css("display","none")
+                $('.overlayAllPage').css("display","none")
             }
         });
     }
@@ -663,10 +853,13 @@
     {
         $('.input').val('');
         $('#tipoReclamo').val(0)
+        $('#meses').val(null).trigger('change');
         $('input[name="sendNotify"][value="1"]').prop('checked', true);
         $('input[name="sendBooklet"][value="1"]').prop('checked', true);
         $('input[name="sendReclaim"][value="1"]').prop('checked', true);
 
+        $('#upp,#upd,#dpp,#dpd').val('Abancay');
+        $('#dpcp').val('03001');
     }
     function fillReclaimWeb()
     {
@@ -740,12 +933,11 @@
             }
         });
     }
-    var ppp
     function searchReclaim()
     {
         if(isEmpty($('#claims').val()))
             msgImportantShow('Advertencia!','Seleccione reclamo','warning')
-        $('.overlayPagina').css("display","flex");
+        $('.overlayAllPage').css("display","flex");
         jQuery.ajax(
         {
             url: "{{ url('format2/searchReclaim') }}",
@@ -754,8 +946,6 @@
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                console.log('aki ajax')
-                ppp=r
                 clearForm()
                 // $('#idFo2').val(r.fo2.idFo2)
                 $('#codRec').val(r.fo2.codRec)
@@ -764,8 +954,6 @@
                 $('#apm').val(r.fo2.apm)
                 $('#numIde').val(r.fo2.numIde)
                 $('.dptelefono').val(r.fo2.dptelefono)
-                // $('.dptelefono').val(r.fo2.dptelefono)
-                // $('.dptelefono').val(r.fo2.dptelefono)
                 $('#dpcorreo').val(r.fo2.dpcorreo)
                 if (r.fo2.declaracionReclamo == '0')
                     $('#sendNotifyNo').prop('checked', true)
@@ -781,14 +969,15 @@
                 else
                     $('#sendReclaimSi').prop('checked', true)
                 $('#dateIns').val(r.ins.dateIns)
-                $('.hourInspection').html(r.ins.startTime+'-'+r.ins.endTime)
-                // console.log(r)
+                $('#dateIns').prop('disabled', true);
+                // $('.hourInspection').html(r.ins.startTime+'-'+r.ins.endTime)
+                $('#startTime').val(r.ins.startTime+'-'+r.ins.endTime)
+                $('#startTime').prop('disabled', true);
                 $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
                 $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
-                // dptelefono
-                // dpcorreo
-                $('.overlayPagina').css("display","none");
 
+                $('.changeInspections').css("display","inline");
+                $('.overlayAllPage').css("display","none");
                 // $.each(r.data,function(indice,fila){
                 //     $('#reclaimPortal').append("<option value='"+fila.idFo2+"'>"+fila.app+' '+fila.apm+' '+fila.nombres+"</option>");
                 // });
@@ -852,6 +1041,9 @@
             descripcion: {required: true,},
             sucursal: {required: true,},
             fundamento: {required: true,},
+            reunion: {required: true,},
+            horaReunion: {required: true,},
+            notificacion: {required: true,},
         };
     }
 </script>

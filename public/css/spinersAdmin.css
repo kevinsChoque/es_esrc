@@ -181,7 +181,7 @@ select.form-control-sm~.select2-container--default .select2-selection--single .s
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-    z-index: 1000; /* Asegura que esté encima de otros elementos */
+    z-index: 1000000; /* Asegura que esté encima de otros elementos */
     display: flex;
     justify-content: center;
     align-items: center;

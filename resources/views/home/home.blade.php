@@ -122,7 +122,7 @@
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
     $(document).ready( function () {
-        $('.overlayPagina').css("display","none");
+        $('.overlayAllPage').css("display","none");
         $('.overlayRegistros').css("display","none");
         loadMontoCotSegunTipoMes();
         cantCotEstadoMes();

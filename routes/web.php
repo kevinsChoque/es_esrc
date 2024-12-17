@@ -33,6 +33,7 @@ Route::post('pformat2/verifyData', [Pformat2Controller::class, 'actVerifyData'])
 Route::get('format2/form', [Format2Controller::class, 'actForm']);
 Route::get('format2/show', [Format2Controller::class, 'actShow']);
 Route::post('format2/saveClaim', [Format2Controller::class, 'actSaveClaim']);
+Route::post('format2/saveChangeClaim', [Format2Controller::class, 'actSaveChangeClaim']);
 Route::get('format2/list', [Format2Controller::class, 'actList']);
 Route::get('format2/edit', [Format2Controller::class, 'actEdit']);
 Route::post('format2/fillReclaimWeb', [Format2Controller::class, 'actFillReclaimWeb']);
@@ -46,9 +47,12 @@ Route::post('format2/searchIns', [Format2Controller::class, 'actSearchIns']);
 // Route::post('format2/showEvidence', [Format2Controller::class, 'actShowEvidence']);
 Route::get('format2/showEvidence/{idFo2?}',[Format2Controller::class, 'actShowEvidence'])->name('detalle-archivo');
 Route::post('format2/changeProcess',[Format2Controller::class, 'actChangeProcess']);
+Route::post('format2/loadClaim',[Format2Controller::class, 'actLoadClaim']);
 
 
 Route::get('format2/f2/{idFo2?}',[F2Controller::class, 'actF2'])->name('f2');
+
+
 
 
 
@@ -58,6 +62,12 @@ Route::get('court/start',[HomeController::class, 'actStart'])->name('formatThree
 Route::post('ins/gethora',[InspectionsController::class, 'obtenerHorariosDisponiblesPorHora']);
 Route::get('ins/getdate',[InspectionsController::class, 'obtenerFechasOcupadas']);
 Route::get('ins/getavailable',[InspectionsController::class, 'tecnicosDisponibles']);
+// Route::post('ins/changeDateInspection',[InspectionsController::class, 'actChangeDateInspection']);
+Route::get('ins/obtenerInspecciones', [InspectionsController::class, 'obtenerInspecciones']);
+Route::get('ins/obtenerHorariosDisponiblesPorMes', [InspectionsController::class, 'obtenerHorariosDisponiblesPorMes']);
+Route::post('ins/saveChangeIns',[InspectionsController::class, 'actSaveChangeIns']);
+
+
 
 // formato3
 Route::get('format3/show/{ins}',[Format3Controller::class, 'actShow']);

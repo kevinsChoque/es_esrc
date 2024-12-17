@@ -51,7 +51,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --}}
 
-
+<!-- Development -->
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -322,7 +324,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
                                         </div>
-                                        <input type="text" id="fechaIns" name="fechaIns" class="form-control flatpickr" placeholder="Selecciona una fecha">
+                                        <input type="text" id="fechaIns" name="fechaIns" class="form-control flatpickr input" placeholder="Selecciona una fecha">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary checkAvailability validate" type="button"><i class="fa fa-search"></i> Verificar disponibilidad de tecnico</button>
                                         </div>
@@ -333,7 +335,7 @@
                                     <select id="hoursAvailable" name="hoursAvailable" class="form-control hoursAvailable"></select>
                                 </div>
                                 <div class="form-group col-lg-3 conteinerHourIns" style="display: none;">
-                                    <label for="hourIns" class="m-0">Hora (rango de 2 horas): <span class="text-danger">*</span></label>
+                                    <label for="hourIns" class="m-0">Hora (rango de 2 horas): <span class="text-danger">*</span> <i class="fa fa-info-circle text-info" id="ihorasInspeccion"></i></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-calendar"></i></span>
@@ -484,10 +486,14 @@
                 });
             },
             error: function (xhr, status, error) {
-                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                // alert("Algo salio mal, porfavor contactese con el Administrador.");
+                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
             }
         });
-
+tippy('#ihorasInspeccion', {
+  arrow: true,
+  content: "El horario de inspecciones es de 8am - 12pm y de 1:30pm a 5pm",
+});
     });
     $('.hourIns').on('change', function() {
         if(hourSelected==null)
@@ -500,6 +506,7 @@
     });
     function validateHour(ele)
     {
+    console.log('llego a validateHour')
         var horaSeleccionada = $(ele).val();
         var horaSeleccionadaDate = new Date('1970-01-01T' + horaSeleccionada + ':00');
 
@@ -530,13 +537,14 @@
             }
         } else {
             // alert('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.');
-            msgImportantShow('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.','Reclamo','error')
+            msgImportantShow('Hora fuera del horario laboral. Seleccione un horario entre 8am-12pm o 1:30pm-5pm.','Reclamo','warning')
             $(ele).val(''); // Limpiar el input
         }
     }
 
     function validateHourAvailable(ele)
     {
+        console.log('llego validateHourAvailable')
         const selectedTime = new Date(`1970-01-01T${$(ele).val()}:00`);
 
         // Horarios laborales
@@ -553,7 +561,8 @@
         // const endInterval = new Date('1970-01-01T'+hourSelected.split('-')[1]+':00');  // Ejemplo de 14:00 PM
 
         // Duración mínima de 1 hora
-        const duracionMinimaMs = 60 * 60 * 1000; // 1 hora en milisegundos
+        const duracionMinimaMs = 60 * 60 * 1000 * 2; // 1 hora en milisegundos el 2 de 2 horas
+        // const duracionMinimaMs = 60 * 60 * 1000; // 1 hora en milisegundos el 2 de 2 horas
         const endSelectedTime = new Date(selectedTime.getTime() + duracionMinimaMs); // Hora de fin
 
         // Verificar si la hora ingresada está dentro del horario laboral
@@ -568,7 +577,8 @@
             console.log('Hora válida');
             // Aquí puedes agregar tu lógica si la hora es válida (enviar el formulario, etc.)
         } else {
-            alert('Hora fuera de rango permitido, fuera del intervalo seleccionado o no cumple con la duración mínima de 1 hora');
+            // alert('Hora fuera de rango permitido, fuera del intervalo seleccionado o no cumple con la duración mínima de 2 hora');
+            msgImportantShow("Hora fuera de rango permitido, fuera del intervalo seleccionado o no cumple con la duración mínima de 2 hora.",'Advertencia','warning')
             $(ele).val(''); // Limpiar el input si no es válido
         }
     }
@@ -580,6 +590,8 @@
         $('#hourIns').val('')
     });
     $('.checkAvailability').on('click',function(){
+        $('.conteinerHourIns').css('display','none')
+        $('.conteinerHoursAvailable').css('display','none');
         var fecha = $('#fechaIns').val();
         jQuery.ajax({
             url: "{{ url('ins/getavailable') }}",
@@ -605,7 +617,7 @@
                 console.log(r)
             },
             error: function (xhr, status, error) {
-                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
             }
         });
     });
@@ -846,7 +858,7 @@
 
             },
             error: function (xhr, status, error) {
-                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                msgImportantShow('Algo salio mal, porfavor contactese con el Administrador.','-','error')
                 console.log(error)
                 $('.overlayForm').css("display","none");
             }
@@ -894,9 +906,13 @@
         $('.input').val('');
         $('#tipo').val('0');
         $('#meses').val('').change()
+        $('.conteinerHourIns').css('display','none')
+        $('.conteinerHoursAvailable').css('display','none');
         loadFile($('#fileEvidence'),false);
         loadFile($('#fileDocPer'),false);
         loadFile($('#fileCarPod'),false);
+        $('.validate').attr('disabled',true)
+
     }
 </script>
 </body>

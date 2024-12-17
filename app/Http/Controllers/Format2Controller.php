@@ -53,7 +53,7 @@ class Format2Controller extends Controller
             }
             $directoryPath = storage_path('app/public/' . $pathFile);
             if (!file_exists($directoryPath))
-                mkdir($directoryPath, 0755, true);
+                mkdir($directoryPath, 0777, true);
             $outputPath = $directoryPath . '/' . $nameFile;
             $pdf->Output('F', $outputPath);
             return true;
@@ -65,6 +65,7 @@ class Format2Controller extends Controller
 
     public function actSavePortal(Request $r)
     {
+        // dd($this->validateUploadedFiles($r));
         if (!$this->validateUserRegistration($r))
             return response()->json(['state' => false, 'message' => 'Usuario no válido o reclamo en proceso.']);
         if (!$this->validateUploadedFiles($r))
@@ -153,7 +154,7 @@ class Format2Controller extends Controller
     private function validateUserRegistration(Request $r): bool
     {
         $conSql = $this->connectionSql();
-        $existReclaim = TFormat2::where('pnumIns', $r->ins)->where('process', '1')->exists();
+        $existReclaim = TFormat2::where('pnumIns', $r->ins)->where('process', '<', '9')->exists();
         if ($conSql)
         {
             $stmt = sqlsrv_query($conSql, "SELECT * FROM CONEXION WHERE InscriNro = ?", [$r->ins]);
@@ -165,7 +166,7 @@ class Format2Controller extends Controller
     }
     private function validateUploadedFiles(Request $r): bool
     {
-        $fileValidations = $r->validateCarPod
+        $fileValidations = $r->validateCarPod == 'true'
         ?[['file' => 'fileDocPer'],['file' => 'fileCarPod'],['file' => 'fileEvidence']]
         :[['file' => 'fileDocPer'],['file' => 'fileEvidence']];
         foreach ($fileValidations as $validation)
@@ -216,7 +217,11 @@ class Format2Controller extends Controller
 
     private function scheduleInspection(Request $request, string $idFo2,string $codRecNum)
     {
-        $ids = DB::table('tecnical')->pluck('idTec')->toArray();
+        // $ids = DB::table('tecnical')->pluck('idTec')->toArray();
+        $ids = array_map(function ($tecnico) {
+            return $tecnico->idTec; // Cambia 'idTec' por el nombre real del campo de ID si es diferente
+        },session('tecnicosDisponibles'));
+        // dd($ids);
         $selectedTechnician = $request->hoursAvailable
             ? explode('-', $request->hoursAvailable)[0]
             : $ids[array_rand($ids)];
@@ -239,9 +244,8 @@ class Format2Controller extends Controller
         else
             return $this->accordingNew($r);
     }
-    private function accordingWeb($r)
+    private function accordingWeb_last($r)
     {
-        // dd($r->all());
         // guardar archivo combinado
         $fo2 = TFormat2::where('codRec',$r->codRec)->first();
         $rutaArchivoExistente = storage_path('app/public/'.$fo2->ppdfFile);
@@ -277,35 +281,88 @@ class Format2Controller extends Controller
 
         $fo2 = TFormat2::where('codRec', $r->codRec)->first();
         $r->merge([
-            'codRec' => $r->codRec,
+            // 'codRec' => $r->codRec,
             'numSum' => $r->suministro,
-            'nombres' => $r->nombres,
-            'app' => $r->app,
-            'apm' => $r->apm,
-            'numIde' => $r->numIde,
-            'upcjb' => $r->upcjb,
-            'upn' => $r->upn,
-            'upmz' => $r->upmz,
-            'uplote' => $r->uplote,
-            'upub' => $r->upub,
-            'upp' => $r->upp,
-            'upd' => $r->upd,
-            'dpcja' => $r->dpcja,
-            'dpn' => $r->dpn,
-            'dpmz' => $r->dpmz,
-            'dplote' => $r->dplote,
-            'dpub' => $r->dpub,
-            'dpp' => $r->dpp,
-            'dpd' => $r->dpd,
-            'dpcp' => $r->dpcp,
-            'dptelefono' => $r->dptelefono,
-            'dpcorreo' => $r->dpcorreo,
+            // 'nombres' => $r->nombres,
+            // 'app' => $r->app,
+            // 'apm' => $r->apm,
+            // 'numIde' => $r->numIde,
+            // 'upcjb' => $r->upcjb,
+            // 'upn' => $r->upn,
+            // 'upmz' => $r->upmz,
+            // 'uplote' => $r->uplote,
+            // 'upub' => $r->upub,
+            // 'upp' => $r->upp,
+            // 'upd' => $r->upd,
+            // 'dpcja' => $r->dpcja,
+            // 'dpn' => $r->dpn,
+            // 'dpmz' => $r->dpmz,
+            // 'dplote' => $r->dplote,
+            // 'dpub' => $r->dpub,
+            // 'dpp' => $r->dpp,
+            // 'dpd' => $r->dpd,
+            // 'dpcp' => $r->dpcp,
+            // 'dptelefono' => $r->dptelefono,
+            // 'dpcorreo' => $r->dpcorreo,
             'declaracionReclamo' => $r->sendNotify,
-            'tipoReclamo' => $r->tipoReclamo,
-            'descripcion' => $r->descripcion,
-            'sucursal' => $r->sucursal,
-            'atendido' => $r->atendido,
-            'fundamento' => $r->fundamento,
+            // 'tipoReclamo' => $r->tipoReclamo,
+            // 'descripcion' => $r->descripcion,
+            // 'sucursal' => $r->sucursal,
+            // 'atendido' => $r->atendido,
+            // 'fundamento' => $r->fundamento,
+            'cartilla' => $r->sendBooklet,
+            'declaracion' => $r->sendReclaim,
+            'verify' => 1,
+            'dateReg' => Carbon::now(),
+        ]);
+        $fo2->fill($r->all());
+        if ($fo2->save())
+            return response()->json(['state' => true, 'message' => 'Se actualizó correctamente']);
+        return response()->json(['state' => false, 'message' => 'Ocurrió un problema, por favor contáctese con el administrador.']);
+    }
+    private function accordingWeb($r)
+    {
+        $fo2 = TFormat2::where('codRec', $r->codRec)->first();
+        if ($r->hasFile('evidenceFile'))
+        {
+            $rutaArchivoExistente = storage_path('app/public/' . $fo2->ppdfFile);
+            $archivoFormulario = $r->file('evidenceFile');
+            $pdf = new Fpdi();
+            function agregarPaginas($pdf, $rutaArchivo)
+            {
+                $totalPaginas = $pdf->setSourceFile($rutaArchivo);
+                for ($pagina = 1; $pagina <= $totalPaginas; $pagina++) {
+                    $tplIdx = $pdf->importPage($pagina);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($tplIdx);
+                }
+            }
+            // Agregar páginas del archivo existente (si existe)
+            if (file_exists($rutaArchivoExistente))
+                agregarPaginas($pdf, $rutaArchivoExistente);
+            // Agregar páginas del archivo recibido
+            agregarPaginas($pdf, $archivoFormulario->path());
+            // Guardar el PDF combinado
+            $nombreArchivoCombinado = $r->codRec . '_evidencias.pdf';
+            $rutaArchivoCombinado = 'public/reclamos/' . $r->codRec . '/' . $nombreArchivoCombinado;
+            // Verificar y crear el directorio si no existe
+            $directorioArchivo = storage_path('app/' . dirname($rutaArchivoCombinado));
+            if (!file_exists($directorioArchivo)) {
+                mkdir($directorioArchivo, 0755, true);
+            }
+            // Guarda el PDF combinado en el almacenamiento
+            $tempFilePath = storage_path('app/' . $rutaArchivoCombinado);
+            $pdf->Output($tempFilePath, 'F');
+            if (!file_exists($tempFilePath)) {
+                return response()->json(['state' => false, 'message' => 'No fue posible guardar el archivo combinado.']);
+            }
+            // Actualizar la ruta del archivo combinado en el modelo
+            $fo2->ppdfFile = str_replace('public/', '', $rutaArchivoCombinado);
+        }
+        // Rellenar y actualizar los datos del registro
+        $r->merge([
+            'numSum' => $r->suministro,
+            'declaracionReclamo' => $r->sendNotify,
             'cartilla' => $r->sendBooklet,
             'declaracion' => $r->sendReclaim,
             'verify' => 1,
@@ -342,72 +399,129 @@ class Format2Controller extends Controller
 
         $r->merge([
             'pnumIns' => $ins,
-            'codRec' => $r->codRec,
+            // 'codRec' => $r->codRec,
             'numSum' => $r->suministro,
-            'nombres' => $r->nombres,
-            'app' => $r->app,
-            'apm' => $r->apm,
-            'numIde' => $r->numIde,
-            'razonSocial' => $r->razonSocial,
-            'upcjb' => $r->upcjb,
-            'upn' => $r->upn,
-            'upmz' => $r->upmz,
-            'uplote' => $r->uplote,
-            'upub' => $r->upub,
-            'upp' => $r->upp,
-            'upd' => $r->upd,
-            'dpcja' => $r->dpcja,
-            'dpn' => $r->dpn,
-            'dpmz' => $r->dpmz,
-            'dplote' => $r->dplote,
-            'dpub' => $r->dpub,
-            'dpp' => $r->dpp,
-            'dpd' => $r->dpd,
-            'dpcp' => $r->dpcp,
-            'dptelefono' => $r->dptelefono,
-            'dpcorreo' => $r->dpcorreo,
+            // 'nombres' => $r->nombres,
+            // 'app' => $r->app,
+            // 'apm' => $r->apm,
+            // 'numIde' => $r->numIde,
+            // 'razonSocial' => $r->razonSocial,
+            // 'upcjb' => $r->upcjb,
+            // 'upn' => $r->upn,
+            // 'upmz' => $r->upmz,
+            // 'uplote' => $r->uplote,
+            // 'upub' => $r->upub,
+            // 'upp' => $r->upp,
+            // 'upd' => $r->upd,
+            // 'dpcja' => $r->dpcja,
+            // 'dpn' => $r->dpn,
+            // 'dpmz' => $r->dpmz,
+            // 'dplote' => $r->dplote,
+            // 'dpub' => $r->dpub,
+            // 'dpp' => $r->dpp,
+            // 'dpd' => $r->dpd,
+            // 'dpcp' => $r->dpcp,
+            // 'dptelefono' => $r->dptelefono,
+            // 'dpcorreo' => $r->dpcorreo,
             'declaracionReclamo' => $r->sendNotify,
             'pmeses' => implode(",",$r->meses),
-            'tipoReclamo' => $r->tipoReclamo,
-            'descripcion' => $r->descripcion,
-            'sucursal' => $r->sucursal,
-            'atendido' => $r->atendido,
-            'fundamento' => $r->fundamento,
+            // 'tipoReclamo' => $r->tipoReclamo,
+            // 'descripcion' => $r->descripcion,
+            // 'sucursal' => $r->sucursal,
+            // 'atendido' => $r->atendido,
+            // 'fundamento' => $r->fundamento,
             'cartilla' => $r->sendBooklet,
             'declaracion' => $r->sendReclaim,
+            // 'notificacion' => $r->notificacion,
             'channel' => 'new',
             'verify' => 1,
+            'process' => 1,
             'dateReg' => Carbon::now(),
         ]);
         $tf2 = TFormat2::create($r->all());
         if($tf2)
         {
-            $codRec = explode('-',$r->codRec)[1];
-            if($this->updateNumberClaim($codRec))
+            $inspection = new TIns([
+                'idFo2' => $tf2->idFo2,
+                'idTec' => 1,
+                'dateIns' => Carbon::now(),
+                'startTime' => '09:18:00',
+                'endTime' => '11:18:00',
+            ]);
+            if ($inspection->save())
             {
-                if ($r->hasFile('evidenceFile'))
+                $codRec = explode('-',$r->codRec)[1];
+                if($this->updateNumberClaim($codRec))
                 {
-                    if ($r->file('evidenceFile')->getClientMimeType() !== 'application/pdf')
-                        return response()->json(['state' => false, 'message' => 'Se guardo el reclamo pero la evidencia no es un archivo valido.']);
-                    $nameFile = $r->codRec . '_' . 'evidencias.'.$r->file('evidenceFile')->getClientOriginalExtension();
-                    $pathFile = $this->saveFileReg($r, 'evidenceFile', $nameFile, $r->codRec);
-                    if ($pathFile)
+                    if ($r->hasFile('evidenceFile'))
                     {
-                        if($tf2->update(['ppdfFile' => $pathFile]))
-                            return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
+                        if ($r->file('evidenceFile')->getClientMimeType() !== 'application/pdf')
+                            return response()->json(['state' => false, 'message' => 'Se guardo el reclamo pero la evidencia no es un archivo valido.']);
+                        $nameFile = $r->codRec . '_' . 'evidencias.'.$r->file('evidenceFile')->getClientOriginalExtension();
+                        $pathFile = $this->saveFileReg($r, 'evidenceFile', $nameFile, $r->codRec);
+                        if ($pathFile)
+                        {
+                            if($tf2->update(['ppdfFile' => $pathFile]))
+                                return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
+                            else
+                                return response()->json(['state' => false, 'message' => 'Se guardo correctamente, pero no pudo guardar la ruta del archivo.']);
+                        }
                         else
-                            return response()->json(['state' => false, 'message' => 'Se guardo correctamente, pero no pudo guardar la ruta del archivo.']);
+                            return response()->json(['state' => false, 'message' => 'No fue posible guardar el archivo de la evidencia.']);
                     }
-                    else
-                        return response()->json(['state' => false, 'message' => 'No fue posible guardar el archivo de la evidencia.']);
+                    return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
                 }
-                return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente']);
+                else
+                    return response()->json(['state' => false, 'message' => 'No fue posible actualizar el numero de reclamo.']);
             }
             else
-                return response()->json(['state' => false, 'message' => 'No fue posible actualizar el numero de reclamo.']);
+                return response()->json(['state' => false, 'message' => 'No fue posible guardar la fecha de INSPECCION.']);
         }
         return response()->json(['state' => false, 'message' => 'Ocurrió un problema, por favor contáctese con el administrador.']);
     }
+
+    public function actSaveChangeClaim(Request $r)
+    {
+        DB::beginTransaction(); // Iniciar la transacción
+        try {
+            $archivo1 = $r->file('evidenceFileReg');
+            $archivo2 = $r->file('evidenceFile');
+            if($archivo2)
+            {
+                $rutaArchivoCombinado = null;
+                if ($archivo1)
+                {
+                    $nombreArchivoCombinado = $r->codRec . '_evidencias.pdf';
+                    $rutaArchivoCombinado = 'reclamos/' . $r->codRec;
+                    $combineSuccess = self::combinePDFs([$archivo1, $archivo2], $rutaArchivoCombinado, $nombreArchivoCombinado);
+                    if (!$combineSuccess)
+                        throw new \Exception('No fue posible guardar el archivo combinado.');
+                }
+                else
+                    throw new \Exception('Ocurrio un error con el archivo del registro.');
+            }
+            $fo2 = TFormat2::where('codRec', $r->codRec)->first();
+            if (!$fo2)
+                throw new \Exception('Registro no encontrado.');
+            $r->merge([
+                'codRec' => $r->codRec,
+                'numSum' => $r->suministro,
+                'declaracionReclamo' => $r->sendNotify,
+                'cartilla' => $r->sendBooklet,
+                'declaracion' => $r->sendReclaim,
+                'verify' => 1,
+                'dateReg' => Carbon::now(),
+            ]);
+            $fo2->fill($r->all());
+            $fo2->save();
+            DB::commit();
+            return response()->json(['state' => true, 'message' => 'Se actualizó correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
     public function actSearchReclaim(Request $r)
     {
         $conSql = $this->connectionSql();
@@ -531,7 +645,7 @@ class Format2Controller extends Controller
         // $list = TFormat2::all();
         $list = TFormat2::join('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
             ->select('format2.*', 'inspections.*')
-            // ->where('process','1')
+            ->orderBy('format2.codRec','desc')
             ->get();
 
         return response()->json(['data' => $list]);
@@ -547,7 +661,9 @@ class Format2Controller extends Controller
     }
     public function actShowEvidence($idFo2)
     {
+
         $rec = TFormat2::find($idFo2);
+        // dd($rec->ppdfFile);
         $rutaArchivo = storage_path('app/public/'.$rec->ppdfFile);
         if (file_exists($rutaArchivo))
             return response()->file($rutaArchivo);
@@ -563,6 +679,38 @@ class Format2Controller extends Controller
         else
             return response()->json(['state'=>false,'message'=>'Error al cambiar el proceso']);
     }
+    // public function actLoadClaim_old(Request $r)
+    // {
+    //     $f2 = TFormat2::where('codRec',$r->codRec)->first();
+    //     $ins = TIns::where('idFo2',$f2->idFo2)->first();
+    //     if($f2 && $ins)
+    //         return response()->json(['state'=>true,'data'=>$f2, 'ins' => $ins]);
+    //     else
+    //         return response()->json(['state'=>false,'message'=>'Ocurrio un error, porfavor contactese con el administrador.']);
+    // }
+    public function actLoadClaim(Request $r)
+    {
+        $f2 = TFormat2::where('codRec', $r->codRec)->first();
+        $ins = TIns::where('idFo2', $f2->idFo2)->first();
+        $pdfBase64 = null;
+
+        if ($f2 && $f2->ppdfFile && file_exists(storage_path('app/public/' . $f2->ppdfFile))) {
+            $pdfPath = storage_path('app/public/' . $f2->ppdfFile);
+            $pdfBase64 = base64_encode(file_get_contents($pdfPath));
+        }
+
+        if ($f2 && $ins) {
+            return response()->json([
+                'state' => true,
+                'data' => $f2,
+                'ins' => $ins,
+                'pdf' => $pdfBase64,
+            ]);
+        } else {
+            return response()->json(['state' => false, 'message' => 'Ocurrió un error, por favor contacte al administrador.']);
+        }
+    }
+
 
 
 

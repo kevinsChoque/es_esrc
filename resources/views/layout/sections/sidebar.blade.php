@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{asset('/')}}" class="brand-link">
-        <img src="{{asset('img/admin/funcionarios/icono.jpg')}}" alt="esrc" class="brand-image img-circle elevation-3" style="opacity: .8">
+        {{-- <img src="{{asset('img/admin/funcionarios/icono.jpg')}}" alt="esrc" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
         <span class="brand-text font-weight-light">esrc</span>
     </a>
     <div class="sidebar">

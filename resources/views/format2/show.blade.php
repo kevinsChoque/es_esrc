@@ -85,7 +85,7 @@
         // cascç
         tableRecords=$('.containerRecords').html();
         fillRecords();
-        $('.overlayPagina').css("display","none");
+        $('.overlayAllPage').css("display","none");
     });
     function fillRecords()
     {
@@ -121,7 +121,7 @@
                         options = r.data[i].process >= '2'?
                             '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>':
                             '<button type="button" class="btn text-info" title="Formato 3" onclick="format3(\''+r.data[i].pnumIns+'\');"><i class="fa fa-file-pdf"></i></button>'+
-                            '<button type="button" class="btn text-info" title="Editar registro" onclick="edit(\''+r.data[i].pnumIns+'\');"><i class="fa fa-edit"></i></button>'+
+                            '<button type="button" class="btn text-info" title="Editar registro" onclick="edit(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'+
                             '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
                     }
                     else
@@ -231,10 +231,11 @@
         // });
         window.open('{{ url('format3/show') }}/' + ins, '_blank');
     }
-    function edit(ins)
+    function edit(codRec)
     {
-        localStorage.setItem("ins",ins);
-        window.open('{{ url('format2/edit') }}');
+        localStorage.setItem("codRec",codRec);
+        // window.open('{{ url('format2/edit') }}');
+        window.location.href = '{{ url('format2/edit') }}';
     }
 </script>
 

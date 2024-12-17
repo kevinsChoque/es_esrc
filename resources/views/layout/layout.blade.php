@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>EMUSAP</title>
     <!-- icono de la pagina -->
-    <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
+    {{-- <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon"> --}}
     <!-- jQuery -->
     <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
     <!-- Google Font: Source Sans Pro -->
@@ -32,6 +32,11 @@
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
     <!-- libreria para fechas -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.css')}}">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -65,10 +70,23 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="overlayPagina">
+                        {{-- <div class="overlayPagina">
                             <div class="loadingio-spinner-spin-i3d1hxbhik m-auto">
                                 <div class="ldio-onxyanc9oyh">
                                     <div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div>
+                                </div>
+                            </div>
+                        </div> --}}
+                        {{-- new overlay --}}
+                        <div class="overlayAllPage">
+                            <div class="overlay-content">
+                                {{-- <h2>Este es el overlay</h2>
+                                <p>Puedes añadir aquí cualquier contenido.</p> --}}
+                                {{-- <button onclick="closeOverlay()">Cerrar</button> --}}
+                                <div class="loadingio-spinner-spin-i3d1hxbhik m-auto">
+                                    <div class="ldio-onxyanc9oyh">
+                                        <div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,8 +140,8 @@
 <script src="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <script>
 $(document).ready( function () {
-    sideBarCollapse();
-    sideBarActive();
+    // sideBarCollapse();
+    // sideBarActive();
 } );
 </script>
 </body>

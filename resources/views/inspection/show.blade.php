@@ -233,7 +233,8 @@
         // cascç
         tableRecords=$('.containerRecords').html();
         fillRecords();
-        $('.overlayPagina').css("display","none");
+        // $('.overlayPagina').css("display","none");
+        $('.overlayAllPage').css("display","none");
     });
     $('.saveF5').on('click',function(){
         saveF5();
