@@ -25,7 +25,8 @@ class InspectionController extends Controller
             ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
             ->leftjoin('format5', 'format5.idFo2', '=', 'format2.idFo2')
             ->leftjoin('format6', 'format6.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','inspections.*','format5.idFo5','format6.idFo6')
+            ->leftjoin('format7', 'format7.idFo2', '=', 'format2.idFo2')
+            ->select('format2.*','inspections.*','format5.idFo5','format6.idFo6','format7.idFo7')
             ->get();
 // dd('all');
         return response()->json(['data' => $list]);

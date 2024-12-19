@@ -6,7 +6,7 @@
 <div class="content-header pb-0 pt-2">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6"><h1 class="m-0">Conciliaciones</h1></div>
+            <div class="col-sm-6"><h1 class="m-0">Resoluciones</h1></div>
             <div class="col-sm-6">
                 <a href="{{url('format2/form')}}" class="btn btn-success float-right"><i class="fa fa-plus"></i> Nueva reclamo</a>
                 <ol class="breadcrumb float-sm-right" style="display: none;">
@@ -43,7 +43,6 @@
                                         <th class="text-center" data-priority="4">Tipo</th>
                                         <th class="text-center" data-priority="4">Inspeccion</th>
                                         <th class="text-center" data-priority="4">Desde</th>
-                                        <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
                                 </thead>
@@ -58,7 +57,6 @@
                                         <th class="text-center" data-priority="4">Tipo</th>
                                         <th class="text-center" data-priority="4">Inspeccion</th>
                                         <th class="text-center" data-priority="4">Desde</th>
-                                        <th class="text-center" data-priority="4">Formatos</th>
                                         <th class="text-center" data-priority="1">Opc.</th>
                                     </tr>
                                 </tfoot>
@@ -350,7 +348,7 @@
         $('.containerRecords').css('display','block');
         jQuery.ajax(
         {
-            url: "{{ url('format4/list') }}",
+            url: "{{ url('desicion/list') }}",
             method: 'get',
             success: function(r)
             {
@@ -368,7 +366,6 @@
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
                     inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
 
-                    iconoPdf = r.data[i].idFo4===null?'':'<button class="btn btn-secondary py-0 px-1" onclick="download()"><i class="fa fa-file-pdf"></i> F4</button>';
                     iconoF4 = r.data[i].idFo4===null?'plus':'file';
                     iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
                     change = r.data[i].f4 == '1'?
@@ -382,18 +379,14 @@
                         '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
                         '<td class="align-middle">' + inspection +'</td>' +
                         '<td class="align-middle text-center">'+
-                            '<span class="badge badge-info">Conciliacion</span>'+change+
-                        '</td>' +
-                        '<td class="align-middle text-center">' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F2</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
-                            iconoPdf +
+                            '<span class="badge badge-info">Finalizar</span>'+change+
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
-                                '<button type="button" class="btn text-info f4" title="Formato 4" onclick="mf4(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF4+'"></i> F4</button>'+
-                                iconLoad +
+                                // '<button type="button" class="btn text-info f4" title="Formato 4" onclick="mf4(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF4+'"></i> F4</button>'+
+                                // iconLoad +
+                                '<button type="button" class="btn text-info" title="Descargar resolucion"><i class="fa fa-download"></i></button>'+
+                                '<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
                             '</div>'+
                         '</td>' +
                         '</tr>';
@@ -404,53 +397,90 @@
             }
         });
     }
+    // function changeProcess(codRec)
+    // {
+    //     event.preventDefault();
+
+    //     Swal.fire({
+    //         title: "El reclamo se declara como:",
+    //         input: "select",
+    //         inputOptions: {
+    //             fundado: "Reclamo FUNDADO",
+    //             infundado: "Reclamo INFUNDADO",
+    //             reconsideracion: "Solicito RECONSIDERACION",
+    //         },
+    //         inputPlaceholder: "Seleccione estado del reclamo",
+    //         showCancelButton: true,
+    //         inputValidator: (value) => {
+    //             return new Promise((resolve) =>
+    //             {
+    //                 if (value === "fundado" || value === "infundado" || value === "reconsideracion")
+    //                 {
+    //                     // alert('send')
+    //                     $(".containerSpinner").removeClass("d-none");
+    //                     $(".containerSpinner").addClass("d-flex");
+    //                     jQuery.ajax({
+    //                         url: "{{ url('format4/changeProcess') }}",
+    //                         method: 'POST',
+    //                         data: {state: value, codRec:codRec},
+    //                         dataType: 'json',
+    //                         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+    //                         success: function (r) {
+    //                             console.log(r)
+    //                             msgImportant(r)
+    //                             // buildTable();
+    //                             // fillRecords();
+    //                         },
+    //                         error: function (xhr, status, error) {alert("Algo salio mal, porfavor contactese con el Administrador.");}
+    //                     });
+    //                     Swal.fire(`El reclamo se cambio a: un estado`);
+    //                 }
+    //                 else
+    //                     resolve("Seleccione un estado del reclamo");
+    //             });
+    //         }
+    //     });
+    //     // if (fruit)
+    //     // {
+    //     //     Swal.fire(`El reclamo se cambio a: ${fruit}`);
+    //     // }
+    // }
     function changeProcess(codRec)
     {
         event.preventDefault();
-
         Swal.fire({
-            title: "El reclamo se declara como:",
-            input: "select",
-            inputOptions: {
-                fundado: "Reclamo FUNDADO",
-                infundado: "Reclamo INFUNDADO",
-                reconsideracion: "Solicito RECONSIDERACION",
-            },
-            inputPlaceholder: "Seleccione estado del reclamo",
-            showCancelButton: true,
-            inputValidator: (value) => {
-                return new Promise((resolve) =>
-                {
-                    if (value === "fundado" || value === "infundado" || value === "reconsideracion")
-                    {
-                        // alert('send')
-                        $(".containerSpinner").removeClass("d-none");
-                        $(".containerSpinner").addClass("d-flex");
-                        jQuery.ajax({
-                            url: "{{ url('format4/changeProcess') }}",
-                            method: 'POST',
-                            data: {stateConciliation: value, codRec:codRec},
-                            dataType: 'json',
-                            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                            success: function (r) {
-                                console.log(r)
-                                msgImportant(r)
-                                // buildTable();
-                                // fillRecords();
-                            },
-                            error: function (xhr, status, error) {alert("Algo salio mal, porfavor contactese con el Administrador.");}
-                        });
-                        Swal.fire(`El reclamo se cambio a: un estado`);
+        title: "Esta seguro de finalizar el proceso de reclamo?",
+        text: "Confirme la accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, confirmar"
+        }).then((result) => {
+            if (result.isConfirmed)
+            {
+                $(".containerSpinner").removeClass("d-none");
+                $(".containerSpinner").addClass("d-flex");
+                jQuery.ajax({
+                    url: "{{ url('desicion/changeProcess') }}",
+                    method: 'POST',
+                    data: {codRec: codRec},
+                    dataType: 'json',
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    success: function (r) {
+                        console.log(r)
+                        msgImportant(r)
+                        buildTable();
+                        fillRecords();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Algo salio mal, porfavor contactese con el Administrador.");
                     }
-                    else
-                        resolve("Seleccione un estado del reclamo");
                 });
             }
+            // else
+                // $(ele).prop('checked', false);
         });
-        // if (fruit)
-        // {
-        //     Swal.fire(`El reclamo se cambio a: ${fruit}`);
-        // }
     }
     function download()
     {

@@ -23,6 +23,7 @@ class TFormat4 extends Model
         'disagreement',
         'subsistes',
         'url',
+        'stateConciliation',
     ];
 }
 

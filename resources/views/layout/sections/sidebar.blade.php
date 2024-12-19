@@ -60,10 +60,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{url('desicion/show')}}" class="nav-link sba7">
+                        <i class="nav-icon fas fa-handshake"></i><p>Resoluciones</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="javascript:void(0)" class="nav-link logout">
                         <i class="nav-icon fas fa-sign-out-alt"></i><p>cerrar sesion</p>
                     </a>
                 </li>
+
             </ul>
         </nav>
     </div>

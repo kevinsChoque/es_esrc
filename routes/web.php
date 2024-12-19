@@ -11,8 +11,12 @@ use App\Http\Controllers\Format3Controller;
 use App\Http\Controllers\InspectionsController;
 use App\Http\Controllers\InspectionController;
 use App\Http\Controllers\Format5Controller;
+use App\Http\Controllers\F5Controller;
 use App\Http\Controllers\Format6Controller;
+use App\Http\Controllers\F6Controller;
 use App\Http\Controllers\Format4Controller;
+use App\Http\Controllers\F7Controller;
+use App\Http\Controllers\DesicionController;
 
 // portal
 Route::get('/', [PortalController::class, 'actReclamoComercial']);
@@ -82,11 +86,13 @@ Route::post('inspection/changeProcess', [InspectionController::class, 'actChange
 Route::post('format5/save', [Format5Controller::class, 'actSave']);
 Route::post('format5/f5', [Format5Controller::class, 'actF5']);
 Route::get('format5/file/{idFo5}', [Format5Controller::class, 'actFile'])->name('format5-file');
+Route::get('format5/f5/{idFo2?}',[F5Controller::class, 'actF5'])->name('f5');
 
 // formato 6
 Route::post('format6/save', [Format6Controller::class, 'actSave']);
 Route::post('format6/f6', [Format6Controller::class, 'actF6']);
 Route::get('format6/file/{idFo6}', [Format6Controller::class, 'actFile'])->name('format6-file');
+Route::get('format6/f6/{idFo2?}',[F6Controller::class, 'actF6'])->name('f6');
 // formato 4 acta de conciliacion
 
 Route::get('format4/show',[Format4Controller::class, 'actShow']);
@@ -96,4 +102,9 @@ Route::post('format4/f4', [Format4Controller::class, 'actF4']);
 Route::post('format4/saveFile', [Format4Controller::class, 'actSaveFile']);
 Route::get('format4/file/{idFo4}', [Format4Controller::class, 'actFile'])->name('format4-file');
 Route::post('format4/changeProcess', [Format4Controller::class, 'actChangeProcess']);
-
+// formato 7
+Route::get('format7/f7/{idFo2?}',[F7Controller::class, 'actF7'])->name('f7');
+// formato 10 resoluciones
+Route::get('desicion/show',[DesicionController::class, 'actShow']);
+Route::get('desicion/list', [DesicionController::class, 'actList']);
+Route::post('desicion/changeProcess', [DesicionController::class, 'actChangeProcess']);

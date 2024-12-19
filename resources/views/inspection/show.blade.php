@@ -223,6 +223,81 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="mf7" tabindex="-1" role="dialog" aria-labelledby="mf7Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="overlay olF7" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="mf7Label">FORMATO 7: Solicitud de contrastacion de medidor de agua potable</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fvf7">
+                    <input type="hidden" class="f7idFo2" id="f7idFo2">
+                    <input type="hidden" class="f7ins" id="f7ins">
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label for="f7date" class="m-0">Fecha de la inspeccion: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-hashtag"></i></span>
+                                </div>
+                                <input type="date" name="f7date" id="f7date" class="form-control input">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="f7hora" class="m-0">Hora: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-clock"></i></span>
+                                </div>
+                                <input type="time" name="f7hora" id="f7hora" class="form-control input">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label for="f7obs" class="m-0">Observaciones: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-arrow-right"></i></span>
+                                </div>
+                                <textarea name="f7obs" id="f7obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
+                            </div>
+                        </div>
+                        {{-- <div class="px-1 conteinerMessageF7">
+                            <div class="row">
+                                <div class="col-lg-9 mb-1">
+                                    <div class="callout callout-warning py-2">
+                                        <h5 class="font-weight-bold">Ten en cuenta!</h5>
+                                        <p>Este formulario es para resumir la solicitud de contrastacion, en caso de actualizar el formato 7, subo otro archivo el cual reemplazara el actual.</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mb-1 d-flex justify-content-center align-items-center">
+                                    <a class="btn btn-link py-1 font-weight-bold linkFileF7" target="_blank" href=""><i class="fa fa-file"></i> Formato 7</a>
+                                </div>
+                            </div>
+                        </div> --}}
+                        {{-- <div class="col-lg-12 mb-3">
+                            <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE FORMATO 7</h5>
+                                <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                            </div>
+                            <input type="file" id="f7file" name="f7file" class="pdfFile" style="display: none;" data-name="ARCHIVO DE FORMATO 7">
+                        </div> --}}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary saveF7">Guardar formato 7</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -356,6 +431,7 @@
                 let iconoF5;
                 let iconoF6;
                 let change;
+                let iconoF7;
                 for (var i = 0; i < r.data.length; i++)
                 {
                     locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
@@ -363,6 +439,7 @@
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
                     iconoF5 = r.data[i].idFo5===null?'plus':'file';
                     iconoF6 = r.data[i].idFo6===null?'plus':'file';
+                    iconoF7 = r.data[i].idFo7===null?'plus':'file';
 
                     change = r.data[i].f5 == '1' && r.data[i].f6 == '1'?
                         '<button type="button" class="btn text-info py-0 pr-0" title="Enviar a conciliacion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
@@ -389,13 +466,19 @@
                             '<span class="badge badge-info">Investigacion</span>'+change+
                         '</td>'+
                         '<td class="align-middle text-center">' +
-                            '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
-                            '<button class="btn btn-secondary py-0 px-1"><i class="fa fa-file-pdf"></i> F6</button>' +
+                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f5') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F5</a>' +
+                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f6') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F6</a>' +
+                            '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f7') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F7</a>' +
+                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
+                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
+                            // '<button class="btn btn-secondary py-0 px-1"><i class="fa fa-file-pdf"></i> F7</button>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
+
                                 '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
                                 '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
+                                '<button type="button" class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
                                 // options+
                             '</div>'+
                         '</td>' +
@@ -529,6 +612,43 @@
                 $('.overlayForm').css("display","none");
             }
         });
+    }
+    function mf7(idFo2,ins)
+    {
+        $('#mf7').modal('show')
+        // cleanF7();
+        // jQuery.ajax({
+        //     url: "{{ url('format7/f7') }}",
+        //     method: 'POST',
+        //     data: {idFo2:idFo2,ins:ins},
+        //     dataType: 'json',
+        //     headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        //     success: function (r) {
+        //         console.log('akita');
+        //         console.log(r)
+        //         $('.conteinerMessageF6').css('display','none');
+        //         if(r.data!==null)
+        //         {
+        //             $('#f6date').val(r.data.date);
+        //             $('#f6hora').val(r.data.hour);
+        //             $('#f6obs').val(r.data.obs);
+        //             $('.conteinerMessageF6').css('display','block');
+        //             // let href = $('.linkFileF5').attr("href");
+        //             let href = "{{ url('format6/file') }}"
+        //             $('.linkFileF6').attr("href",href+"/"+r.data.idFo6)
+        //             // alert(r.data.url)
+
+        //         }
+        //         $('#mf6').modal('show')
+        //         $('#f6idFo2').val(idFo2)
+        //         $('#f6ins').val(ins)
+        //     },
+        //     error: function (xhr, status, error) {
+        //         alert("Algo salio mal, porfavor contactese con el Administrador.");
+        //         console.log(error)
+        //         $('.overlayForm').css("display","none");
+        //     }
+        // });
     }
     function userClaimant(reg)
     {

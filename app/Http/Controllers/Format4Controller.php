@@ -127,19 +127,35 @@ class Format4Controller extends Controller
     }
     public function actChangeProcess(Request $r)
     {
-        $state = $r->state=='fundado'?'4':($r->state=='infundado'?'5':'6');
-        $f2 = TFormat2::where('codRec',$r->codRec)->first();
-        $f2->process = $state;
-        if($f2->save())
-            return response()->json(['state'=>true,'message'=>'El reclamo '.$r->codRec.' se declaro como '.$r->state]);
-        else
-            return response()->json(['state'=>false,'message'=>'Ocurrio un error, porfavor contactese con el administrador']);
-        // return response()->json(['state'=>false,'message'=>$r->state]);
+        // $state = $r->state=='fundado'?'4':($r->state=='infundado'?'5':'6');
         // $f2 = TFormat2::where('codRec',$r->codRec)->first();
-        // $f2->process = '2';
-        // if($f2->save())
-        //     return response()->json(['state'=>true,'message'=>'El reclamo paso a la etapa de inspeccion.']);
+        // $f4 = TFormat4::where('codRec',$f2->idFo2)->first();
+        // $f2->process = 4;
+        // $f4->state = $r->stateConciliation;
+        // if($f2->save() && $f4->save())
+        //     return response()->json(['state'=>true,'message'=>'El reclamo '.$r->codRec.' se declaro como '.$r->stateConciliation]);
         // else
-        //     return response()->json(['state'=>false,'message'=>'Error al cambiar el proceso']);
+        //     return response()->json(['state'=>false,'message'=>'Ocurrio un error, porfavor contactese con el administrador']);
+        // ---------------
+        // ---------------
+        // ---------------
+        try {
+            DB::beginTransaction();
+            $f2 = TFormat2::where('codRec', $r->codRec)->first();
+            if (!$f2)
+                throw new Exception('No se encontró el registro de TFormat2.');
+            $f4 = TFormat4::where('idFo2', $f2->idFo2)->first();
+            if (!$f4)
+                throw new Exception('No se encontró el registro de TFormat4.');
+            $f2->process = 4;
+            $f4->state = $r->stateConciliation;
+            if (!$f2->save() || !$f4->save())
+                throw new Exception('Error al guardar los cambios.');
+            DB::commit();
+            return response()->json(['state' => true,'message' => 'El reclamo ' . $r->codRec . ' se declaró como ' . $r->stateConciliation]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false,'message' => 'Ocurrió un error, por favor contacte con el administrador.']);
+        }
     }
 }
