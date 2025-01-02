@@ -64,6 +64,7 @@ class TFormat2 extends Model
         'f5',
         'f6',
         'f2',
+        'f9',
         'process',
         'dateReg'
     ];

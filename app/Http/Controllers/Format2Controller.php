@@ -375,8 +375,6 @@ class Format2Controller extends Controller
     }
     private function accordingNew($r)
     {
-        // dd($r->all());
-
         $conSql = $this->connectionSql();
         if($conSql)
         {
@@ -394,45 +392,13 @@ class Format2Controller extends Controller
                 return response()->json(['state'=>false,'message'=>"El usuario ya cuenta con un reclamo en proceso."]);
         }
         // ---
-
-        // ---
-
         $r->merge([
             'pnumIns' => $ins,
-            // 'codRec' => $r->codRec,
             'numSum' => $r->suministro,
-            // 'nombres' => $r->nombres,
-            // 'app' => $r->app,
-            // 'apm' => $r->apm,
-            // 'numIde' => $r->numIde,
-            // 'razonSocial' => $r->razonSocial,
-            // 'upcjb' => $r->upcjb,
-            // 'upn' => $r->upn,
-            // 'upmz' => $r->upmz,
-            // 'uplote' => $r->uplote,
-            // 'upub' => $r->upub,
-            // 'upp' => $r->upp,
-            // 'upd' => $r->upd,
-            // 'dpcja' => $r->dpcja,
-            // 'dpn' => $r->dpn,
-            // 'dpmz' => $r->dpmz,
-            // 'dplote' => $r->dplote,
-            // 'dpub' => $r->dpub,
-            // 'dpp' => $r->dpp,
-            // 'dpd' => $r->dpd,
-            // 'dpcp' => $r->dpcp,
-            // 'dptelefono' => $r->dptelefono,
-            // 'dpcorreo' => $r->dpcorreo,
             'declaracionReclamo' => $r->sendNotify,
             'pmeses' => implode(",",$r->meses),
-            // 'tipoReclamo' => $r->tipoReclamo,
-            // 'descripcion' => $r->descripcion,
-            // 'sucursal' => $r->sucursal,
-            // 'atendido' => $r->atendido,
-            // 'fundamento' => $r->fundamento,
             'cartilla' => $r->sendBooklet,
             'declaracion' => $r->sendReclaim,
-            // 'notificacion' => $r->notificacion,
             'channel' => 'new',
             'verify' => 1,
             'process' => 1,
@@ -441,12 +407,19 @@ class Format2Controller extends Controller
         $tf2 = TFormat2::create($r->all());
         if($tf2)
         {
+            $ids = array_map(function ($tecnico) {
+                return $tecnico->idTec;
+            },session('tecnicosDisponibles'));
+            $selectedTechnician = $r->nhoursAvailable
+                ? explode('-', $r->nhoursAvailable)[0]
+                : $ids[array_rand($ids)];
+
             $inspection = new TIns([
                 'idFo2' => $tf2->idFo2,
-                'idTec' => 1,
-                'dateIns' => Carbon::now(),
-                'startTime' => '09:18:00',
-                'endTime' => '11:18:00',
+                'idTec' => $selectedTechnician,
+                'dateIns' => $r->nfechaIns,
+                'startTime' => $r->nhourInsInicio,
+                'endTime' => $r->nhourInsFin,
             ]);
             if ($inspection->save())
             {

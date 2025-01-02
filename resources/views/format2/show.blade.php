@@ -36,8 +36,8 @@
                             <table id="records" class="table table-hover table-striped table-bordered dt-responsive nowrap">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        <th class="text-center" data-priority="3">Identificador</th>
+                                        {{-- <th class="text-center" data-priority="4">Num.suministro</th> --}}
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -53,8 +53,8 @@
                                 </tbody>
                                 <tfoot class="thead-light">
                                     <tr>
-                                        <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        <th class="text-center" data-priority="3">Identificador</th>
+                                        {{-- <th class="text-center" data-priority="4">Num.suministro</th> --}}
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -98,17 +98,17 @@
             {
                 console.log(r)
                 let html = '';
-                let nombres;
-                let locationProperty;
-                let inspection;
+                // let nombres;
+                // let locationProperty;
+                // let inspection;
                 let from;
                 let options;
                 let evidence;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    nombres=r.data[i].numIde+' '+r.data[i].nombres+' '+r.data[i].app+' '+r.data[i].apm;
-                    locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
+                    // nombres=r.data[i].numIde+' '+r.data[i].nombres+' '+r.data[i].app+' '+r.data[i].apm;
+                    // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
+                    // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
                     evidence = isEmpty(r.data[i].ppdfFile)?
                         '':
@@ -131,12 +131,13 @@
                     }
 
                     html += '<tr>' +
-                        '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
-                        '<td class="align-middle">' + novDato(r.data[i].numSum) + '</td>' +
-                        '<td class="align-middle">' + nombres + '</td>' +
-                        '<td class="align-middle">' + locationProperty +'</td>' +
-                        '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
-                        '<td class="align-middle">' + inspection +'</td>' +
+                        // '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
+                        '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
+                        // '<td class="align-middle">' + novDato(r.data[i].numSum) + '</td>' +
+                        '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
+                        '<td class="align-middle text-center">' + novDato(r.data[i].tipoReclamo) +'</td>' +
+                        '<td class="align-middle">' + fdateInspection(r.data[i]) +'</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].reunion) +'</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].notificacion) +'</td>' +
                         '<td class="align-middle">' + from +'</td>' +

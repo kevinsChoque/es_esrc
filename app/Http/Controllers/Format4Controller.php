@@ -19,8 +19,9 @@ class Format4Controller extends Controller
     public function actList()
     {
         $list = TFormat2::where('format2.process', '=', '3')
+            ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
             ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','format4.idFo4')
+            ->select('format2.*','format4.idFo4','inspections.*')
             ->get();
         return response()->json(['data' => $list]);
     }

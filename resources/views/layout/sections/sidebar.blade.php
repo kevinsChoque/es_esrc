@@ -33,7 +33,7 @@
 
                 <li class="sbd1 nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <i class="nav-icon fas fa-file"></i>
                         <p>Formato 2<i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -51,17 +51,22 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{url('inspection/show')}}" class="nav-link sba6">
-                        <i class="nav-icon fas fa-building"></i><p>Actas de inspeccion</p>
+                        <i class="nav-icon fas fa-file"></i><p>Actas de inspeccion</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{url('format4/show')}}" class="nav-link sba7">
-                        <i class="nav-icon fas fa-handshake"></i><p>Acta de conciliacion</p>
+                        <i class="nav-icon fas fa-file"></i><p>Acta de conciliacion</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{url('desicion/show')}}" class="nav-link sba7">
-                        <i class="nav-icon fas fa-handshake"></i><p>Resoluciones</p>
+                        <i class="nav-icon fas fa-file"></i><p>Resoluciones</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('opciones/show')}}" class="nav-link sba7">
+                        <i class="nav-icon fas fa-file"></i><p>Opciones de recursos</p>
                     </a>
                 </li>
                 <li class="nav-item">

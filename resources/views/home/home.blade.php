@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="col-lg-12"></div>
-        <div class="col-lg-8">
+        {{-- <div class="col-lg-8">
             <div class="card">
                 <div class="overlay overlayMontoCotSegunTipoMes" style="display: flex;">
                     <div class="spinner"></div>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 <script>

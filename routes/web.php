@@ -17,6 +17,12 @@ use App\Http\Controllers\F6Controller;
 use App\Http\Controllers\Format4Controller;
 use App\Http\Controllers\F7Controller;
 use App\Http\Controllers\DesicionController;
+use App\Http\Controllers\OpcionesController;
+use App\Http\Controllers\Format9Controller;
+use App\Http\Controllers\F9Controller;
+use App\Http\Controllers\Format8Controller;
+use App\Http\Controllers\F8Controller;
+
 
 // portal
 Route::get('/', [PortalController::class, 'actReclamoComercial']);
@@ -108,3 +114,18 @@ Route::get('format7/f7/{idFo2?}',[F7Controller::class, 'actF7'])->name('f7');
 Route::get('desicion/show',[DesicionController::class, 'actShow']);
 Route::get('desicion/list', [DesicionController::class, 'actList']);
 Route::post('desicion/changeProcess', [DesicionController::class, 'actChangeProcess']);
+
+// opciones
+Route::get('opciones/show',[OpcionesController::class, 'actShow']);
+Route::get('opciones/list', [OpcionesController::class, 'actList']);
+// format9
+Route::post('format9/edit', [Format9Controller::class, 'actEdit']);
+Route::post('format9/save', [Format9Controller::class, 'actSave']);
+Route::get('format9/file/{idFo9}', [Format9Controller::class, 'actFile'])->name('format9-file');
+Route::get('format9/f9/{idFo2?}',[F9Controller::class, 'actF9'])->name('f9');
+
+// format8
+Route::post('format8/edit', [Format8Controller::class, 'actEdit']);
+Route::post('format8/save', [Format8Controller::class, 'actSave']);
+Route::get('format8/file/{idFo8}', [Format8Controller::class, 'actFile'])->name('format8-file');
+Route::get('format8/f8/{idFo2?}',[F8Controller::class, 'actF8'])->name('f8');

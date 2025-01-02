@@ -379,9 +379,9 @@
                         </strong>
                     </td>
                     <td colspan="5" class="align-middle p-1">
-                        <input type="date" name="dateIns" id="dateIns" class="form-control w-100 input">
+                        <input type="date" name="dateIns" id="dateIns" class="form-control w-100 input" disabled>
                         {{-- new --}}
-                        <div class="form-group">
+                        <div class="form-group m-0 nconteinerDate" style="display: none;">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
@@ -396,8 +396,9 @@
                     </td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA (RANGO DE 2 HORAS):</strong></td>
                     <td colspan="2" class="align-middle p-1">
-                        <input type="text" name="startTime" id="startTime" class="form-control w-100 input">
-                        <div class="form-group nconteinerHoursAvailable">
+                        <input type="text" name="startTime" id="startTime" class="form-control w-100 input" disabled>
+                        {{-- new --}}
+                        <div class="form-group nconteinerHoursAvailable" style="display: none;">
                             <label for="nhoursAvailable" class="m-0">Horas disponibles:</label>
                             <select id="nhoursAvailable" name="nhoursAvailable" class="form-control nhoursAvailable"></select>
                         </div>
@@ -420,6 +421,7 @@
                             </div>
                             <small id="nerrorHourMessage" class="text-danger"></small>
                         </div>
+                        {{-- new --}}
                     </td>
                 </tr>
                 {{-- <tr>
@@ -445,7 +447,7 @@
             </form>
         </div>
         <div class="card-footer">
-            <button type="button" class="btn btn-success w-100 saveClaim">Guardar Reclamo</button>
+            <button type="button" class="btn btn-success w-100 saveClaim"><i class="fa fa-save"></i> Guardar Reclamo</button>
         </div>
     </div>
 </div>
@@ -485,7 +487,7 @@
     $(document).ready( function () {
         tableRecords=$('.containerRecords').html();
         $('.overlayAllPage').css("display","none");
-        $('.oveCard').css("display","none");
+        // $('.oveCard').css("display","none");
         initFv('fvclaim',rules());
         // fillReclaim();
         fillReclaimWeb();
@@ -526,12 +528,41 @@
                     $('.nconteinerHourIns').css('display','none')
                     $('.nconteinerHoursAvailable').css('display','block');
                     ngetAvailableHours($('#nfechaIns').val());
+
                 }
             },
             error: function (xhr, status, error) {
                 msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
             }
         });
+    });
+    $('#nhourInsInicio, #nhourInsFin').on('change', function () {
+        const startHour = $('#nhourInsInicio').val(); // Hora de inicio
+        const endHour = $('#nhourInsFin').val(); // Hora de finalización
+        const interval = $('#nhoursAvailable').val(); // Obtener el valor del select
+        const [sinvalor ,intervalStart, intervalEnd] = interval.split('-'); // Dividir el intervalo en hora de inicio y fin
+        // Validar que las horas estén dentro del intervalo
+        if (startHour && (startHour < intervalStart || startHour > intervalEnd))
+        {
+            $('#nerrorHourMessage').text(`La hora de inicio debe estar entre ${intervalStart} y ${intervalEnd}.`);
+            $('#nhourInsInicio').val(''); // Limpiar hora de inicio
+            return;
+        }
+        if (endHour && (endHour < intervalStart || endHour > intervalEnd))
+        {
+            $('#nerrorHourMessage').text(`La hora de finalización debe estar entre ${intervalStart} y ${intervalEnd}.`);
+            $('#nhourInsFin').val(''); // Limpiar hora de finalización
+            return;
+        }
+        // Validar que la hora final sea mayor que la inicial
+        if (startHour && endHour && endHour <= startHour)
+        {
+            $('#nerrorHourMessage').text('La hora de finalización debe ser mayor que la hora de inicio.');
+            $('#nhourInsFin').val(''); // Limpiar hora final
+            return;
+        }
+        // Si todo es válido, limpiar mensajes de error
+        $('#nerrorHourMessage').text('');
     });
     function ngetAvailableHours(fecha)
     {
@@ -577,6 +608,12 @@
             $('.cardNew').css('display','none')
             $('.canalInfoNew').removeClass('bg-info').addClass('bg-light')
             $('.canalInfoWeb').removeClass('bg-light').addClass('bg-info')
+            $('.nconteinerDate').css('display','none')
+            $('#dateIns').css('display','block');
+            $('#startTime').css('display','block')
+            $('.nconteinerHoursAvailable').css('display','none')
+            $('.nconteinerHourIns').css('display','none')
+            $('.oveCard').css("display","flex");
             according=true
         }
         else
@@ -587,6 +624,10 @@
             $('.canalInfoNew').removeClass('bg-light').addClass('bg-info')
 
             $('.containerEvidence').html('')
+            $('.nconteinerDate').css('display','block')
+            $('#dateIns').css('display','none');
+            $('#startTime').css('display','none')
+            $('.oveCard').css("display","none");
             according=false
             showDateRed()
         }
@@ -888,6 +929,10 @@
         if(isEmpty($('#meses').val()))
         {msgImportantShow('Seleccione los meses de reclamo.','Advertencia','warning');return true;}
         if($('#fvclaim').valid()==false) {return true;}
+        if(!according && (isEmpty($('#nfechaIns').val()) || isEmpty($('#nhourInsInicio').val()) || isEmpty($('#nhourInsFin').val())))
+        {msgImportantShow('Seleccione la fecha de inspeccion.','Advertencia','warning');return true;}
+        if(!according && $('#evidenceFile')[0].files.length==0)
+        {msgImportantShow("No se subio ningun archivo.",'Reclamo','warning');return true;}
         return false;
 
     }
@@ -935,6 +980,7 @@
     }
     function searchReclaim()
     {
+        // alert('aki e')
         if(isEmpty($('#claims').val()))
             msgImportantShow('Advertencia!','Seleccione reclamo','warning')
         $('.overlayAllPage').css("display","flex");
@@ -978,6 +1024,8 @@
 
                 $('.changeInspections').css("display","inline");
                 $('.overlayAllPage').css("display","none");
+                $('.oveCard').css("display","none");
+
                 // $.each(r.data,function(indice,fila){
                 //     $('#reclaimPortal').append("<option value='"+fila.idFo2+"'>"+fila.app+' '+fila.apm+' '+fila.nombres+"</option>");
                 // });

@@ -36,8 +36,8 @@
                             <table id="records" class="table table-hover table-striped table-bordered dt-responsive nowrap">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        {{-- <th class="text-center" data-priority="3">Cod.reclamo</th> --}}
+                                        <th class="text-center" data-priority="4">Identificador</th>
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -51,8 +51,8 @@
                                 </tbody>
                                 <tfoot class="thead-light">
                                     <tr>
-                                        <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        {{-- <th class="text-center" data-priority="3">Cod.reclamo</th> --}}
+                                        <th class="text-center" data-priority="4">Identificador</th>
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -78,7 +78,7 @@
                 <div class="spinner"></div>
             </div>
             <div class="modal-header">
-                <h5 class="modal-title" id="mf5Label">FORMATO 5: Resumen del acta de inspeccion interna</h5>
+                <h5 class="modal-title" id="mf5Label"><i class="fa fa-file"></i> FORMATO 5: Resumen del acta de inspeccion interna</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -154,7 +154,7 @@
                 <div class="spinner"></div>
             </div>
             <div class="modal-header">
-                <h5 class="modal-title" id="mf6Label">FORMATO 6: Resumen del acta de inspeccion externa</h5>
+                <h5 class="modal-title" id="mf6Label"><i class="fa fa-file"></i> FORMATO 6: Resumen del acta de inspeccion externa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -230,7 +230,7 @@
                 <div class="spinner"></div>
             </div>
             <div class="modal-header">
-                <h5 class="modal-title" id="mf7Label">FORMATO 7: Solicitud de contrastacion de medidor de agua potable</h5>
+                <h5 class="modal-title" id="mf7Label"><i class="fa fa-file"></i> FORMATO 7: Solicitud de contrastacion de medidor de agua potable</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -302,31 +302,21 @@
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
     var tableRecords;
-    // console.log("{{ Storage::url('format5/20241001_173405_M-O_Inteligencia_artificial_esp_(1).pdf') }}")
     $(document).ready( function () {
         // $('.containerRecords').css('display','block');
-        // cascç
         tableRecords=$('.containerRecords').html();
         fillRecords();
-        // $('.overlayPagina').css("display","none");
         $('.overlayAllPage').css("display","none");
     });
-    $('.saveF5').on('click',function(){
-        saveF5();
-    })
-    $('.saveF6').on('click',function(){
-        saveF6();
-    })
+    $('.saveF5').on('click',function(){saveF5();})
+    $('.saveF6').on('click',function(){saveF6();})
     function saveF5()
     {
-        // console.log($('#f5idFo2').val())
-        // alert($(ele).html())
         if(validateF5())
             return;
         var formData = new FormData($("#fvf5")[0]);
         formData.append('f5idFo2',$('#f5idFo2').val());
         formData.append('f5ins',$('#f5ins').val());
-
         $('.saveF5').prop('disabled',true);
         $('.olF5').css("display","flex");
         jQuery.ajax({
@@ -359,14 +349,11 @@
     }
     function saveF6()
     {
-        // console.log($('#f5idFo2').val())
-        // alert($(ele).html())
         if(validateF6())
             return;
         var formData = new FormData($("#fvf6")[0]);
         formData.append('f6idFo2',$('#f6idFo2').val());
         formData.append('f6ins',$('#f6ins').val());
-
         $('.saveF6').prop('disabled',true);
         $('.olF6').css("display","flex");
         jQuery.ajax({
@@ -424,8 +411,8 @@
             {
                 console.log(r)
                 let html = '';
-                let locationProperty;
-                let inspection;
+                // let locationProperty;
+                // let inspection;
                 // let formats;
                 // let options;
                 let iconoF5;
@@ -434,8 +421,8 @@
                 let iconoF7;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
+                    // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
+                    // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
                     // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
                     iconoF5 = r.data[i].idFo5===null?'plus':'file';
                     iconoF6 = r.data[i].idFo6===null?'plus':'file';
@@ -456,12 +443,12 @@
                     //     '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-file"></i> F6</button>';
                     // }
                     html += '<tr class="'+r.data[i].idFo2+'">' +
-                        '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
-                        '<td class="align-middle">' + recordsId(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + userClaimant(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + locationProperty +'</td>' +
-                        '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
-                        '<td class="align-middle">' + inspection +'</td>' +
+                        // '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
+                        '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
+                        '<td class="align-middle text-center">' + novDato(r.data[i].tipoReclamo) +'</td>' +
+                        '<td class="align-middle">' + fdateInspection(r.data[i]) +'</td>' +
                         '<td class="align-middle">' +
                             '<span class="badge badge-info">Investigacion</span>'+change+
                         '</td>'+
@@ -469,13 +456,9 @@
                             '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f5') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F5</a>' +
                             '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f6') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F6</a>' +
                             '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f7') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F7</a>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1"><i class="fa fa-file-pdf"></i> F7</button>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
-
                                 '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
                                 '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
                                 '<button type="button" class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
@@ -490,6 +473,7 @@
             }
         });
     }
+
     function changeProcess(codRec)
     {
         event.preventDefault();
@@ -650,16 +634,8 @@
         //     }
         // });
     }
-    function userClaimant(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> dni: '+reg.numIde+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
-    }
-    function recordsId(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> Sum: '+reg.numSum+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> Ins: '+reg.pnumIns+'</span>';
-    }
+
+
 
 </script>
 <script>

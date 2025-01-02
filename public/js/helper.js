@@ -1,5 +1,6 @@
 
 function novDato(dato){return dato!==null && dato!=''?dato:'--';}
+function aonDato(dato){return dato!==null && dato!=''?dato:'';}
 function initFv(id,rules)
 {
     $('#'+id).validate({
@@ -128,3 +129,27 @@ function isEmpty(value) {
     // Si no está vacío, retorna false
     return false;
 }
+function frecordsId(reg)
+{
+    return '<span class="badge badge-light"><i class="fa fa-hashtag"></i> NR: '+reg.codRec+'</span><br>'+
+    '<span class="badge badge-light">Sum: '+reg.numSum+'</span><br>' +
+    '<span class="badge badge-light">Ins: '+reg.pnumIns+'</span>';
+}
+function fdateInspection(reg)
+{
+    return '<span class="badge badge-light"><i class="fa fa-calendar-day"></i> Fecha: '+reg.dateIns+'</span><br>' +
+    '<span class="badge badge-light"><i class="fa fa-clock"></i> Hora: '+reg.startTime.slice(0, 5)+' - '+reg.endTime.slice(0, 5)+'</span>';
+}
+function fuserClaimant(reg)
+{
+    return '<span class="badge badge-light">Doc: '+reg.numIde+'</span><br>' +
+    '<span class="badge badge-light">Nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
+}
+function flocationPredio(reg)
+{
+    return '<span class="badge badge-light">'+aonDato(reg.upcjb)+' '+aonDato(reg.upn)+' '+aonDato(reg.upmz)+' '+aonDato(reg.uplote)+'</span><br>';
+    // '<span class="badge badge-light">Nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
+}
+
+
+

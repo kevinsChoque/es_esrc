@@ -37,7 +37,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        {{-- <th class="text-center" data-priority="4">Num.suministro</th> --}}
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -52,7 +52,7 @@
                                 <tfoot class="thead-light">
                                     <tr>
                                         <th class="text-center" data-priority="3">Cod.reclamo</th>
-                                        <th class="text-center" data-priority="4">Num.suministro</th>
+                                        {{-- <th class="text-center" data-priority="4">Num.suministro</th> --}}
                                         <th class="text-center" data-priority="4">Reclamante</th>
                                         <th class="text-center" data-priority="4">Ubicacion del predio</th>
                                         <th class="text-center" data-priority="4">Tipo</th>
@@ -365,9 +365,8 @@
                 let change;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
-
+                    // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
+                    // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
                     iconoPdf = r.data[i].idFo4===null?'':'<button class="btn btn-secondary py-0 px-1" onclick="download()"><i class="fa fa-file-pdf"></i> F4</button>';
                     iconoF4 = r.data[i].idFo4===null?'plus':'file';
                     iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
@@ -375,12 +374,12 @@
                         '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
                         '';
                     html += '<tr class="'+r.data[i].idFo2+'">' +
-                        '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
-                        '<td class="align-middle">' + recordsId(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + userClaimant(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + locationProperty +'</td>' +
-                        '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
-                        '<td class="align-middle">' + inspection +'</td>' +
+                        '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
+                        // '<td class="align-middle">' + recordsId(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
+                        '<td class="align-middle text-center">' + novDato(r.data[i].tipoReclamo) +'</td>' +
+                        '<td class="align-middle">' + fdateInspection(r.data[i]) +'</td>' +
                         '<td class="align-middle text-center">'+
                             '<span class="badge badge-info">Conciliacion</span>'+change+
                         '</td>' +
@@ -414,7 +413,7 @@
             inputOptions: {
                 fundado: "Reclamo FUNDADO",
                 infundado: "Reclamo INFUNDADO",
-                reconsideracion: "Solicito RECONSIDERACION",
+                //reconsideracion: "Solicito RECONSIDERACION",
             },
             inputPlaceholder: "Seleccione estado del reclamo",
             showCancelButton: true,
@@ -456,16 +455,16 @@
     {
         alert('descargando formato4')
     }
-    function userClaimant(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> dni: '+reg.numIde+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
-    }
-    function recordsId(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> Sum: '+reg.numSum+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> Ins: '+reg.pnumIns+'</span>';
-    }
+    // function userClaimant(reg)
+    // {
+    //     return '<span class="badge badge-light"><i class="fa fa-id-card"></i> dni: '+reg.numIde+'</span><br>' +
+    //     '<span class="badge badge-light"><i class="fa fa-user"></i> nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
+    // }
+    // function recordsId(reg)
+    // {
+    //     return '<span class="badge badge-light"><i class="fa fa-id-card"></i> Sum: '+reg.numSum+'</span><br>' +
+    //     '<span class="badge badge-light"><i class="fa fa-user"></i> Ins: '+reg.pnumIns+'</span>';
+    // }
     function cleanF4()
     {
         $('#fvf4 .input').val('');
