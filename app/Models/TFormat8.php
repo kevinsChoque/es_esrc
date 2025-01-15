@@ -19,6 +19,7 @@ class TFormat8 extends Model
         'url',
         'fr',
         'fa',
+        'comment',
     ];
 }
 

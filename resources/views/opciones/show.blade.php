@@ -245,7 +245,6 @@
     var tableRecords;
     $(document).ready( function () {
         // $('.containerRecords').css('display','block');
-        // cascç
         tableRecords=$('.containerRecords').html();
         fillRecords();
         $('.overlayAllPage').css("display","none");
@@ -355,9 +354,13 @@
                 if (r.state)
                 {
                     $('.saveF8').prop('disabled',false);
-                    $('#apelar').modal('hide');
+                    $('#reconsideracion').modal('hide');
                     // $('#f4idFo2').val()
-                    // $('.'+$('#f4idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
+                    // $('.'+$('#f8idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
+                    let iconChange = '<span class="badge badge-info">En Reconsideracion</span> <button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.f2.codRec+'\');"><i class="fa fa-edit"></i></button>';
+                    $('.'+$('#f8idFo2').val()).find('.containerState').html(iconChange);
+                    $('.'+$('#f8idFo2').val()).find('.apelar').remove();
+                    // estadoReg = (r.data[i].idFo8===null?'<span class="badge badge-info">En Apelacion</span>':'<span class="badge badge-info">En Reconsideracion</span>')+change;
                 }
                 msgForm(r);
                 $('.overlayAllPage').css("display","none");
@@ -394,6 +397,9 @@
                 {
                     $('.saveF9').prop('disabled',false);
                     $('#apelar').modal('hide');
+                    let iconChange = '<span class="badge badge-info">En Apelacion</span>';
+                    $('.'+$('#f9idFo2').val()).find('.containerState').html(iconChange);
+                    $('.'+$('#f9idFo2').val()).find('.reconsideracion').remove();
                     // $('#f4idFo2').val()
                     // $('.'+$('#f4idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
                 }
@@ -459,64 +465,47 @@
             method: 'get',
             success: function(r)
             {
-                console.log(r)
                 let html = '';
-                let locationProperty;
-                let inspection;
                 // let formats;
                 // let options;
-                let iconoF4;
                 let iconoF6;
                 let change;
                 let opciones;
                 let estadoReg;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
-
-                    iconoF4 = r.data[i].idFo4===null?'plus':'file';
-                    iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
-                    change = r.data[i].f4 == '1'?
-                        '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
-                        '';
-                    change = '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>';
+                    // iconLoad = r.data[i].idFo4===null?'':'<button class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
+                    // change = r.data[i].f4 == '1'
+                    //     ?'<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'
+                    //     :'';
+                    change = '<button class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].idFo2+'\');"><i class="fa fa-edit"></i></button>';
+                    changeEnd = '<button class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcessEnd(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>';
 
                     if(r.data[i].idFo8===null && r.data[i].idFo9===null)
                     {
-                        opciones = '<button type="button" class="btn text-info py-0" onclick="apelar(\''+r.data[i].idFo2+'\');"><i class="fa fa-gavel"></i> Apelar</button><br>'+
-                        '<button type="button" class="btn text-info py-0" onclick="reconsideracion(\''+r.data[i].idFo2+'\');"><i class="fa fa-retweet"></i> Reconsideracion</button>';
-                        estadoReg = '<span class="badge badge-info">Finalizados</span>';
+                        opciones = '<button class="btn text-info py-0 apelar" onclick="apelar(\''+r.data[i].idFo2+'\');"><i class="fa fa-gavel"></i> Apelar</button><br>'+
+                        '<button class="btn text-info py-0 reconsideracion" onclick="reconsideracion(\''+r.data[i].idFo2+'\');"><i class="fa fa-retweet"></i> Reconsideracion</button>';
+                        estadoReg = '<span class="badge badge-info">Finalizados</span> '+changeEnd;
                     }
                     else
                     {
-                        opciones = r.data[i].idFo8===null?'<button type="button" class="btn text-info py-0" onclick="apelar(\''+r.data[i].idFo2+'\');"><i class="fa fa-gavel"></i> Apelar</button><br>':
-                        '<button type="button" class="btn text-info py-0" onclick="reconsideracion(\''+r.data[i].idFo2+'\');"><i class="fa fa-retweet"></i> Reconsideracion</button>';
-                        estadoReg = (r.data[i].idFo8===null?'<span class="badge badge-info">En Apelacion</span>':'<span class="badge badge-info">En Reconsideracion</span>')+change;
+                        opciones = r.data[i].idFo8===null?'<button class="btn text-info py-0 apelar" onclick="apelar(\''+r.data[i].idFo2+'\');"><i class="fa fa-gavel"></i> Apelar</button><br>':
+                        '<button class="btn text-info py-0 reconsideracion" onclick="reconsideracion(\''+r.data[i].idFo2+'\');"><i class="fa fa-retweet"></i> Reconsideracion</button>';
+                        estadoReg = (r.data[i].idFo8===null?'<span class="badge badge-info">En Apelacion</span>':'<span class="badge badge-info">En Reconsideracion</span>'+change);
                     }
                     html += '<tr class="'+r.data[i].idFo2+'">' +
-                        // '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
-                        '<td class="align-middle">CR: ' + novDato(r.data[i].codRec)+'<br>'+recordsId(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + userClaimant(r.data[i]) + '</td>' +
-                        '<td class="align-middle">' + locationProperty +'</td>' +
+                        '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
+                        '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].tipoReclamo) +'</td>' +
-                        '<td class="align-middle">' + inspection +'</td>' +
-                        '<td class="align-middle text-center">'+
+                        '<td class="align-middle">' + fdateInspection(r.data[i]) +'</td>' +
+                        '<td class="align-middle text-center containerState">'+
                             // '<span class="badge badge-info">Finalizar</span>'+change+
                             // '<span class="badge badge-info">Finalizados</span>'+
                             estadoReg+
                         '</td>' +
                         '<td class="align-middle text-center">' +
-                            // '<div class="btn-group btn-group-sm" role="group">'+
-                                // '<button type="button" class="btn text-info f4" title="Formato 4" onclick="mf4(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF4+'"></i> F4</button>'+
-                                // iconLoad +
-
-                                // '<button type="button" class="btn text-info py-0" onclick="apelar(\''+r.data[i].idFo2+'\');"><i class="fa fa-gavel"></i> Apelar</button><br>'+
-                                // '<button type="button" class="btn text-info py-0" onclick="reconsideracion(\''+r.data[i].idFo2+'\');"><i class="fa fa-retweet"></i> Reconsideracion</button>'+
-                                opciones+
-                                // '<button type="button" class="btn text-info" title="Descargar resolucion"><i class="fa fa-download"></i></button>'+
-                                // '<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
-                            // '</div>'+
+                            opciones+
                         '</td>' +
                         '</tr>';
                 }
@@ -526,55 +515,136 @@
             }
         });
     }
-    // function changeProcess(codRec)
-    // {
-    //     event.preventDefault();
+    function changeProcessEnd(codRec)
+    {
+        event.preventDefault();
+        Swal.fire({
+        title: "ESTA SEGURO EN CERRAR ESTE PROCESO DE RECLAMO?",
+        text: "Confirme la accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, confirmar"
+        }).then((result) => {
+            if (result.isConfirmed)
+            {
+                $(".containerSpinner").removeClass("d-none");
+                $(".containerSpinner").addClass("d-flex");
+                jQuery.ajax({
+                    url: "{{ url('opciones/changeProcessEnd') }}",
+                    method: 'POST',
+                    data: {codRec: codRec},
+                    dataType: 'json',
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    success: function (r) {
+                        console.log(r)
+                        msgImportant(r)
+                        buildTable();
+                        fillRecords();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Algo salio mal, porfavor contactese con el Administrador.");
+                    }
+                });
+            }
+        });
+    }
+    function buildTable()
+    {
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
+    }
+    function changeProcess(idFo2)
+    {
+        event.preventDefault();
+        Swal.fire({
+            title: "Seleccione una acción para el registro",
+            text: "Confirme su decisión",
+            icon: "question",
+            showCancelButton: true,
+            showDenyButton: true,
+            showConfirmButton: true,
+            confirmButtonText: "Enviar a investigación",
+            denyButtonText: "Solución rápida",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#3085d6",
+            denyButtonColor: "#4caf50",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Acción para "Enviar a investigación"
+                $(".containerSpinner").removeClass("d-none").addClass("d-flex");
+                jQuery.ajax({
+                    url: "{{ url('desicion/investigate') }}",
+                    method: 'POST',
+                    data: { idFo2: idFo2 },
+                    dataType: 'json',
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                    success: function (r) {
+                        console.log(r);
+                        msgImportant(r);
+                        buildTable();
+                        fillRecords();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Algo salió mal. Por favor contacte al administrador.");
+                    },
+                    complete: function () {
+                        $(".containerSpinner").removeClass("d-flex").addClass("d-none");
+                    }
+                });
+            } else if (result.isDenied) {
+                // Acción para "Solución rápida"
+                Swal.fire({
+                    title: "Agregar comentario",
+                    text: "Escriba un comentario para finalizar el reclamo:",
+                    input: 'textarea',
+                    inputPlaceholder: 'Escriba su comentario aquí...',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                    confirmButtonText: "Finalizar reclamo",
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    preConfirm: (comment) => {
+                        if (!comment) {
+                            Swal.showValidationMessage("El comentario no puede estar vacío.");
+                        }
+                        return comment;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed)
+                    {
+                        $(".containerSpinner").removeClass("d-none").addClass("d-flex");
+                        jQuery.ajax({
+                            url: "{{ url('opciones/quickSolution') }}", // Cambia según la ruta
+                            method: 'POST',
+                            data: {
+                                idFo2: idFo2,
+                                comentario: result.value // Enviamos el comentario con la solicitud
+                            },
+                            dataType: 'json',
+                            headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                            success: function (r) {
+                                console.log(r);
+                                msgImportant(r);
+                                buildTable();
+                                fillRecords();
+                            },
+                            error: function (xhr, status, error) {
+                                alert("Algo salió mal. Por favor contacte al administrador.");
+                            },
+                            complete: function () {
+                                $(".containerSpinner").removeClass("d-flex").addClass("d-none");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
-    //     Swal.fire({
-    //         title: "El reclamo se declara como:",
-    //         input: "select",
-    //         inputOptions: {
-    //             fundado: "Reclamo FUNDADO",
-    //             infundado: "Reclamo INFUNDADO",
-    //             reconsideracion: "Solicito RECONSIDERACION",
-    //         },
-    //         inputPlaceholder: "Seleccione estado del reclamo",
-    //         showCancelButton: true,
-    //         inputValidator: (value) => {
-    //             return new Promise((resolve) =>
-    //             {
-    //                 if (value === "fundado" || value === "infundado" || value === "reconsideracion")
-    //                 {
-    //                     // alert('send')
-    //                     $(".containerSpinner").removeClass("d-none");
-    //                     $(".containerSpinner").addClass("d-flex");
-    //                     jQuery.ajax({
-    //                         url: "{{ url('format4/changeProcess') }}",
-    //                         method: 'POST',
-    //                         data: {state: value, codRec:codRec},
-    //                         dataType: 'json',
-    //                         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-    //                         success: function (r) {
-    //                             console.log(r)
-    //                             msgImportant(r)
-    //                             // buildTable();
-    //                             // fillRecords();
-    //                         },
-    //                         error: function (xhr, status, error) {alert("Algo salio mal, porfavor contactese con el Administrador.");}
-    //                     });
-    //                     Swal.fire(`El reclamo se cambio a: un estado`);
-    //                 }
-    //                 else
-    //                     resolve("Seleccione un estado del reclamo");
-    //             });
-    //         }
-    //     });
-    //     // if (fruit)
-    //     // {
-    //     //     Swal.fire(`El reclamo se cambio a: ${fruit}`);
-    //     // }
-    // }
-    function changeProcess(codRec)
+    function changeProcess_old(codRec)
     {
         event.preventDefault();
         Swal.fire({
@@ -614,16 +684,6 @@
     function download()
     {
         alert('descargando formato4')
-    }
-    function userClaimant(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> dni: '+reg.numIde+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
-    }
-    function recordsId(reg)
-    {
-        return '<span class="badge badge-light"><i class="fa fa-id-card"></i> Sum: '+reg.numSum+'</span><br>' +
-        '<span class="badge badge-light"><i class="fa fa-user"></i> Ins: '+reg.pnumIns+'</span>';
     }
     function cleanF9()
     {

@@ -19,6 +19,39 @@ class Format6Controller extends Controller
     }
     public function actSave(Request $r)
     {
+        DB::beginTransaction();
+        try {
+            $existingRecord = TFormat6::updateOrCreate(
+                ['idFo2' => $r->f6idFo2],
+                [
+                    'inscription' => $r->f6ins,
+                    'date' => $r->f6date,
+                    'hour' => $r->f6hora,
+                    'obs' => $r->f6obs,
+                    'fr' => Carbon::now(),
+                ]
+            );
+            if ($existingRecord->wasRecentlyCreated || $existingRecord->wasChanged())
+            {
+                $f2 = TFormat2::find($r->f6idFo2);
+                $f2->f6 = '1';
+                if ($f2->save()) {
+                    DB::commit();
+                    $message = $existingRecord->wasRecentlyCreated
+                        ? 'Formato 6 registrado correctamente'
+                        : 'Formato 6 actualizado correctamente';
+                    return response()->json(['state' => true, 'message' => $message, 'load' => ($f2->f5 == 1 && $f2->f6 == 1 ? true:false)]);
+                }
+            }
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => 'No fue posible actualizar el expediente.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function actSave_last(Request $r)
+    {
         // $pathFile = storage_path('app/public/'.'2024-1485/20241009_160649_formato5.pdf');
         // dd(file_exists($pathFile));
         // Verificar si el archivo es PDF

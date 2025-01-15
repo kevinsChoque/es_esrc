@@ -28,6 +28,42 @@ class Format9Controller extends Controller
     }
     public function actSave(Request $r)
     {
+        if (!$r->hasFile('f9file') || $r->file('f9file')->getClientMimeType() !== 'application/pdf')
+            return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
+        $f2 = TFormat2::find($r->f9idFo2);
+        if (!$f2)
+            return response()->json(['state' => false, 'message' => 'No se encontró el expediente.'], 404);
+        DB::beginTransaction();
+        try {
+            $nameFile = $f2->codRec . '_f9_apelacion.' . $r->file('f9file')->getClientOriginalExtension();
+            $pathFile = 'reclamos/' . $f2->codRec;
+            $existingRecord = TFormat9::firstOrNew(['idFo2' => $r->f9idFo2]);
+            // Si existe un archivo anterior, eliminarlo
+            if ($existingRecord->exists && Storage::exists('public/' . $existingRecord->url))
+                Storage::delete('public/' . $existingRecord->url);
+            $pathFile = $this->saveFileReg($r, 'f9file', $nameFile, $pathFile);
+            $existingRecord->fill([
+                'fundamento' => $r->f9fundamento,
+                'url' => $pathFile,
+                'fa' => $existingRecord->exists ? Carbon::now() : null,
+                'fr' => !$existingRecord->exists ? Carbon::now() : $existingRecord->fr,
+            ])->save();
+            $f2->f9 = '1';
+            $f2->save();
+            DB::commit();
+            return response()->json([
+                'state' => true,
+                'message' => $existingRecord->wasRecentlyCreated ? 'Formato 9 registrado correctamente' : 'Formato 9 actualizado correctamente',
+                'f2' => $f2,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function actSave_old(Request $r)
+    {
         // Validar que el archivo sea PDF
         if ($r->hasFile('f9file') && $r->file('f9file')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
@@ -50,7 +86,7 @@ class Format9Controller extends Controller
                     'fa' => Carbon::now(),
                 ]);
                 DB::commit();
-                return response()->json(['state' => true, 'message' => 'Formato 9 actualizado correctamente']);
+                return response()->json(['state' => true, 'message' => 'Formato 9 actualizado correctamente', 'f2' => $f2]);
             }
             $pathFile = $this->saveFileReg($r, 'f9file', $nameFile, $pathFile);
             $newRecord = TFormat9::create([
@@ -65,7 +101,7 @@ class Format9Controller extends Controller
                 if ($f2->save())
                 {
                     DB::commit();
-                    return response()->json(['state' => true, 'message' => 'Formato 9 registrado correctamente']);
+                    return response()->json(['state' => true, 'message' => 'Formato 9 registrado correctamente', 'f2' => $f2]);
                 }
                 throw new \Exception('No fue posible actualizar el expediente.');
             }

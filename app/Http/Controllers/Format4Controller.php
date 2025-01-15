@@ -25,60 +25,25 @@ class Format4Controller extends Controller
             ->get();
         return response()->json(['data' => $list]);
     }
-    public function actSave(Request $r)
+    public function actSave(Request $request)
     {
-        // dd($r->all());
-        $f2 = TFormat2::find($r->f4idFo2);
-        // dd($f2);
         DB::beginTransaction();
         try {
-            $existingRecord = TFormat4::where('idFo2', $r->f4idFo2)->first();
-            if ($existingRecord)
+            $format2 = TFormat2::findOrFail($request->f4idFo2);
+            $format4 = TFormat4::updateOrCreate(
+                ['idFo2' => $request->f4idFo2],
+                $request->only(['hourStart', 'hourEnd', 'proEps', 'proRec', 'agreement', 'disagreement'])
+            );
+            if ($format4->wasRecentlyCreated || $format4->wasChanged())
             {
-                $existingRecord->update([
-                    'idFo2' => $r->f4idFo2,
-                    'hourStart' => $r->hourStart,
-                    'hourEnd' => $r->hourEnd,
-                    'proEps' => $r->proEps,
-                    'proRec' => $r->proRec,
-                    'agreement' => $r->agreement,
-                    'disagreement' => $r->disagreement,
-                    // 'subsists' => Carbon::now(),
-                ]);
-                DB::commit();
-                return response()->json(['state' => true, 'message' => 'Formato 4 actualizado correctamente']);
+                $format2->f4 = '1';
+                $format2->save();
             }
-            else
-            {
-                $r->merge([
-                    'idFo2' => $r->f4idFo2,
-                    'hourStart' => $r->hourStart,
-                    'hourEnd' => $r->hourEnd,
-                    'proEps' => $r->proEps,
-                    'proRec' => $r->proRec,
-                    'agreement' => $r->agreement,
-                    'disagreement' => $r->disagreement,
-                    // 'fr' => Carbon::now(),
-                ]);
-                $f4 = TFormat4::create($r->all());
-                if ($f4)
-                {
-                    $f2->f4='1';
-                    if($f2->save())
-                    {
-                        DB::commit();
-                        return response()->json(['state' => true, 'message' => 'Formato 4 registrado correctamente']);
-                    }
-                    else
-                    {
-                        DB::rollBack();
-                        return response()->json(['state' => false, 'message' => 'No fue posible actualizar el expediente.']);
-                    }
-                } else {
-                    DB::rollBack();
-                    return response()->json(['state' => false, 'message' => 'No fue posible registrar el formato 4']);
-                }
-            }
+            DB::commit();
+            $message = $format4->wasRecentlyCreated
+                ? 'Formato 4 registrado correctamente'
+                : 'Formato 4 actualizado correctamente';
+            return response()->json(['state' => true, 'message' => $message, 'f2' => $format2]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
@@ -91,13 +56,11 @@ class Format4Controller extends Controller
     }
     public function actSaveFile(Request $r)
     {
-        // dd($r->all());
         if ($r->hasFile('f4file') && $r->file('f4file')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
-        $nameFile = Carbon::now()->format('Ymd_His') . '_' . 'formato4.'.$r->file('f4file')->getClientOriginalExtension();
-        $f2 = TFormat2::find($r->ff4idFo2);
-        $pathFile = $f2->codRec;
-
+        $f2 = TFormat2::findOrFail($r->ff4idFo2);
+        $nameFile = $f2->codRec . '_conciliacion.' . $r->file('f4file')->getClientOriginalExtension();
+        $pathFile = 'reclamos/' . $f2->codRec;
         DB::beginTransaction();
         try {
             $existingRecord = TFormat4::where('idFo2', $r->ff4idFo2)->first();

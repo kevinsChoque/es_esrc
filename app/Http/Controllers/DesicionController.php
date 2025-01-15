@@ -16,7 +16,8 @@ class DesicionController extends Controller
     {
         $list = TFormat2::where('format2.process', '=', '4')
             ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','format4.idFo4')
+            ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+            ->select('format2.*','format4.idFo4','inspections.*')
             ->get();
         return response()->json(['data' => $list]);
     }

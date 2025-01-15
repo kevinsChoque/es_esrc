@@ -15,8 +15,11 @@ use App\Http\Controllers\F5Controller;
 use App\Http\Controllers\Format6Controller;
 use App\Http\Controllers\F6Controller;
 use App\Http\Controllers\Format4Controller;
+use App\Http\Controllers\F4Controller;
+use App\Http\Controllers\Format7Controller;
 use App\Http\Controllers\F7Controller;
 use App\Http\Controllers\DesicionController;
+use App\Http\Controllers\ResController;
 use App\Http\Controllers\OpcionesController;
 use App\Http\Controllers\Format9Controller;
 use App\Http\Controllers\F9Controller;
@@ -47,8 +50,10 @@ Route::post('format2/saveChangeClaim', [Format2Controller::class, 'actSaveChange
 Route::get('format2/list', [Format2Controller::class, 'actList']);
 Route::get('format2/edit', [Format2Controller::class, 'actEdit']);
 Route::post('format2/fillReclaimWeb', [Format2Controller::class, 'actFillReclaimWeb']);
-
-
+Route::post('format2/fileInspection', [Format2Controller::class, 'actFileInspection']);
+Route::post('format2/saveFileIns', [Format2Controller::class, 'actSaveFileIns']);
+// Route::get('format2/showFileInspection', [Format2Controller::class, 'actShowFileInspection']);
+Route::get('format2/showFileInspection/{idFo5}', [Format2Controller::class, 'actShowFileInspection']);
 // reclamo form
 Route::post('format2/searchReclaim', [Format2Controller::class, 'actSearchReclaim']);
 Route::post('format2/searchData', [Format2Controller::class, 'actSearchData']);
@@ -108,16 +113,21 @@ Route::post('format4/f4', [Format4Controller::class, 'actF4']);
 Route::post('format4/saveFile', [Format4Controller::class, 'actSaveFile']);
 Route::get('format4/file/{idFo4}', [Format4Controller::class, 'actFile'])->name('format4-file');
 Route::post('format4/changeProcess', [Format4Controller::class, 'actChangeProcess']);
+Route::get('format4/f4/{idFo2?}',[F4Controller::class, 'actF4'])->name('f4');
 // formato 7
 Route::get('format7/f7/{idFo2?}',[F7Controller::class, 'actF7'])->name('f7');
+Route::post('format7/save', [Format7Controller::class, 'actSave']);
+Route::post('format7/f7', [Format7Controller::class, 'actF7']);
 // formato 10 resoluciones
 Route::get('desicion/show',[DesicionController::class, 'actShow']);
 Route::get('desicion/list', [DesicionController::class, 'actList']);
 Route::post('desicion/changeProcess', [DesicionController::class, 'actChangeProcess']);
+Route::get('desicion/res/{idFo2?}',[ResController::class, 'actRes'])->name('desicion');
+// en el controlador se verifica si tiene resolucion, ya q no agregamos ningun datoç
+Route::post('format2/fileRes',[Format2Controller::class, 'actFileRes']);
+Route::post('format2/saveFileRes',[Format2Controller::class, 'actSaveFileRes']);
+Route::get('format2/showFileRes/{idFo2?}',[Format2Controller::class, 'actShowFileRes']);
 
-// opciones
-Route::get('opciones/show',[OpcionesController::class, 'actShow']);
-Route::get('opciones/list', [OpcionesController::class, 'actList']);
 // format9
 Route::post('format9/edit', [Format9Controller::class, 'actEdit']);
 Route::post('format9/save', [Format9Controller::class, 'actSave']);
@@ -129,3 +139,9 @@ Route::post('format8/edit', [Format8Controller::class, 'actEdit']);
 Route::post('format8/save', [Format8Controller::class, 'actSave']);
 Route::get('format8/file/{idFo8}', [Format8Controller::class, 'actFile'])->name('format8-file');
 Route::get('format8/f8/{idFo2?}',[F8Controller::class, 'actF8'])->name('f8');
+
+// opciones
+Route::get('opciones/show',[OpcionesController::class, 'actShow']);
+Route::get('opciones/list', [OpcionesController::class, 'actList']);
+Route::post('opciones/changeProcessEnd', [OpcionesController::class, 'actChangeProcessEnd']);
+Route::post('opciones/quickSolution', [OpcionesController::class, 'actQuickSolution']);

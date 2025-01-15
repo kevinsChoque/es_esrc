@@ -266,8 +266,6 @@
     }
     function saveF4()
     {
-        // console.log($('#f5idFo2').val())
-        // alert($(ele).html())
         if(validateF4())
             return;
         var formData = new FormData($("#fvf4")[0]);
@@ -285,13 +283,18 @@
             contentType: false,
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                console.log(r)
                 if (r.state)
                 {
                     $('.saveF4').prop('disabled',false);
                     $('#mf4').modal('hide');
-                    $('#f4idFo2').val()
                     $('.'+$('#f4idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
+                    let iconLoad = '<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+$('#f4idFo2').val()+'\',\''+$('#f4ins').val()+'\');"><i class="fa fa-upload"></i></button>'
+                    $('.'+$('#f4idFo2').val()).find('.f4').parent().parent().append(iconLoad)
+                    let iconF4 = '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+$('#f4idFo2').val()+'"><i class="fa fa-file-pdf"></i> F4</a>';
+                    $('.'+$('#f4idFo2').val()).find('.containerDownload').html(iconF4)
+                    let iconChange = '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.f2.codRec+'\');"><i class="fa fa-edit"></i></button>';
+                    $('.'+$('#f4idFo2').val()).find('.containerChangeState').append(iconChange)
+
                 }
                 msgForm(r);
                 $('.olF4').css("display","none");
@@ -367,7 +370,7 @@
                 {
                     // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
                     // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
-                    iconoPdf = r.data[i].idFo4===null?'':'<button class="btn btn-secondary py-0 px-1" onclick="download()"><i class="fa fa-file-pdf"></i> F4</button>';
+                    iconoPdf = r.data[i].idFo4===null?'-':'<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F4</a>';
                     iconoF4 = r.data[i].idFo4===null?'plus':'file';
                     iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
                     change = r.data[i].f4 == '1'?
@@ -380,14 +383,15 @@
                         '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
                         '<td class="align-middle text-center">' + novDato(r.data[i].tipoReclamo) +'</td>' +
                         '<td class="align-middle">' + fdateInspection(r.data[i]) +'</td>' +
-                        '<td class="align-middle text-center">'+
+                        '<td class="align-middle text-center containerChangeState">'+
                             '<span class="badge badge-info">Conciliacion</span>'+change+
                         '</td>' +
-                        '<td class="align-middle text-center">' +
+                        '<td class="align-middle text-center containerDownload">' +
                             // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F2</button>' +
                             // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
                             // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
                             iconoPdf +
+                            // '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F4</a>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
@@ -406,14 +410,12 @@
     function changeProcess(codRec)
     {
         event.preventDefault();
-
         Swal.fire({
             title: "El reclamo se declara como:",
             input: "select",
             inputOptions: {
                 fundado: "Reclamo FUNDADO",
                 infundado: "Reclamo INFUNDADO",
-                //reconsideracion: "Solicito RECONSIDERACION",
             },
             inputPlaceholder: "Seleccione estado del reclamo",
             showCancelButton: true,
@@ -422,7 +424,6 @@
                 {
                     if (value === "fundado" || value === "infundado" || value === "reconsideracion")
                     {
-                        // alert('send')
                         $(".containerSpinner").removeClass("d-none");
                         $(".containerSpinner").addClass("d-flex");
                         jQuery.ajax({
@@ -432,10 +433,9 @@
                             dataType: 'json',
                             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                             success: function (r) {
-                                console.log(r)
                                 msgImportant(r)
-                                // buildTable();
-                                // fillRecords();
+                                buildTable();
+                                fillRecords();
                             },
                             error: function (xhr, status, error) {alert("Algo salio mal, porfavor contactese con el Administrador.");}
                         });
@@ -451,10 +451,15 @@
         //     Swal.fire(`El reclamo se cambio a: ${fruit}`);
         // }
     }
-    function download()
+    function buildTable()
     {
-        alert('descargando formato4')
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
     }
+    // function download()
+    // {
+    //     alert('descargando formato4')
+    // }
     // function userClaimant(reg)
     // {
     //     return '<span class="badge badge-light"><i class="fa fa-id-card"></i> dni: '+reg.numIde+'</span><br>' +

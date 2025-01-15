@@ -683,6 +683,103 @@ class Format2Controller extends Controller
             return response()->json(['state' => false, 'message' => 'Ocurrió un error, por favor contacte al administrador.']);
         }
     }
+    public function actFileInspection(Request $r)
+    {
+        $f2 = TFormat2::where('idFo2',$r->idFo2)->where('pnumIns',$r->ins)->where('process','<',9)->first();
+        return response()->json(['state' => true, 'data' => $f2]);
+    }
+    // actSaveFileIns
+    public function actSaveFileIns_las(Request $r)
+    {
+        // dd($r->all());
+        if ($r->hasFile('fileInspection') && $r->file('fileInspection')->getClientMimeType() !== 'application/pdf')
+            return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
+        $f2 = TFormat2::find($r->fileidFo2);
+        $nameFile = $f2->codRec.'_inspecciones.'.$r->file('fileInspection')->getClientOriginalExtension();
+        $pathFile = 'reclamos/'.$f2->codRec;
+        dd($f2->idFo2,$nameFile,$pathFile);
+        DB::beginTransaction();
+        try {
+            if (Storage::exists('public/'.$f2->fileIns))
+                Storage::delete('public/'.$f2->fileIns);
+            $pathFile = $this->saveFileReg($r, 'fileInspection', $nameFile, $pathFile);
+            $f2->update(['fileIns' => $pathFile]);
+            DB::commit();
+            return response()->json(['state' => true, 'message' => 'Se subio el archivo correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function actSaveFileIns(Request $r)
+    {
+        try {
+            if (!$r->hasFile('fileInspection') || $r->file('fileInspection')->getClientMimeType() !== 'application/pdf')
+                return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido en formato PDF.']);
+            // Obtener el registro del formato 2
+            $f2 = TFormat2::findOrFail($r->fileidFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
+            $nameFile = $f2->codRec . '_inspecciones.' . $r->file('fileInspection')->getClientOriginalExtension();
+            $pathFile = 'reclamos/' . $f2->codRec;
+            DB::beginTransaction();
+            if ($f2->fileIns && Storage::exists('public/' . $f2->fileIns))
+                Storage::delete('public/' . $f2->fileIns);
+            $newFilePath = $this->saveFileReg($r, 'fileInspection', $nameFile, $pathFile);
+            $f2->update(['fileIns' => $newFilePath]);
+            DB::commit();
+            return response()->json(['state' => true, 'message' => 'Archivo subido correctamente.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function actShowFileInspection(Request $r,$idFo2)
+    {
+    	$f2 = TFormat2::find($idFo2);
+        $pathFile = storage_path('app/public/'.$f2->fileIns);
+        if (file_exists($pathFile))
+            return response()->file($pathFile);
+        else
+            abort(404);
+    }
+    public function actFileRes(Request $r)
+    {
+        $f2 = TFormat2::where('idFo2',$r->idFo2)->where('pnumIns',$r->ins)->where('process','<',9)->first();
+        return response()->json(['state' => true, 'data' => $f2]);
+    }
+    public function actSaveFileRes(Request $r)
+    {
+        // dd($r->all());
+        try {
+            if (!$r->hasFile('resfile') || $r->file('resfile')->getClientMimeType() !== 'application/pdf')
+                return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido en formato PDF.']);
+            // Obtener el registro del formato 2
+            $f2 = TFormat2::findOrFail($r->residFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
+            $nameFile = $f2->codRec . '_resolucion.' . $r->file('resfile')->getClientOriginalExtension();
+            $pathFile = 'reclamos/' . $f2->codRec;
+            DB::beginTransaction();
+            if ($f2->fileRes && Storage::exists('public/' . $f2->fileRes))
+                Storage::delete('public/' . $f2->fileRes);
+            $newFilePath = $this->saveFileReg($r, 'resfile', $nameFile, $pathFile);
+            $f2->update(['fileRes' => $newFilePath]);
+            DB::commit();
+            return response()->json(['state' => true, 'message' => 'Archivo subido correctamente.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function actShowFileRes(Request $r,$idFo2)
+    {
+    	$f2 = TFormat2::find($idFo2);
+        $pathFile = storage_path('app/public/'.$f2->fileRes);
+        if (file_exists($pathFile))
+            return response()->file($pathFile);
+        else
+            abort(404);
+    }
+
+
+
 
 
 

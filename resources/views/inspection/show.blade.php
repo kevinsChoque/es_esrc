@@ -115,7 +115,7 @@
                                 <textarea name="f5obs" id="f5obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
                             </div>
                         </div>
-                        <div class="px-1 conteinerMessageF5">
+                        {{-- <div class="px-1 conteinerMessageF5">
                             <div class="row">
                                 <div class="col-lg-9 mb-1">
                                     <div class="callout callout-warning py-2">
@@ -136,7 +136,7 @@
                                 <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
                             </div>
                             <input type="file" id="f5file" name="f5file" class="pdfFile" style="display: none;" data-name="ARCHIVO DE FORMATO 5">
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>
@@ -191,7 +191,7 @@
                                 <textarea name="f6obs" id="f6obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
                             </div>
                         </div>
-                        <div class="px-1 conteinerMessageF6">
+                        {{-- <div class="px-1 conteinerMessageF6">
                             <div class="row">
                                 <div class="col-lg-9 mb-1">
                                     <div class="callout callout-warning py-2">
@@ -212,7 +212,7 @@
                                 <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
                             </div>
                             <input type="file" id="f6file" name="f6file" class="pdfFile" style="display: none;" data-name="ARCHIVO DE FORMATO 6">
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>
@@ -298,6 +298,55 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="mloadFile" tabindex="-1" role="dialog" aria-labelledby="mloadFileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="overlay olFile" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="mloadFileLabel"><i class="fa fa-file"></i> FORMATO 6: Resumen del acta de inspeccion externa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fvfile">
+                    <input type="hidden" class="fileidFo2" id="fileidFo2">
+                    <input type="hidden" class="fileins" id="fileins">
+                    <div class="row">
+                        <div class="px-1 conteinerMessageFile">
+                            <div class="row">
+                                <div class="col-lg-9 mb-1">
+                                    <div class="callout callout-warning py-2">
+                                        <h5 class="font-weight-bold">Ten en cuenta!</h5>
+                                        <p>Este formato es para resumir el acta
+                                            de inspeccion interna, en caso de actualizar el formato 5, subo otro archivo el cual reemplazara el actual.</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mb-1 d-flex justify-content-center align-items-center">
+                                    <a class="btn btn-link py-1 font-weight-bold linkFile" target="_blank" href=""><i class="fa fa-file"></i> Archivo de inspeccion</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE INSPECCION</h5>
+                                <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                            </div>
+                            <input type="file" id="fileInspection" name="fileInspection" class="pdfFile" style="display: none;" data-name="ARCHIVO DE INSPECCION">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary saveFile">Guardar archivo</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -310,6 +359,50 @@
     });
     $('.saveF5').on('click',function(){saveF5();})
     $('.saveF6').on('click',function(){saveF6();})
+    $('.saveF7').on('click',function(){saveF7();})
+    $('.saveFile').on('click',function(){saveFile();})
+    function saveFile()
+    {
+        if($('#fileInspection')[0].files.length==0)
+        {alert("No se subio el documento de la inspeccion.");return;}
+        var formData = new FormData($("#fvfile")[0]);
+        formData.append('fileidFo2',$('#fileidFo2').val());
+        formData.append('fileins',$('#fileins').val());
+        $('.saveFile').prop('disabled',true);
+        $('.olFile').css("display","flex");
+        jQuery.ajax({
+            url: "{{ url('format2/saveFileIns') }}",
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                console.log(r)
+                if (r.state)
+                {
+                    $('.saveFile').prop('disabled',false);
+                    $('#mloadFile').modal('hide');
+                    // $('#fileidFo2').val()
+                    // $('.'+$('#fileidFo2').val()).find('.f5').html('<i class="fa fa-file"></i> F5');
+                    // if(r.load)
+                    // {
+                    //     buildTable();
+                    //     fillRecords();
+                    // }
+                }
+                msgForm(r);
+                $('.olFile').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.olFile').css("display","none");
+                $('.saveFile').prop('disabled',false);
+            }
+        });
+    }
     function saveF5()
     {
         if(validateF5())
@@ -335,6 +428,11 @@
                     $('#mf5').modal('hide');
                     $('#f5idFo2').val()
                     $('.'+$('#f5idFo2').val()).find('.f5').html('<i class="fa fa-file"></i> F5');
+                    if(r.load)
+                    {
+                        buildTable();
+                        fillRecords();
+                    }
                 }
                 msgForm(r);
                 $('.olF5').css("display","none");
@@ -372,6 +470,11 @@
                     $('#mf6').modal('hide');
                     $('#f6idFo2').val()
                     $('.'+$('#f6idFo2').val()).find('.f6').html('<i class="fa fa-file"></i> F6');
+                    if(r.load)
+                    {
+                        buildTable();
+                        fillRecords();
+                    }
                 }
                 msgForm(r);
                 $('.olF6').css("display","none");
@@ -384,20 +487,63 @@
             }
         });
     }
+    function saveF7()
+    {
+        if(validateF7())
+            return;
+        var formData = new FormData($("#fvf7")[0]);
+        formData.append('f7idFo2',$('#f7idFo2').val());
+        formData.append('f7ins',$('#f7ins').val());
+        $('.saveF7').prop('disabled',true);
+        $('.olF7').css("display","flex");
+        jQuery.ajax({
+            url: "{{ url('format7/save') }}",
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                console.log(r)
+                if (r.state)
+                {
+                    $('.saveF7').prop('disabled',false);
+                    $('#mf7').modal('hide');
+                    $('#f7idFo2').val()
+                    $('.'+$('#f7idFo2').val()).find('.f7').html('<i class="fa fa-file"></i> F7');
+                }
+                msgForm(r);
+                $('.olF7').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.olF7').css("display","none");
+                $('.saveF7').prop('disabled',false);
+            }
+        });
+    }
     function validateF5()
     {
         if($('#fvf5').valid()==false)
         {return true;}
-        if($('#f5file')[0].files.length==0)
-        {alert("No se subio el documento del formato 5.");return true;}
+        // if($('#f5file')[0].files.length==0)
+        // {alert("No se subio el documento del formato 5.");return true;}
         return false;
     }
     function validateF6()
     {
         if($('#fvf6').valid()==false)
         {return true;}
-        if($('#f6file')[0].files.length==0)
-        {alert("No se subio el documento del formato 6.");return true;}
+        // if($('#f6file')[0].files.length==0)
+        // {alert("No se subio el documento del formato 6.");return true;}
+        return false;
+    }
+    function validateF7()
+    {
+        if($('#fvf7').valid()==false)
+        {return true;}
         return false;
     }
     function fillRecords()
@@ -462,6 +608,7 @@
                                 '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
                                 '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
                                 '<button type="button" class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
+                                '<button class="btn text-info" onclick="mloadfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
                                 // options+
                             '</div>'+
                         '</td>' +
@@ -470,6 +617,38 @@
                 $('#data').html(html);
                 initDatatable('records');
                 $('.overlayRegistros').css('display','none');
+            }
+        });
+    }
+    function mloadfile(idFo2,ins)
+    {
+        // $('#mloadFile').modal('show')
+        cleanFile();
+        jQuery.ajax({
+            url: "{{ url('format2/fileInspection') }}",
+            method: 'POST',
+            data: {idFo2:idFo2,ins:ins},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                $('.conteinerMessageFile').css('display','none');
+                if(r.data.fileIns!==null)
+                {
+                    $('.conteinerMessageFile').css('display','block');
+                    // let href = $('.linkFileF5').attr("href");
+                    let href = "{{ url('format2/showFileInspection') }}"
+                    $('.linkFile').attr("href",href+"/"+r.data.idFo2)
+                    // alert(r.data.url)
+
+                }
+                $('#mloadFile').modal('show')
+                $('#fileidFo2').val(idFo2)
+                $('#fileins').val(ins)
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.overlayForm').css("display","none");
             }
         });
     }
@@ -523,6 +702,15 @@
     {
         $('#fvf6 .input').val('');
         loadFile($('#f6file'),false);
+    }
+    function cleanF7()
+    {
+        $('#fvf7 .input').val('');
+        loadFile($('#f7file'),false);
+    }
+    function cleanFile()
+    {
+        loadFile($('#fileInspection'),false);
     }
     function mf5(idFo2,ins)
     {
@@ -599,40 +787,39 @@
     }
     function mf7(idFo2,ins)
     {
-        $('#mf7').modal('show')
-        // cleanF7();
-        // jQuery.ajax({
-        //     url: "{{ url('format7/f7') }}",
-        //     method: 'POST',
-        //     data: {idFo2:idFo2,ins:ins},
-        //     dataType: 'json',
-        //     headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-        //     success: function (r) {
-        //         console.log('akita');
-        //         console.log(r)
-        //         $('.conteinerMessageF6').css('display','none');
-        //         if(r.data!==null)
-        //         {
-        //             $('#f6date').val(r.data.date);
-        //             $('#f6hora').val(r.data.hour);
-        //             $('#f6obs').val(r.data.obs);
-        //             $('.conteinerMessageF6').css('display','block');
-        //             // let href = $('.linkFileF5').attr("href");
-        //             let href = "{{ url('format6/file') }}"
-        //             $('.linkFileF6').attr("href",href+"/"+r.data.idFo6)
-        //             // alert(r.data.url)
+        cleanF7();
+        jQuery.ajax({
+            url: "{{ url('format7/f7') }}",
+            method: 'POST',
+            data: {idFo2:idFo2,ins:ins},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                console.log('akita');
+                console.log(r)
+                $('.conteinerMessageF7').css('display','none');
+                if(r.data!==null)
+                {
+                    $('#f7date').val(r.data.date);
+                    $('#f7hora').val(r.data.hour);
+                    $('#f7obs').val(r.data.obs);
+                    $('.conteinerMessageF7').css('display','block');
+                    // let href = $('.linkFileF5').attr("href");
+                    let href = "{{ url('format7/file') }}"
+                    $('.linkFileF7').attr("href",href+"/"+r.data.idFo7)
+                    // alert(r.data.url)
 
-        //         }
-        //         $('#mf6').modal('show')
-        //         $('#f6idFo2').val(idFo2)
-        //         $('#f6ins').val(ins)
-        //     },
-        //     error: function (xhr, status, error) {
-        //         alert("Algo salio mal, porfavor contactese con el Administrador.");
-        //         console.log(error)
-        //         $('.overlayForm').css("display","none");
-        //     }
-        // });
+                }
+                $('#mf7').modal('show')
+                $('#f7idFo2').val(idFo2)
+                $('#f7ins').val(ins)
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.overlayForm').css("display","none");
+            }
+        });
     }
 
 
