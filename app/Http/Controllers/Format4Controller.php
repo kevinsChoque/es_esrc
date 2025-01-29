@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use DB;
 
+use App\Exceptions\Exception;
 use App\Models\TFormat2;
 use App\Models\TFormat4;
+use App\Models\TProcess;
 
 class Format4Controller extends Controller
 {
@@ -18,10 +20,21 @@ class Format4Controller extends Controller
     }
     public function actList()
     {
-        $list = TFormat2::where('format2.process', '=', '3')
+        // $list = TFormat2::where('format2.process', '=', '3')
+        //     ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+        //     ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
+        //     ->select('format2.*','format4.idFo4','inspections.*')
+        //     ->get();
+        $list = TProcess::where('format2.process', '=', '3')
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
             ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
-            ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','format4.idFo4','inspections.*')
+            ->leftjoin('format4', 'format4.idPro', '=', 'process.idPro')
+            ->select('format2.*','format4.idFo4','inspections.*','process.*')
+            ->whereIn('process.idPro', function ($query) {
+                $query->selectRaw('MAX(idPro)')
+                    ->from('process')
+                    ->groupBy('process.idFo2'); // Agrupar por el campo que conecta con format2
+            })
             ->get();
         return response()->json(['data' => $list]);
     }
@@ -29,15 +42,16 @@ class Format4Controller extends Controller
     {
         DB::beginTransaction();
         try {
-            $format2 = TFormat2::findOrFail($request->f4idFo2);
+            $pro = TProcess::findOrFail($request->f4idPro);
+            $format2 = TFormat2::findOrFail($pro->idFo2);
             $format4 = TFormat4::updateOrCreate(
-                ['idFo2' => $request->f4idFo2],
+                ['idPro' => $request->f4idPro],
                 $request->only(['hourStart', 'hourEnd', 'proEps', 'proRec', 'agreement', 'disagreement'])
             );
             if ($format4->wasRecentlyCreated || $format4->wasChanged())
             {
-                $format2->f4 = '1';
-                $format2->save();
+                $pro->f4 = '1';
+                $pro->save();
             }
             DB::commit();
             $message = $format4->wasRecentlyCreated
@@ -51,19 +65,21 @@ class Format4Controller extends Controller
     }
     public function actF4(Request $r)
     {
-        $f4 = TFormat4::where('idFo2',$r->idFo2)->first();
+        $f4 = TFormat4::where('idPro',$r->idPro)->first();
         return response()->json(['state' => true, 'data' => $f4]);
     }
     public function actSaveFile(Request $r)
     {
+        // dd($r->all());
         if ($r->hasFile('f4file') && $r->file('f4file')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
-        $f2 = TFormat2::findOrFail($r->ff4idFo2);
-        $nameFile = $f2->codRec . '_conciliacion.' . $r->file('f4file')->getClientOriginalExtension();
+        $pro = TProcess::findOrFail($r->ff4idPro);
+        $f2 = TFormat2::findOrFail($pro->idFo2);
+        $nameFile = $f2->codRec.'_'.$pro->idPro. '_conciliacion.' . $r->file('f4file')->getClientOriginalExtension();
         $pathFile = 'reclamos/' . $f2->codRec;
         DB::beginTransaction();
         try {
-            $existingRecord = TFormat4::where('idFo2', $r->ff4idFo2)->first();
+            $existingRecord = TFormat4::where('idPro', $r->ff4idPro)->first();
             if ($existingRecord)
             {
                 if (Storage::exists('public/'.$existingRecord->url))
@@ -103,18 +119,20 @@ class Format4Controller extends Controller
         // ---------------
         // ---------------
         // ---------------
+        // dd($r->all());
         try {
             DB::beginTransaction();
-            $f2 = TFormat2::where('codRec', $r->codRec)->first();
+            $pro = TProcess::where('idPro', $r->idPro)->first();
+            $f2 = TFormat2::where('codRec', $pro->codRec)->first();
             if (!$f2)
-                throw new Exception('No se encontró el registro de TFormat2.');
-            $f4 = TFormat4::where('idFo2', $f2->idFo2)->first();
+                throw new \Exception('No se encontró el registro de TFormat2.');
+            $f4 = TFormat4::where('idPro', $pro->idPro)->first();
             if (!$f4)
-                throw new Exception('No se encontró el registro de TFormat4.');
+                throw new \Exception('No se encontró el registro de TFormat4.');
             $f2->process = 4;
             $f4->state = $r->stateConciliation;
             if (!$f2->save() || !$f4->save())
-                throw new Exception('Error al guardar los cambios.');
+                throw new \Exception('Error al guardar los cambios.');
             DB::commit();
             return response()->json(['state' => true,'message' => 'El reclamo ' . $r->codRec . ' se declaró como ' . $r->stateConciliation]);
         } catch (Exception $e) {

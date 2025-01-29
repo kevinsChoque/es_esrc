@@ -14,7 +14,7 @@ class TFormat4 extends Model
 
     protected $fillable = [
         'idFo4',
-        'idFo2',
+        'idPro',
         'hourStart',
         'hourEnd',
         'proEps',

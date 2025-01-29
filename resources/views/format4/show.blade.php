@@ -84,7 +84,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvf4">
-                    <input type="hidden" name="f4idFo2" id="f4idFo2">
+                    <input type="hidden" name="f4idPro" id="f4idPro">
                     <input type="hidden" name="f4ins" id="f4ins">
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -187,7 +187,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvfile">
-                    <input type="hidden" name="ff4idFo2" id="ff4idFo2">
+                    <input type="hidden" name="ff4idPro" id="ff4idPro">
                     <input type="hidden" name="ff4ins" id="ff4ins">
                     <div class="row">
                         <div class="px-1 conteinerMessageF4">
@@ -269,7 +269,7 @@
         if(validateF4())
             return;
         var formData = new FormData($("#fvf4")[0]);
-        formData.append('f4idFo2',$('#f4idFo2').val());
+        formData.append('f4idPro',$('#f4idPro').val());
         formData.append('f4ins',$('#f4ins').val());
 
         $('.saveF4').prop('disabled',true);
@@ -287,14 +287,13 @@
                 {
                     $('.saveF4').prop('disabled',false);
                     $('#mf4').modal('hide');
-                    $('.'+$('#f4idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
-                    let iconLoad = '<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+$('#f4idFo2').val()+'\',\''+$('#f4ins').val()+'\');"><i class="fa fa-upload"></i></button>'
-                    $('.'+$('#f4idFo2').val()).find('.f4').parent().parent().append(iconLoad)
-                    let iconF4 = '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+$('#f4idFo2').val()+'"><i class="fa fa-file-pdf"></i> F4</a>';
-                    $('.'+$('#f4idFo2').val()).find('.containerDownload').html(iconF4)
-                    let iconChange = '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.f2.codRec+'\');"><i class="fa fa-edit"></i></button>';
-                    $('.'+$('#f4idFo2').val()).find('.containerChangeState').append(iconChange)
-
+                    $('.'+$('#f4idPro').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
+                    let iconLoad = '<button class="btn text-info" title="Subir Formato 4" onclick="mfile(\''+$('#f4idPro').val()+'\',\''+$('#f4ins').val()+'\');"><i class="fa fa-upload"></i></button>'
+                    $('.'+$('#f4idPro').val()).find('.f4').parent().parent().append(iconLoad)
+                    let iconF4 = '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+$('#f4idPro').val()+'"><i class="fa fa-file-pdf"></i> F4</a>';
+                    $('.'+$('#f4idPro').val()).find('.containerDownload').html(iconF4)
+                    let iconChange = '<span class="badge badge-info">Conciliacion</span><button class="btn text-info py-0 pr-0" onclick="changeProcess(\''+$('#f4idPro').val()+'\');"><i class="fa fa-edit"></i></button>';
+                    $('.'+$('#f4idPro').val()).find('.containerChangeState').html(iconChange)
                 }
                 msgForm(r);
                 $('.olF4').css("display","none");
@@ -333,7 +332,7 @@
                 {
                     $('.saveF4File').prop('disabled',false);
                     $('#mLoadFile').modal('hide');
-                    // $('#ff4idFo2').val()
+                    loadFile($('#f4file'),false);
                     // $('.'+$('#ff4idFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
                 }
                 msgForm(r);
@@ -347,7 +346,6 @@
             }
         });
     }
-
     function fillRecords()
     {
         $('.containerRecords').css('display','block');
@@ -357,28 +355,20 @@
             method: 'get',
             success: function(r)
             {
-                console.log(r)
                 let html = '';
-                let locationProperty;
-                let inspection;
-                // let formats;
-                // let options;
                 let iconoF4;
                 let iconoF6;
                 let change;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
-                    iconoPdf = r.data[i].idFo4===null?'-':'<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F4</a>';
+                    iconoPdf = r.data[i].idFo4===null?'-':'<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+r.data[i].idPro+'"><i class="fa fa-file-pdf"></i> F4</a>';
                     iconoF4 = r.data[i].idFo4===null?'plus':'file';
-                    iconLoad = r.data[i].idFo4===null?'':'<button type="button" class="btn text-info f4" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
-                    change = r.data[i].f4 == '1'?
-                        '<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
-                        '';
-                    html += '<tr class="'+r.data[i].idFo2+'">' +
+                    iconLoad = r.data[i].idFo4===null?'':'<button class="btn text-info" title="Subir Formato 4" onclick="mfile(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>';
+                    change = r.data[i].f4 == '1'
+                        ?'<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].idPro+'\');"><i class="fa fa-edit"></i></button>'
+                        :'';
+                    html += '<tr class="'+r.data[i].idPro+'">' +
                         '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
-                        // '<td class="align-middle">' + recordsId(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
                         '<td class="align-middle text-center">' + novDato(r.data[i].tipoReclamo) +'</td>' +
@@ -387,15 +377,11 @@
                             '<span class="badge badge-info">Conciliacion</span>'+change+
                         '</td>' +
                         '<td class="align-middle text-center containerDownload">' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F2</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F5</button>' +
-                            // '<button class="btn btn-secondary py-0 px-1 mr-1"><i class="fa fa-file-pdf"></i> F6</button>' +
                             iconoPdf +
-                            // '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f4') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F4</a>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
-                                '<button type="button" class="btn text-info f4" title="Formato 4" onclick="mf4(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF4+'"></i> F4</button>'+
+                                '<button type="button" class="btn text-info f4" title="Formato 4" onclick="mf4(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF4+'"></i> F4</button>'+
                                 iconLoad +
                             '</div>'+
                         '</td>' +
@@ -407,7 +393,7 @@
             }
         });
     }
-    function changeProcess(codRec)
+    function changeProcess(idPro)
     {
         event.preventDefault();
         Swal.fire({
@@ -429,7 +415,7 @@
                         jQuery.ajax({
                             url: "{{ url('format4/changeProcess') }}",
                             method: 'POST',
-                            data: {stateConciliation: value, codRec:codRec},
+                            data: {stateConciliation: value, idPro:idPro},
                             dataType: 'json',
                             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                             success: function (r) {
@@ -475,15 +461,16 @@
         $('#fvf4 .input').val('');
         // loadFile($('#f5file'),false);
     }
-    function mfile(idFo2,ins)
+    function mfile(idPro,ins)
     {
         jQuery.ajax({
             url: "{{ url('format4/f4') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
+                console.log(r)
                 $('.conteinerMessageF4').css('display','none');
                 if(!isEmpty(r.data.url))
                 {
@@ -492,7 +479,7 @@
                     $('.linkFileF4').attr("href",href+"/"+r.data.idFo4)
                 }
                 $('#mLoadFile').modal('show')
-                $('#ff4idFo2').val(idFo2)
+                $('#ff4idPro').val(idPro)
                 $('#ff4ins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -502,16 +489,13 @@
             }
         });
     }
-    function mf4(idFo2,ins)
+    function mf4(idPro,ins)
     {
-        // $('#mf4').modal('show')
-        // $('#f4idFo2').val(idFo2)
-        // $('#f4ins').val(ins)
         cleanF4();
         jQuery.ajax({
             url: "{{ url('format4/f4') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
@@ -529,7 +513,7 @@
                     // $('.linkFileF5').attr("href",href+"/"+r.data.idFo5)
                 }
                 $('#mf4').modal('show')
-                $('#f4idFo2').val(idFo2)
+                $('#f4idPro').val(idPro)
                 $('#f4ins').val(ins)
             },
             error: function (xhr, status, error) {

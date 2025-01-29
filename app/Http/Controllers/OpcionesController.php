@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
+use DB;
 use App\Models\TFormat2;
 use App\Models\TFormat8;
-
-use DB;
+use App\Models\TProcess;
 
 class OpcionesController extends Controller
 {
@@ -15,11 +14,12 @@ class OpcionesController extends Controller
     {return view('opciones/show');}
     public function actList()
     {
-        $list = TFormat2::where('format2.process', '=', '5')
-            ->leftjoin('format8', 'format8.idFo2', '=', 'format2.idFo2')
-            ->leftjoin('format9', 'format9.idFo2', '=', 'format2.idFo2')
+        $list = TProcess::where('format2.process', '=', '5')
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->leftjoin('format8', 'format8.idPro', '=', 'process.idPro')
+            ->leftjoin('format9', 'format9.idPro', '=', 'process.idPro')
             ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','format8.idFo8','format9.idFo9','inspections.*')
+            ->select('format2.*','format8.idFo8','format9.idFo9','inspections.*','process.*')
             // ->where('format2.endProcess','!=','1')
             // ->whereNull('format2.endProcess')
             ->where(function($query) {
@@ -27,7 +27,18 @@ class OpcionesController extends Controller
                       ->orWhereNull('format2.endProcess')
                       ->orWhere('format2.endProcess', '');
             })
+            ->whereIn('process.idPro', function ($query) {
+                $query->selectRaw('MAX(idPro)')
+                    ->from('process')
+                    ->groupBy('process.idFo2'); // Agrupar por el campo que conecta con format2
+            })
             ->get();
+        // $list = TProcess::where('format2.process', '=', '3')
+        //     ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+        //     ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+        //     ->leftjoin('format4', 'format4.idPro', '=', 'process.idPro')
+        //     ->select('format2.*','format4.idFo4','inspections.*','process.*')
+        //     ->get();
         return response()->json(['data' => $list]);
     }
     public function actChangeProcess(Request $r)
@@ -80,5 +91,36 @@ class OpcionesController extends Controller
             DB::rollBack();
             return response()->json(['state' => false,'message' => 'Ocurrió un error, por favor contacte con el administrador.']);
         }
+    }
+    public function actInvestigate(Request $r)
+    {
+        // dd($r->all());
+        $f2 = TFormat2::find($r->idFo2);
+        $pro = new TProcess([
+            'idFo2' => $f2->idFo2,
+            'codRec' => $f2->codRec,
+            'inscription' => $f2->pnumIns,
+            'fr' => Carbon::now(),
+        ]);
+        $pro->save();
+        $f2->process = '2';
+        $f2->endProcess = null;
+        $f2->save();
+        return response()->json(['state' => true,
+        'message' => 'Se cambio al estado de investigacion como  reconsideracion el reclamo con codigo: ' . $f2->codRec ]);
+        // try {
+        //     DB::beginTransaction();
+        //     $f8 = TFormat8::where('idFo2', $r->idFo2)->first();
+        //     $f8->comment = $r->comentario;
+        //     $f8->save();
+        //     $f2 = TFormat2::where('idFo2', $r->idFo2)->first();
+        //     $f2->endProcess = '1';
+        //     $f2->save();
+        //     DB::commit();
+        //     return response()->json(['state' => true,'message' => 'Se guardo el comentario y se realizo el cierre del reclamo ' . $r->codRec . ' correctamente.']);
+        // } catch (Exception $e) {
+        //     DB::rollBack();
+        //     return response()->json(['state' => false,'message' => 'Ocurrió un error, por favor contacte con el administrador.']);
+        // }
     }
 }

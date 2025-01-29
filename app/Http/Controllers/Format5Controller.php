@@ -9,15 +9,16 @@ use DB;
 
 use App\Models\TFormat5;
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class Format5Controller extends Controller
 {
-    public function actSave(Request $r)
+    public function actSave_old(Request $r)
     {
         DB::beginTransaction();
         try {
             $existingRecord = TFormat5::updateOrCreate(
-                ['idFo2' => $r->f5idFo2],
+                ['idPro' => $r->f5idPro],
                 [
                     'inscription' => $r->f5ins,
                     'date' => $r->f5date,
@@ -28,7 +29,8 @@ class Format5Controller extends Controller
             );
             if ($existingRecord->wasRecentlyCreated || $existingRecord->wasChanged())
             {
-                $f2 = TFormat2::find($r->f5idFo2);
+                $pro = TProcess::find($r->f5idPro);
+                $f2 = TFormat2::find($pro->idFo2);
                 $f2->f5 = '1';
                 if ($f2->save()) {
                     DB::commit();
@@ -45,7 +47,46 @@ class Format5Controller extends Controller
             return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
+    public function actSave(Request $r)
+    {
+        DB::beginTransaction();
+        try {
+            $existingRecord = TFormat5::updateOrCreate(
+                ['idPro' => $r->f5idPro],
+                [
+                    'inscription' => $r->f5ins,
+                    'date' => $r->f5date,
+                    'hour' => $r->f5hora,
+                    'obs' => $r->f5obs,
+                    'fr' => Carbon::now(),
+                ]
+            );
+            if ($existingRecord->wasRecentlyCreated || $existingRecord->wasChanged())
+            {
+                $pro = TProcess::find($r->f5idPro);
+                if (!$pro)
+                    throw new \Exception('Proceso no encontrado.');
+                $pro->f5 = '1';
+                if ($pro->save())
+                {
+                    DB::commit();
+                    $load = ($pro->f5 == '1' && $pro->f6 == '1');
+                    $message = $existingRecord->wasRecentlyCreated
+                        ? 'Formato 5 registrado correctamente'
+                        : 'Formato 5 actualizado correctamente';
+                    return response()->json(['state' => true, 'message' => $message, 'load' => $load]);
+                }
+            }
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => 'No fue posible actualizar el expediente.']);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Revertir la transacción en caso de error
+            return response()->json([
+                'state' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function actSave_last(Request $r)
     {
         // $pathFile = storage_path('app/public/'.'2024-1485/20241009_160649_formato5.pdf');
@@ -115,7 +156,7 @@ class Format5Controller extends Controller
 
     public function actF5(Request $r)
     {
-        $f5 = TFormat5::where('idFo2',$r->idFo2)->where('inscription',$r->ins)->first();
+        $f5 = TFormat5::where('idPro',$r->idPro)->where('inscription',$r->ins)->first();
         return response()->json(['state' => true, 'data' => $f5]);
     }
     public function actFile(Request $r,$idFo5)

@@ -5,30 +5,40 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class InspectionController extends Controller
 {
     public function actShow()
-    {
-        return view('inspection/show');
-    }
+    {return view('inspection/show');}
     public function actList()
     {
-        // $list = TFormat2::all();
-        // $list = TFormat2::join('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
-        //     ->select('format2.*', 'inspections.*')
-        //     ->where('format2.verify', '=', 1)
+// -------------
+// -------------
+// -------------
+        // $list = TProcess::where('format2.verify', '=', 1)
+        //     ->where('format2.process', '=', '2')
+        //     ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+        //     ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+        //     ->leftjoin('format5', 'format5.idPro', '=', 'process.idPro')
+        //     ->leftjoin('format6', 'format6.idPro', '=', 'process.idPro')
+        //     ->leftjoin('format7', 'format7.idPro', '=', 'process.idPro')
+        //     ->select('format2.*','inspections.*','format5.idFo5','format6.idFo6','format7.idFo7','process.*')
         //     ->get();
-        // dd('aki');
-        $list = TFormat2::where('format2.verify', '=', 1)
+        $list = TProcess::where('format2.verify', '=', 1)
             ->where('format2.process', '=', '2')
-            ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
-            ->leftjoin('format5', 'format5.idFo2', '=', 'format2.idFo2')
-            ->leftjoin('format6', 'format6.idFo2', '=', 'format2.idFo2')
-            ->leftjoin('format7', 'format7.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','inspections.*','format5.idFo5','format6.idFo6','format7.idFo7')
+            ->leftJoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->leftJoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+            ->leftJoin('format5', 'format5.idPro', '=', 'process.idPro')
+            ->leftJoin('format6', 'format6.idPro', '=', 'process.idPro')
+            ->leftJoin('format7', 'format7.idPro', '=', 'process.idPro')
+            ->select('format2.*', 'inspections.*', 'format5.idFo5', 'format6.idFo6', 'format7.idFo7', 'process.*')
+            ->whereIn('process.idPro', function ($query) {
+                $query->selectRaw('MAX(idPro)')
+                    ->from('process')
+                    ->groupBy('process.idFo2'); // Agrupar por el campo que conecta con format2
+            })
             ->get();
-// dd('all');
         return response()->json(['data' => $list]);
     }
     public function actChangeProcess(Request $r)

@@ -14,7 +14,7 @@ class TFormat7 extends Model
 
     protected $fillable = [
         'idFo7',
-        'idFo2',
+        'idPro',
         'inscription',
         'date',
         'hour',

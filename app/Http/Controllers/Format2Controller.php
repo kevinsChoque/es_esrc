@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-// ---
-use setasign\Fpdi\Fpdi;
-
 use Illuminate\Support\Facades\File;
-// ---
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+use setasign\Fpdi\Fpdi;
 use Carbon\Carbon;
 use DB;
-
-use Illuminate\Support\Facades\Log;
-
 use App\Models\TFormat2;
+use App\Models\TProcess;
 use App\Models\TIns;
-
 
 class Format2Controller extends Controller
 {
@@ -370,7 +365,15 @@ class Format2Controller extends Controller
         ]);
         $fo2->fill($r->all());
         if ($fo2->save())
-            return response()->json(['state' => true, 'message' => 'Se actualizó correctamente']);
+        {
+            $pro = new TProcess([
+                'idFo2' => $fo2->idFo2,
+                'codRec' => $fo2->codRec,
+                'inscription' => $fo2->pnumIns,
+            ]);
+            if ($pro->save())
+                return response()->json(['state' => true, 'message' => 'Se actualizó correctamente']);
+        }
         return response()->json(['state' => false, 'message' => 'Ocurrió un problema, por favor contáctese con el administrador.']);
     }
     private function accordingNew($r)
@@ -685,10 +688,18 @@ class Format2Controller extends Controller
     }
     public function actFileInspection(Request $r)
     {
-        $f2 = TFormat2::where('idFo2',$r->idFo2)->where('pnumIns',$r->ins)->where('process','<',9)->first();
-        return response()->json(['state' => true, 'data' => $f2]);
+        try {
+            $pro = TProcess::find($r->idPro);
+            if (!$pro)
+                return response()->json(['state' => false, 'message' => 'El proceso no fue encontrado.'], 404);
+            // $f2 = TFormat2::where('idFo2', $pro->idFo2)->where('pnumIns', $r->ins)->where('process', '<', 9)->first();
+            // if (!$f2)
+            //     return response()->json(['state' => false, 'message' => 'No se encontró un formato que cumpla las condiciones.'], 404);
+            return response()->json(['state' => true, 'data' => $pro]);
+        } catch (\Exception $e) {
+            return response()->json(['state' => false, 'message' => 'Ocurrió un error inesperado: ' . $e->getMessage()], 500);
+        }
     }
-    // actSaveFileIns
     public function actSaveFileIns_las(Request $r)
     {
         // dd($r->all());
@@ -716,15 +727,16 @@ class Format2Controller extends Controller
         try {
             if (!$r->hasFile('fileInspection') || $r->file('fileInspection')->getClientMimeType() !== 'application/pdf')
                 return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido en formato PDF.']);
+            $pro = TProcess::findOrFail($r->fileidPro);
             // Obtener el registro del formato 2
-            $f2 = TFormat2::findOrFail($r->fileidFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
-            $nameFile = $f2->codRec . '_inspecciones.' . $r->file('fileInspection')->getClientOriginalExtension();
+            $f2 = TFormat2::findOrFail($pro->idFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
+            $nameFile = $f2->codRec.'_'.$r->fileidPro.'_inspecciones.'.$r->file('fileInspection')->getClientOriginalExtension();
             $pathFile = 'reclamos/' . $f2->codRec;
             DB::beginTransaction();
-            if ($f2->fileIns && Storage::exists('public/' . $f2->fileIns))
-                Storage::delete('public/' . $f2->fileIns);
+            if ($pro->fileIns && Storage::exists('public/' . $pro->fileIns))
+                Storage::delete('public/' . $pro->fileIns);
             $newFilePath = $this->saveFileReg($r, 'fileInspection', $nameFile, $pathFile);
-            $f2->update(['fileIns' => $newFilePath]);
+            $pro->update(['fileIns' => $newFilePath]);
             DB::commit();
             return response()->json(['state' => true, 'message' => 'Archivo subido correctamente.']);
         } catch (\Exception $e) {
@@ -732,10 +744,10 @@ class Format2Controller extends Controller
             return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
         }
     }
-    public function actShowFileInspection(Request $r,$idFo2)
+    public function actShowFileInspection(Request $r,$idPro)
     {
-    	$f2 = TFormat2::find($idFo2);
-        $pathFile = storage_path('app/public/'.$f2->fileIns);
+    	$pro = TProcess::find($idPro);
+        $pathFile = storage_path('app/public/'.$pro->fileIns);
         if (file_exists($pathFile))
             return response()->file($pathFile);
         else
@@ -743,8 +755,17 @@ class Format2Controller extends Controller
     }
     public function actFileRes(Request $r)
     {
-        $f2 = TFormat2::where('idFo2',$r->idFo2)->where('pnumIns',$r->ins)->where('process','<',9)->first();
-        return response()->json(['state' => true, 'data' => $f2]);
+        // $f2 = TFormat2::where('idFo2',$r->idFo2)->where('pnumIns',$r->ins)->where('process','<',9)->first();
+        // return response()->json(['state' => true, 'data' => $f2]);
+        // ----------
+        try {
+            $pro = TProcess::find($r->idPro);
+            if (!$pro)
+                return response()->json(['state' => false, 'message' => 'El proceso no fue encontrado.'], 404);
+            return response()->json(['state' => true, 'data' => $pro]);
+        } catch (\Exception $e) {
+            return response()->json(['state' => false, 'message' => 'Ocurrió un error inesperado: ' . $e->getMessage()], 500);
+        }
     }
     public function actSaveFileRes(Request $r)
     {
@@ -752,15 +773,15 @@ class Format2Controller extends Controller
         try {
             if (!$r->hasFile('resfile') || $r->file('resfile')->getClientMimeType() !== 'application/pdf')
                 return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido en formato PDF.']);
-            // Obtener el registro del formato 2
-            $f2 = TFormat2::findOrFail($r->residFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
-            $nameFile = $f2->codRec . '_resolucion.' . $r->file('resfile')->getClientOriginalExtension();
+            $pro = TProcess::findOrFail($r->residPro);
+            $f2 = TFormat2::findOrFail($pro->idFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
+            $nameFile = $f2->codRec.'_'.$r->residPro.'_resolucion.'.$r->file('resfile')->getClientOriginalExtension();
             $pathFile = 'reclamos/' . $f2->codRec;
             DB::beginTransaction();
-            if ($f2->fileRes && Storage::exists('public/' . $f2->fileRes))
-                Storage::delete('public/' . $f2->fileRes);
+            if ($pro->fileRes && Storage::exists('public/' . $pro->fileRes))
+                Storage::delete('public/' . $pro->fileRes);
             $newFilePath = $this->saveFileReg($r, 'resfile', $nameFile, $pathFile);
-            $f2->update(['fileRes' => $newFilePath]);
+            $pro->update(['fileRes' => $newFilePath]);
             DB::commit();
             return response()->json(['state' => true, 'message' => 'Archivo subido correctamente.']);
         } catch (\Exception $e) {
@@ -768,10 +789,10 @@ class Format2Controller extends Controller
             return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
         }
     }
-    public function actShowFileRes(Request $r,$idFo2)
+    public function actShowFileRes(Request $r,$idPro)
     {
-    	$f2 = TFormat2::find($idFo2);
-        $pathFile = storage_path('app/public/'.$f2->fileRes);
+    	$pro = TProcess::find($idPro);
+        $pathFile = storage_path('app/public/'.$pro->fileRes);
         if (file_exists($pathFile))
             return response()->file($pathFile);
         else

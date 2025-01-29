@@ -1,26 +1,23 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use DB;
 use App\Models\TFormat9;
 use App\Models\TFormat2;
-
-use DB;
+use App\Models\TProcess;
 
 class Format9Controller extends Controller
 {
     public function actEdit(Request $r)
     {
-        // $f9 = TFormat9::where('idFo2',$r->idFo2)->first();
-        $f9 = TFormat2::leftjoin('format9', 'format9.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*', 'format9.fundamento', 'format9.url', 'format9.idFo9')
-            ->where('format2.idFo2',$r->idFo2)
+        $f9 = TProcess::leftjoin('format9', 'format9.idPro', '=', 'process.idPro')
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->select('format2.*', 'format9.fundamento', 'format9.url', 'format9.idFo9','process.*')
+            ->where('process.idPro',$r->idPro)
             ->first();
-        // dd($f9);
         if($f9)
             return response()->json(['state' => true, 'data' => $f9]);
         else
@@ -30,14 +27,15 @@ class Format9Controller extends Controller
     {
         if (!$r->hasFile('f9file') || $r->file('f9file')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
-        $f2 = TFormat2::find($r->f9idFo2);
-        if (!$f2)
+        $pro = TProcess::find($r->f9idPro);
+        $f2 = TFormat2::find($pro->idFo2);
+        if (!$pro)
             return response()->json(['state' => false, 'message' => 'No se encontró el expediente.'], 404);
         DB::beginTransaction();
         try {
-            $nameFile = $f2->codRec . '_f9_apelacion.' . $r->file('f9file')->getClientOriginalExtension();
+            $nameFile = $f2->codRec.'_'.$pro->idPro.'_f9_apelacion.'.$r->file('f9file')->getClientOriginalExtension();
             $pathFile = 'reclamos/' . $f2->codRec;
-            $existingRecord = TFormat9::firstOrNew(['idFo2' => $r->f9idFo2]);
+            $existingRecord = TFormat9::firstOrNew(['idPro' => $r->f9idPro]);
             // Si existe un archivo anterior, eliminarlo
             if ($existingRecord->exists && Storage::exists('public/' . $existingRecord->url))
                 Storage::delete('public/' . $existingRecord->url);
@@ -48,7 +46,9 @@ class Format9Controller extends Controller
                 'fa' => $existingRecord->exists ? Carbon::now() : null,
                 'fr' => !$existingRecord->exists ? Carbon::now() : $existingRecord->fr,
             ])->save();
-            $f2->f9 = '1';
+            $pro->f9 = '1';
+            $f2->endProcess = '1';
+            $pro->save();
             $f2->save();
             DB::commit();
             return response()->json([
@@ -61,7 +61,6 @@ class Format9Controller extends Controller
             return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
     public function actSave_old(Request $r)
     {
         // Validar que el archivo sea PDF

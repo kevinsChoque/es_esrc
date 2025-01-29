@@ -5,23 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TFormat6 extends Model
+class TProcess extends Model
 {
-    protected $table='format6';
-	protected $primaryKey='idFo6';
+    protected $table='process';
+	protected $primaryKey='idPro';
 	public $incrementing=true;
 	public $timestamps=false;
 
     protected $fillable = [
-        'idFo6',
         'idPro',
+        'idFo2',
+        'codRec',
         'inscription',
-        'date',
-        'hour',
-        'obs',
-        'url',
-        'fr',
-        'fa',
+        'f5',
+        'f6',
+        'f7',
+        'f4',
+        'f8',
+        'f9',
+        'fileIns',
+        'fileRes',
     ];
 }
+
 

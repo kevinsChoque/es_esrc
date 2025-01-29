@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class F7Controller extends Controller
 {
-    public function actF7($idFo2)
+    public function actF7($idPro)
     {
-        $f2 = TFormat2::find($idFo2);
+        // $f2 = TFormat2::find($idFo2);
+        $f2 = TProcess::where('process.idPro', '=', $idPro)
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
+            ->select('format2.*','inspections.*','process.*')
+            ->first();
         // dd($f2->idFo2);
         $m = 1;
     	$sm = 0;

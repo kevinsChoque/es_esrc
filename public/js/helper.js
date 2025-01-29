@@ -140,6 +140,23 @@ function fdateInspection(reg)
     return '<span class="badge badge-light"><i class="fa fa-calendar-day"></i> Fecha: '+reg.dateIns+'</span><br>' +
     '<span class="badge badge-light"><i class="fa fa-clock"></i> Hora: '+reg.startTime.slice(0, 5)+' - '+reg.endTime.slice(0, 5)+'</span>';
 }
+// function fdateTime(reg)
+// {
+//     return '<span class="badge badge-light"><i class="fa fa-calendar-day"></i> '+reg.fr+'</span><br>' +
+//     '<span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.fr+' - '+reg.fr+'</span>';
+// }
+function fdateTime(fr) {
+    console.log(fr)
+    if (!fr) return '<span class="badge badge-danger">Fecha no disponible</span>';
+
+    let fecha = new Date(fr);
+
+    return `
+        <span class="badge badge-light"><i class="fa fa-calendar-day"></i> ${fecha.toLocaleDateString()}</span><br>
+        <span class="badge badge-light"><i class="fa fa-clock"></i> ${fecha.toLocaleTimeString()}</span>
+    `;
+}
+
 function fuserClaimant(reg)
 {
     return '<span class="badge badge-light">Doc: '+reg.numIde+'</span><br>' +
@@ -149,6 +166,13 @@ function flocationPredio(reg)
 {
     return '<span class="badge badge-light">'+aonDato(reg.upcjb)+' '+aonDato(reg.upn)+' '+aonDato(reg.upmz)+' '+aonDato(reg.uplote)+'</span><br>';
     // '<span class="badge badge-light">Nombre: '+reg.nombres+' '+reg.app+' '+reg.apm+'</span>';
+}
+function cleanFv(form)
+{
+    var validator = $("#"+form).validate();
+    validator.resetForm();
+    $("#"+form+" .is-valid").removeClass("is-valid");
+    $("#"+form+" .is-invalid").removeClass("is-invalid");
 }
 
 

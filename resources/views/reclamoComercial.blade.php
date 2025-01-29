@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>EMUSAP</title>
     <!-- icono de la pagina -->
-    <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
+    <link rel="icon" href="{{asset('img/emusap_logo.png')}}" type="image/x-icon">
     <!-- jQuery -->
     <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
     <!-- Google Font: Source Sans Pro -->
@@ -79,7 +79,7 @@
     <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="#">
-                <img src="{{asset('img/panelAdm/logoFile.png')}}" style="width: 50px;">
+                <img src="{{asset('img/emusap_logo.png')}}" style="width: 25px;">
                 <span class="m-0">EMUSAP </span>
                 <span class="m-0 font-weight-bold font-italic"> ABANCAY S.A.</span>
             </a>

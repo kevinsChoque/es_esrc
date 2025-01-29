@@ -80,7 +80,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvfile">
-                    <input type="hidden" name="residFo2" id="residFo2">
+                    <input type="hidden" name="residPro" id="residPro">
                     <input type="hidden" name="resins" id="resins">
                     <div class="row">
                         <div class="px-1 conteinerMessageRes">
@@ -143,14 +143,11 @@
     }
     function saveResFile()
     {
-        // console.log($('#f5idFo2').val())
-        // alert($(ele).html())
         if(validateFile())
             return;
         var formData = new FormData($("#fvfile")[0]);
         // formData.append('f4idFo2',$('#residFo2').val());
         // formData.append('f4ins',$('#resins').val());
-
         $('.saveResFile').prop('disabled',true);
         $('.olFile').css("display","flex");
         jQuery.ajax({
@@ -167,8 +164,6 @@
                 {
                     $('.saveResFile').prop('disabled',false);
                     $('#mLoadFile').modal('hide');
-                    // $('#residFo2').val()
-                    // $('.'+$('#residFo2').val()).find('.f4').html('<i class="fa fa-file"></i> F4');
                 }
                 msgForm(r);
                 $('.olFile').css("display","none");
@@ -199,7 +194,7 @@
                     change = r.data[i].f4 == '1'
                         ?'<button type="button" class="btn text-info py-0 pr-0" title="Declarar reclamo como" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'
                         :'';
-                    html += '<tr class="'+r.data[i].idFo2+'">' +
+                    html += '<tr class="'+r.data[i].idPro+'">' +
                         '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
@@ -210,8 +205,8 @@
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
-                                '<a class="btn text-info" title="Descargar resolucion" target="_blank" href="'+'{{ route('desicion') }}/'+r.data[i].idFo2+'"><i class="fa fa-download"></i></a>' +
-                                '<button type="button" class="btn text-info f4" title="Subir resolucion" onclick="mfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
+                                '<a class="btn text-info" title="Descargar resolucion" target="_blank" href="'+'{{ route('desicion') }}/'+r.data[i].idPro+'"><i class="fa fa-download"></i></a>' +
+                                '<button type="button" class="btn text-info f4" title="Subir resolucion" onclick="mfile(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
                             '</div>'+
                         '</td>' +
                         '</tr>';
@@ -259,12 +254,12 @@
                 // $(ele).prop('checked', false);
         });
     }
-    function mfile(idFo2,ins)
+    function mfile(idPro,ins)
     {
         jQuery.ajax({
             url: "{{ url('format2/fileRes') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
@@ -273,10 +268,10 @@
                 {
                     $('.conteinerMessageRes').css('display','block');
                     let href = "{{ url('format2/showFileRes') }}"
-                    $('.linkFileRes').attr("href",href+"/"+r.data.idFo2)
+                    $('.linkFileRes').attr("href",href+"/"+r.data.idPro)
                 }
                 $('#mLoadFile').modal('show')
-                $('#residFo2').val(idFo2)
+                $('#residPro').val(idPro)
                 $('#resins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -285,6 +280,11 @@
                 $('.overlayForm').css("display","none");
             }
         });
+    }
+    function buildTable()
+    {
+        $('.containerRecords>div').remove();
+        $('.containerRecords').html(tableRecords);
     }
 </script>
 <script>

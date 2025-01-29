@@ -9,12 +9,13 @@ use DB;
 
 use App\Models\TFormat6;
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class Format6Controller extends Controller
 {
     public function actF6(Request $r)
     {
-        $f6 = TFormat6::where('idFo2',$r->idFo2)->where('inscription',$r->ins)->first();
+        $f6 = TFormat6::where('idPro',$r->idPro)->where('inscription',$r->ins)->first();
         return response()->json(['state' => true, 'data' => $f6]);
     }
     public function actSave(Request $r)
@@ -22,7 +23,7 @@ class Format6Controller extends Controller
         DB::beginTransaction();
         try {
             $existingRecord = TFormat6::updateOrCreate(
-                ['idFo2' => $r->f6idFo2],
+                ['idPro' => $r->f6idPro],
                 [
                     'inscription' => $r->f6ins,
                     'date' => $r->f6date,
@@ -33,14 +34,18 @@ class Format6Controller extends Controller
             );
             if ($existingRecord->wasRecentlyCreated || $existingRecord->wasChanged())
             {
-                $f2 = TFormat2::find($r->f6idFo2);
-                $f2->f6 = '1';
-                if ($f2->save()) {
+                $pro = TProcess::find($r->f6idPro);
+                if (!$pro)
+                    throw new \Exception('Proceso no encontrado.');
+                $pro->f6 = '1';
+                if ($pro->save())
+                {
                     DB::commit();
+                    $load = ($pro->f5 == '1' && $pro->f6 == '1');
                     $message = $existingRecord->wasRecentlyCreated
                         ? 'Formato 6 registrado correctamente'
                         : 'Formato 6 actualizado correctamente';
-                    return response()->json(['state' => true, 'message' => $message, 'load' => ($f2->f5 == 1 && $f2->f6 == 1 ? true:false)]);
+                    return response()->json(['state' => true, 'message' => $message, 'load' => $load]);
                 }
             }
             DB::rollBack();

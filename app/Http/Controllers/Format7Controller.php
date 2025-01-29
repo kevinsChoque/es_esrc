@@ -9,21 +9,21 @@ use DB;
 
 use App\Models\TFormat7;
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class Format7Controller extends Controller
 {
     public function actF7(Request $r)
     {
-        $f7 = TFormat7::where('idFo2',$r->idFo2)->where('inscription',$r->ins)->first();
+        $f7 = TFormat7::where('idPro',$r->idPro)->where('inscription',$r->ins)->first();
         return response()->json(['state' => true, 'data' => $f7]);
     }
     public function actSave(Request $r)
     {
-        // dd($r->all());
         DB::beginTransaction();
         try {
             $existingRecord = TFormat7::updateOrCreate(
-                ['idFo2' => $r->f7idFo2],
+                ['idPro' => $r->f7idPro],
                 [
                     'inscription' => $r->f7ins,
                     'date' => $r->f7date,
@@ -34,9 +34,12 @@ class Format7Controller extends Controller
             );
             if ($existingRecord->wasRecentlyCreated || $existingRecord->wasChanged())
             {
-                $f2 = TFormat2::find($r->f7idFo2);
-                $f2->f7 = '1';
-                if ($f2->save()) {
+                $pro = TProcess::find($r->f7idPro);
+                if (!$pro)
+                    throw new \Exception('Proceso no encontrado.');
+                $pro->f7 = '1';
+                if ($pro->save())
+                {
                     DB::commit();
                     $message = $existingRecord->wasRecentlyCreated
                         ? 'Formato 7 registrado correctamente'

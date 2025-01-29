@@ -9,12 +9,12 @@
                 <span class="description-text">f2</span>
             </a>
         </li>
-        <li class="nav-item border-right infraccionPmsNavbar">
+        {{-- <li class="nav-item border-right infraccionPmsNavbar">
             <a class="nav-link border-right" href="{{url('postulaciones/ver')}}" title="Registrar infraccion">
                 <i class="fas fa-plus d-none d-sm-inline-block"></i>
                 <span class="description-text">f3</span>
             </a>
-        </li>
+        </li> --}}
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">

@@ -5,7 +5,7 @@
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<title>EMUSAP</title>
     <!-- icono de la pagina -->
-    <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
+    <link rel="icon" href="{{asset('img/emusap_logo.png')}}" type="image/x-icon">
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<!-- Font Awesome -->
@@ -101,13 +101,13 @@
             contentType: false,
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                if (r.estado)
+                if (r.state)
                     window.location.href = "{{url('home/home')}}";
                 else
                 {
                 	$('.overlayPagina').css("display","none");
                 	$('.sig-in').prop('disabled',false);
-                    msjRee(r);
+                    msgImportant(r);
                 }
             },
             error: function (xhr, status, error) {

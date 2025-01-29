@@ -5,20 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use DB;
 use App\Models\TFormat8;
 use App\Models\TFormat2;
-
-use DB;
+use App\Models\TProcess;
 
 class Format8Controller extends Controller
 {
     public function actEdit(Request $r)
     {
         // $f8 = TFormat8::where('idFo2',$r->idFo2)->first();
-        $f8 = TFormat2::leftjoin('format8', 'format8.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*', 'format8.fundamento', 'format8.url', 'format8.idFo8')
-            ->where('format2.idFo2',$r->idFo2)
+        $f8 = TProcess::leftjoin('format8', 'format8.idPro', '=', 'process.idPro')
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->select('format2.*', 'format8.fundamento', 'format8.url', 'format8.idFo8','process.*')
+            ->where('process.idPro',$r->idPro)
             ->first();
         // dd($f8);
         if($f8)
@@ -30,14 +30,15 @@ class Format8Controller extends Controller
     {
         if (!$r->hasFile('f8file') || $r->file('f8file')->getClientMimeType() !== 'application/pdf')
             return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido.']);
-        $f2 = TFormat2::find($r->f8idFo2);
+        $pro = TProcess::find($r->f8idPro);
+        $f2 = TFormat2::find($pro->idFo2);
         if (!$f2)
             return response()->json(['state' => false, 'message' => 'No se encontró el expediente.'], 404);
         DB::beginTransaction();
         try {
-            $nameFile = $f2->codRec . '_f8_reconsideracion.' . $r->file('f8file')->getClientOriginalExtension();
+            $nameFile = $f2->codRec.'_'.$pro->idPro.'_f8_reconsideracion.'.$r->file('f8file')->getClientOriginalExtension();
             $pathFile = 'reclamos/' . $f2->codRec;
-            $existingRecord = TFormat8::firstOrNew(['idFo2' => $r->f8idFo2]);
+            $existingRecord = TFormat8::firstOrNew(['idPro' => $r->f8idPro]);
             // Si existe un archivo anterior, eliminarlo
             if ($existingRecord->exists && Storage::exists('public/' . $existingRecord->url))
                 Storage::delete('public/' . $existingRecord->url);
@@ -48,8 +49,8 @@ class Format8Controller extends Controller
                 'fa' => $existingRecord->exists ? Carbon::now() : null,
                 'fr' => !$existingRecord->exists ? Carbon::now() : $existingRecord->fr,
             ])->save();
-            $f2->f8 = '1';
-            $f2->save();
+            $pro->f8 = '1';
+            $pro->save();
             DB::commit();
             return response()->json([
                 'state' => true,

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Models\TFormat2;
+use App\Models\TProcess;
 
 class ResController extends Controller
 {
-    public function actRes($idFo2)
+    public function actRes($idPro)
     {
-        $f2 = TFormat2::find($idFo2);
+        $pro = TProcess::find($idPro);
+        $f2 = TFormat2::find($pro->idFo2);
         // dd($f2->idFo2);
         $m = 1;
         $ssm = 1;

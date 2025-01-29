@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\TFormat2;
-
+use App\Models\TProcess;
 use DB;
 
 class DesicionController extends Controller
@@ -14,27 +14,21 @@ class DesicionController extends Controller
     {return view('desicion/show');}
     public function actList()
     {
-        $list = TFormat2::where('format2.process', '=', '4')
-            ->leftjoin('format4', 'format4.idFo2', '=', 'format2.idFo2')
+        $list = TProcess::where('format2.process', '=', '4')
+            ->leftjoin('format2', 'format2.idFo2', '=', 'process.idFo2')
+            ->leftjoin('format4', 'format4.idPro', '=', 'process.idPro')
             ->leftjoin('inspections', 'inspections.idFo2', '=', 'format2.idFo2')
-            ->select('format2.*','format4.idFo4','inspections.*')
+            ->select('format2.*','format4.idFo4','inspections.*','process.*')
+            ->whereIn('process.idPro', function ($query) {
+                $query->selectRaw('MAX(idPro)')
+                    ->from('process')
+                    ->groupBy('process.idFo2'); // Agrupar por el campo que conecta con format2
+            })
             ->get();
         return response()->json(['data' => $list]);
     }
     public function actChangeProcess(Request $r)
     {
-        // $state = $r->state=='fundado'?'4':($r->state=='infundado'?'5':'6');
-        // $f2 = TFormat2::where('codRec',$r->codRec)->first();
-        // $f4 = TFormat4::where('codRec',$f2->idFo2)->first();
-        // $f2->process = 4;
-        // $f4->state = $r->stateConciliation;
-        // if($f2->save() && $f4->save())
-        //     return response()->json(['state'=>true,'message'=>'El reclamo '.$r->codRec.' se declaro como '.$r->stateConciliation]);
-        // else
-        //     return response()->json(['state'=>false,'message'=>'Ocurrio un error, porfavor contactese con el administrador']);
-        // ---------------
-        // ---------------
-        // ---------------
         try {
             DB::beginTransaction();
             $f2 = TFormat2::where('codRec', $r->codRec)->first();
@@ -44,7 +38,7 @@ class DesicionController extends Controller
             if (!$f2->save())
                 throw new Exception('Error al guardar los cambios.');
             DB::commit();
-            return response()->json(['state' => true,'message' => 'El reclamo ' . $r->codRec . ' se declaró como ' . $r->stateConciliation]);
+            return response()->json(['state' => true,'message' => 'El reclamo ' . $r->codRec . ' se declaró como finalizado.']);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['state' => false,'message' => 'Ocurrió un error, por favor contacte con el administrador.']);

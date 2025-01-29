@@ -14,7 +14,7 @@ class TFormat8 extends Model
 
     protected $fillable = [
         'idFo8',
-        'idFo2',
+        'idPro',
         'fundamento',
         'url',
         'fr',

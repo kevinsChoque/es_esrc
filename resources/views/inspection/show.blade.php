@@ -85,7 +85,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvf5">
-                    <input type="hidden" class="f5idFo2" id="f5idFo2">
+                    <input type="hidden" class="f5idPro" id="f5idPro">
                     <input type="hidden" class="f5ins" id="f5ins">
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -161,7 +161,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvf6">
-                    <input type="hidden" class="f6idFo2" id="f6idFo2">
+                    <input type="hidden" class="f6idPro" id="f6idPro">
                     <input type="hidden" class="f6ins" id="f6ins">
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -237,7 +237,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvf7">
-                    <input type="hidden" class="f7idFo2" id="f7idFo2">
+                    <input type="hidden" class="f7idPro" id="f7idPro">
                     <input type="hidden" class="f7ins" id="f7ins">
                     <div class="row">
                         <div class="form-group col-lg-6">
@@ -312,7 +312,7 @@
             </div>
             <div class="modal-body">
                 <form id="fvfile">
-                    <input type="hidden" class="fileidFo2" id="fileidFo2">
+                    <input type="hidden" class="fileidPro" id="fileidPro">
                     <input type="hidden" class="fileins" id="fileins">
                     <div class="row">
                         <div class="px-1 conteinerMessageFile">
@@ -366,7 +366,7 @@
         if($('#fileInspection')[0].files.length==0)
         {alert("No se subio el documento de la inspeccion.");return;}
         var formData = new FormData($("#fvfile")[0]);
-        formData.append('fileidFo2',$('#fileidFo2').val());
+        formData.append('fileidPro',$('#fileidPro').val());
         formData.append('fileins',$('#fileins').val());
         $('.saveFile').prop('disabled',true);
         $('.olFile').css("display","flex");
@@ -408,7 +408,7 @@
         if(validateF5())
             return;
         var formData = new FormData($("#fvf5")[0]);
-        formData.append('f5idFo2',$('#f5idFo2').val());
+        formData.append('f5idPro',$('#f5idPro').val());
         formData.append('f5ins',$('#f5ins').val());
         $('.saveF5').prop('disabled',true);
         $('.olF5').css("display","flex");
@@ -421,13 +421,11 @@
             contentType: false,
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                console.log(r)
                 if (r.state)
                 {
                     $('.saveF5').prop('disabled',false);
                     $('#mf5').modal('hide');
-                    $('#f5idFo2').val()
-                    $('.'+$('#f5idFo2').val()).find('.f5').html('<i class="fa fa-file"></i> F5');
+                    $('.'+$('#f5idPro').val()).find('.f5').html('<i class="fa fa-file"></i> F5');
                     if(r.load)
                     {
                         buildTable();
@@ -450,7 +448,7 @@
         if(validateF6())
             return;
         var formData = new FormData($("#fvf6")[0]);
-        formData.append('f6idFo2',$('#f6idFo2').val());
+        formData.append('f6idPro',$('#f6idPro').val());
         formData.append('f6ins',$('#f6ins').val());
         $('.saveF6').prop('disabled',true);
         $('.olF6').css("display","flex");
@@ -463,13 +461,11 @@
             contentType: false,
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                console.log(r)
                 if (r.state)
                 {
                     $('.saveF6').prop('disabled',false);
                     $('#mf6').modal('hide');
-                    $('#f6idFo2').val()
-                    $('.'+$('#f6idFo2').val()).find('.f6').html('<i class="fa fa-file"></i> F6');
+                    $('.'+$('#f6idPro').val()).find('.f6').html('<i class="fa fa-file"></i> F6');
                     if(r.load)
                     {
                         buildTable();
@@ -492,7 +488,7 @@
         if(validateF7())
             return;
         var formData = new FormData($("#fvf7")[0]);
-        formData.append('f7idFo2',$('#f7idFo2').val());
+        formData.append('f7idPro',$('#f7idPro').val());
         formData.append('f7ins',$('#f7ins').val());
         $('.saveF7').prop('disabled',true);
         $('.olF7').css("display","flex");
@@ -510,8 +506,7 @@
                 {
                     $('.saveF7').prop('disabled',false);
                     $('#mf7').modal('hide');
-                    $('#f7idFo2').val()
-                    $('.'+$('#f7idFo2').val()).find('.f7').html('<i class="fa fa-file"></i> F7');
+                    $('.'+$('#f7idPro').val()).find('.f7').html('<i class="fa fa-file"></i> F7');
                 }
                 msgForm(r);
                 $('.olF7').css("display","none");
@@ -555,41 +550,23 @@
             method: 'get',
             success: function(r)
             {
+                console.log('-----')
                 console.log(r)
+                console.log('-----')
                 let html = '';
-                // let locationProperty;
-                // let inspection;
-                // let formats;
-                // let options;
                 let iconoF5;
                 let iconoF6;
-                let change;
                 let iconoF7;
+                let change;
                 for (var i = 0; i < r.data.length; i++)
                 {
-                    // locationProperty = r.data[i].upcjb+' '+r.data[i].upn+' '+r.data[i].upmz+' '+r.data[i].uplote;
-                    // inspection=r.data[i].dateIns+' | '+ r.data[i].startTime+' '+r.data[i].endTime;
-                    // from = r.data[i].verify=='1'?'<pan class="badge badge-info">aprobado</span>':'<pan class="badge badge-warning">web</span>';
                     iconoF5 = r.data[i].idFo5===null?'plus':'file';
                     iconoF6 = r.data[i].idFo6===null?'plus':'file';
                     iconoF7 = r.data[i].idFo7===null?'plus':'file';
-
-                    change = r.data[i].f5 == '1' && r.data[i].f6 == '1'?
-                        '<button type="button" class="btn text-info py-0 pr-0" title="Enviar a conciliacion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>':
-                        '';
-                        console.log(change)
-                    // if(r.data[i].idFo5===null)
-                    // {
-                    //     options = '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-plus"></i> F5</button>'+
-                    //     '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-plus"></i> F6</button>';
-                    // }
-                    // else
-                    // {
-                    //     options = '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-file"></i> F5</button>'+
-                    //     '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-file"></i> F6</button>';
-                    // }
-                    html += '<tr class="'+r.data[i].idFo2+'">' +
-                        // '<td class="align-middle">' + novDato(r.data[i].codRec) + '</td>' +
+                    change = r.data[i].f5 == '1' && r.data[i].f6 == '1'
+                        ?'<button class="btn text-info py-0 pr-0" title="Enviar a conciliacion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'
+                        :'';
+                    html += '<tr class="'+r.data[i].idPro+'">' +
                         '<td class="align-middle">' + frecordsId(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + fuserClaimant(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + flocationPredio(r.data[i]) +'</td>' +
@@ -599,17 +576,16 @@
                             '<span class="badge badge-info">Investigacion</span>'+change+
                         '</td>'+
                         '<td class="align-middle text-center">' +
-                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f5') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F5</a>' +
-                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f6') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F6</a>' +
-                            '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f7') }}/'+r.data[i].idFo2+'"><i class="fa fa-file-pdf"></i> F7</a>' +
+                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f5') }}/'+r.data[i].idPro+'"><i class="fa fa-file-pdf"></i> F5</a>' +
+                            '<a class="btn btn-secondary py-0 px-1 mr-1" target="_blank" href="'+'{{ route('f6') }}/'+r.data[i].idPro+'"><i class="fa fa-file-pdf"></i> F6</a>' +
+                            '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f7') }}/'+r.data[i].idPro+'"><i class="fa fa-file-pdf"></i> F7</a>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
                             '<div class="btn-group btn-group-sm" role="group">'+
-                                '<button type="button" class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
-                                '<button type="button" class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
-                                '<button type="button" class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
-                                '<button class="btn text-info" onclick="mloadfile(\''+r.data[i].idFo2+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
-                                // options+
+                                '<button class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
+                                '<button class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
+                                '<button class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
+                                '<button class="btn text-info" onclick="mloadfile(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
                             '</div>'+
                         '</td>' +
                         '</tr>';
@@ -620,14 +596,13 @@
             }
         });
     }
-    function mloadfile(idFo2,ins)
+    function mloadfile(idPro,ins)
     {
-        // $('#mloadFile').modal('show')
         cleanFile();
         jQuery.ajax({
             url: "{{ url('format2/fileInspection') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
@@ -635,14 +610,11 @@
                 if(r.data.fileIns!==null)
                 {
                     $('.conteinerMessageFile').css('display','block');
-                    // let href = $('.linkFileF5').attr("href");
                     let href = "{{ url('format2/showFileInspection') }}"
-                    $('.linkFile').attr("href",href+"/"+r.data.idFo2)
-                    // alert(r.data.url)
-
+                    $('.linkFile').attr("href",href+"/"+r.data.idPro)
                 }
                 $('#mloadFile').modal('show')
-                $('#fileidFo2').val(idFo2)
+                $('#fileidPro').val(idPro)
                 $('#fileins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -652,7 +624,6 @@
             }
         });
     }
-
     function changeProcess(codRec)
     {
         event.preventDefault();
@@ -712,34 +683,28 @@
     {
         loadFile($('#fileInspection'),false);
     }
-    function mf5(idFo2,ins)
+    function mf5(idPro,ins)
     {
         cleanF5();
         jQuery.ajax({
             url: "{{ url('format5/f5') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-
-                console.log('akita');
-                console.log(r)
                 $('.conteinerMessageF5').css('display','none');
                 if(r.data!==null)
                 {
                     $('#f5date').val(r.data.date);
                     $('#f5hora').val(r.data.hour);
                     $('#f5obs').val(r.data.obs);
-                    $('.conteinerMessageF5').css('display','block');
-                    // let href = $('.linkFileF5').attr("href");
-                    let href = "{{ url('format5/file') }}"
-                    $('.linkFileF5').attr("href",href+"/"+r.data.idFo5)
-                    // alert(r.data.url)
-
+                    // $('.conteinerMessageF5').css('display','block');
+                    // let href = "{{ url('format5/file') }}"
+                    // $('.linkFileF5').attr("href",href+"/"+r.data.idFo5)
                 }
                 $('#mf5').modal('show')
-                $('#f5idFo2').val(idFo2)
+                $('#f5idPro').val(idPro)
                 $('#f5ins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -749,13 +714,13 @@
             }
         });
     }
-    function mf6(idFo2,ins)
+    function mf6(idPro,ins)
     {
         cleanF6();
         jQuery.ajax({
             url: "{{ url('format6/f6') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
@@ -767,15 +732,12 @@
                     $('#f6date').val(r.data.date);
                     $('#f6hora').val(r.data.hour);
                     $('#f6obs').val(r.data.obs);
-                    $('.conteinerMessageF6').css('display','block');
-                    // let href = $('.linkFileF5').attr("href");
-                    let href = "{{ url('format6/file') }}"
-                    $('.linkFileF6').attr("href",href+"/"+r.data.idFo6)
-                    // alert(r.data.url)
-
+                    // $('.conteinerMessageF6').css('display','block');
+                    // let href = "{{ url('format6/file') }}"
+                    // $('.linkFileF6').attr("href",href+"/"+r.data.idFo6)
                 }
                 $('#mf6').modal('show')
-                $('#f6idFo2').val(idFo2)
+                $('#f6idPro').val(idPro)
                 $('#f6ins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -785,33 +747,28 @@
             }
         });
     }
-    function mf7(idFo2,ins)
+    function mf7(idPro,ins)
     {
         cleanF7();
         jQuery.ajax({
             url: "{{ url('format7/f7') }}",
             method: 'POST',
-            data: {idFo2:idFo2,ins:ins},
+            data: {idPro:idPro,ins:ins},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                console.log('akita');
-                console.log(r)
                 $('.conteinerMessageF7').css('display','none');
                 if(r.data!==null)
                 {
                     $('#f7date').val(r.data.date);
                     $('#f7hora').val(r.data.hour);
                     $('#f7obs').val(r.data.obs);
-                    $('.conteinerMessageF7').css('display','block');
-                    // let href = $('.linkFileF5').attr("href");
-                    let href = "{{ url('format7/file') }}"
-                    $('.linkFileF7').attr("href",href+"/"+r.data.idFo7)
-                    // alert(r.data.url)
-
+                    // $('.conteinerMessageF7').css('display','block');
+                    // let href = "{{ url('format7/file') }}"
+                    // $('.linkFileF7').attr("href",href+"/"+r.data.idFo7)
                 }
                 $('#mf7').modal('show')
-                $('#f7idFo2').val(idFo2)
+                $('#f7idPro').val(idPro)
                 $('#f7ins').val(ins)
             },
             error: function (xhr, status, error) {
@@ -821,9 +778,6 @@
             }
         });
     }
-
-
-
 </script>
 <script>
     $('.boxFile').on('click',function(){

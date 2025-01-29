@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+
+use App\Models\TUsers;
 
 class LoginController extends Controller
 {
@@ -16,20 +19,21 @@ class LoginController extends Controller
     }
     public function actSigin(Request $r)
     {
-        return response()->json(['estado' => true, 'message' => 'ok']);
-    	$tUsu = TUsuario::where('usuario',$r->usuario)->first();
-        // validacion de usuario para ver si esta inactivo
-        if($tUsu->estado=='0')
-        {   return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no cuenta con acceso al sistema.']);}
-        // validacion de usuario para ver siexiste
-    	if($tUsu==null)
-    	{  return response()->json(['estado' => false, 'message' => 'El usuario no se encuentra registrado.']);}
-        // validacion de usuario para ver si la contraseña es la correcta
-    	if(!Hash::check($r->password, $tUsu->password))
-    	{  return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);}
-        // guardado en sesion el usuario logueado
-    	session(['usuario' => $tUsu]);
-        $this->historial($r);
-    	return response()->json(['estado' => true, 'message' => 'ok']);
+        // return response()->json(['estado' => true, 'message' => 'ok']);
+        // dd($r->all());
+    	$use = TUsers::where('dni',$r->usuario)->first();
+        if($use==null)
+    	{  return response()->json(['state' => false, 'message' => 'El usuario no se encuentra registrado.']);}
+        if($use->state=='0')
+        {   return response()->json(['state' => false, 'message' => 'El usuario '.$r->usuario.' no cuenta con acceso al sistema.']);}
+    	if(!Hash::check($r->password, $use->password))
+    	{  return response()->json(['state' => false, 'message' => 'La contraseña es incorrecta.']);}
+    	session(['use' => $use]);
+    	return response()->json(['state' => true, 'message' => 'ok']);
+    }
+    public function actLogout(Request $r)
+    {
+    	session()->flush();
+    	return redirect('login/login');
     }
 }
