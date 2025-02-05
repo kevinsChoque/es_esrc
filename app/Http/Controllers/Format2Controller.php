@@ -60,7 +60,7 @@ class Format2Controller extends Controller
 
     public function actSavePortal(Request $r)
     {
-        // dd($this->validateUploadedFiles($r));
+        // dd($r->all());
         if (!$this->validateUserRegistration($r))
             return response()->json(['state' => false, 'message' => 'Usuario no válido o reclamo en proceso.']);
         if (!$this->validateUploadedFiles($r))
@@ -192,6 +192,8 @@ class Format2Controller extends Controller
                 'ppdfFile' => $pathFile,
                 'fundamento' => $r->fundamento,
                 'declaracion' => $r->dro1,
+                'reunion' => $r->fechaReu,
+                'horaReunion' => $r->hoursAvailableReu,
                 'datePortal' => Carbon::now(),
                 'channel' => 'web',
                 'process' => '1',

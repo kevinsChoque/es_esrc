@@ -117,6 +117,10 @@
             </div>
         </div>
     </div>
+    <style>
+        .resaltar{background: rgb(129 188 221 / 50%) !important;}
+        .table td{border: 1px solid #4284bb !important;}
+    </style>
     <div class="card">
         <div class="overlay oveCard">
             <div class="spinner"></div>
@@ -141,9 +145,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="apm" id="apm" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle py-0"><strong>nombres</strong></td>
-                    <td colspan="6" class="align-middle py-0"><strong>apellido paterno</strong></td>
-                    <td colspan="2" class="align-middle py-0"><strong>apellido materno</strong></td>
+                    <td colspan="4" class="align-middle py-0 text-center resaltar"><strong>Nombres</strong></td>
+                    <td colspan="6" class="align-middle py-0 text-center resaltar"><strong>Apellido paterno</strong></td>
+                    <td colspan="2" class="align-middle py-0 text-center resaltar"><strong>Apellido materno</strong></td>
                 </tr>
                 <tr>
                     <td colspan="8" class="align-middle"><strong>Numero de documento de identidad (DNI, LE, CI) razon social</strong></td>
@@ -163,10 +167,10 @@
                     <td colspan="1" class="p-1"><input type="text" name="uplote" id="uplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="align-middle py-0"><strong>(calle, jiron, avenida)</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Nª</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Mz.</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Lote</strong></td>
+                    <td colspan="9" class="align-middle py-0 text-center resaltar"><strong>(calle, jiron, avenida)</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Nª</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Mz.</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Lote</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="upub" id="upub" class="form-control w-100 urbanizacion input"></td>
@@ -174,9 +178,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="upd" id="upd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle py-0"><strong>(urbanizacion, barrio)</strong></td>
-                    <td colspan="6" class="align-middle py-0"><strong>provincia</strong></td>
-                    <td colspan="2" class="align-middle py-0"><strong>distrito</strong></td>
+                    <td colspan="4" class="align-middle py-0 text-center resaltar"><strong>(urbanizacion, barrio)</strong></td>
+                    <td colspan="6" class="align-middle py-0 text-center resaltar"><strong>provincia</strong></td>
+                    <td colspan="2" class="align-middle py-0 text-center resaltar"><strong>distrito</strong></td>
                 </tr>
                 {{-- --- --}}
                 <tr>
@@ -189,10 +193,10 @@
                     <td colspan="1" class="p-1"><input type="text" name="dplote" id="dplote" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="align-middle py-0"><strong>(calle, jiron, avenida)</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Nª</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Mz.</strong></td>
-                    <td colspan="1" class="align-middle py-0"><strong>Lote</strong></td>
+                    <td colspan="9" class="align-middle py-0 text-center resaltar"><strong>(calle, jiron, avenida)</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Nª</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Mz.</strong></td>
+                    <td colspan="1" class="align-middle py-0 text-center resaltar"><strong>Lote</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="dpub" id="dpub" class="form-control w-100 urbanizacion input"></td>
@@ -200,9 +204,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="dpd" id="dpd" class="form-control w-100 input" value="Abancay"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle py-0"><strong>(urbanizacion, barrio)</strong></td>
-                    <td colspan="6" class="align-middle py-0"><strong>provincia</strong></td>
-                    <td colspan="2" class="align-middle py-0"><strong>distrito</strong></td>
+                    <td colspan="4" class="align-middle py-0 text-center resaltar"><strong>(urbanizacion, barrio)</strong></td>
+                    <td colspan="6" class="align-middle py-0 text-center resaltar"><strong>provincia</strong></td>
+                    <td colspan="2" class="align-middle py-0 text-center resaltar"><strong>distrito</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="p-1"><input type="text" name="dpcp" id="dpcp" class="form-control w-100 input onlyNumbers" value="03001" maxlength="5"></td>
@@ -210,9 +214,9 @@
                     <td colspan="2" class="p-1"><input type="text" name="dpcorreo" id="dpcorreo" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="align-middle py-0"><strong>Codigo postal</strong></td>
-                    <td colspan="6" class="align-middle py-0"><strong>Telefono / Celular</strong></td>
-                    <td colspan="2" class="align-middle py-0"><strong>Correo electronico</strong></td>
+                    <td colspan="4" class="align-middle py-0 text-center resaltar"><strong>Codigo postal</strong></td>
+                    <td colspan="6" class="align-middle py-0 text-center resaltar"><strong>Telefono / Celular</strong></td>
+                    <td colspan="2" class="align-middle py-0 text-center resaltar"><strong>Correo electronico</strong></td>
                 </tr>
                 <tr>
                     <td colspan="12" class="align-middle"><strong>Declaracion del reclamante (Fijacion de correo electronico como domicilio procesal)</strong></td>

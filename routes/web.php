@@ -26,6 +26,7 @@ use App\Http\Controllers\F9Controller;
 use App\Http\Controllers\Format8Controller;
 use App\Http\Controllers\F8Controller;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\MeetingsController;
 
 
 // portal
@@ -90,7 +91,7 @@ Route::get('ins/obtenerInspecciones', [InspectionsController::class, 'obtenerIns
 Route::get('ins/obtenerHorariosDisponiblesPorMes', [InspectionsController::class, 'obtenerHorariosDisponiblesPorMes']);
 Route::post('ins/saveChangeIns',[InspectionsController::class, 'actSaveChangeIns']);
 
-
+Route::get('reu/getavailable',[MeetingsController::class, 'actGetavailable']);
 
 // formato3
 Route::get('format3/show/{ins}',[Format3Controller::class, 'actShow']);

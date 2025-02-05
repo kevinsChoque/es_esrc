@@ -211,21 +211,34 @@
                                         <select name="tipo" id="tipo" class="form-control validate">
                                             <option value="0" selected disabled>== SELECCIONE ==</option>
                                             <optgroup label="PROBLEMAS EN EL REGIMEN DE FACTURACION Y EL NIVEL DE CONSUMO">
-                                                <option value="1">CONSUMO MEDIDO</option>
-                                                <option value="2">CONSUMO PROMEDIO</option>
-                                                <option value="3">ASIGNACION DE CONSUMO</option>
-                                                <option value="4">CONSUMO NO FACTURADO OPORTUNAMENTE</option>
-                                                <option value="5">CONSUMO NO REALIZADO POR SERVICIO REALIZADO</option>
-                                                <option value="6">CONSUMO ATRIBUIBLE A USUARIO ANTERIOR DEL SUMINISTRO</option>
-                                                <option value="7">CONSUMO ATRIBUIBLE A OTRO SUMINISTRO</option>
-                                                <option value="8">REFACTURACION</option>
+                                                {{-- <option value="1">CONSUMO MEDIDO</option> --}}
+                                                <optgroup label="Consumo medido: El usuario considera que">
+                                                    <option value="1">El regimen de facturacion no es aplicable</option>
+                                                    <option value="2">Ha efectuado un consumo menor al volumen registrado por el medidor</option>
+                                                </optgroup>
+                                                <optgroup label="Consumo promedio: El usuario considera que">
+                                                    <option value="3">El regimen de facturacion no es aplicable</option>
+                                                    <option value="4">El monto facturado esta mal calculado</option>
+                                                </optgroup>
+                                                <optgroup label="Asignacion de consumo: El usuario considera que">
+                                                    <option value="5">El regimen de facturacion no es aplicable</option>
+                                                    <option value="6">El volumen facturado esta por encima del valor que corresponde segun las normas y la estructura tarifaria vigente</option>
+                                                    <option value="7">El volumen facturado es mayor por considerarse un numero mayor de unidades de uso al que corresponde</option>
+                                                </optgroup>
+                                                <option value="8">CONSUMO PROMEDIO</option>
+                                                <option value="9">ASIGNACION DE CONSUMO</option>
+                                                <option value="10">CONSUMO NO FACTURADO OPORTUNAMENTE</option>
+                                                <option value="11">CONSUMO NO REALIZADO POR SERVICIO REALIZADO</option>
+                                                <option value="12">CONSUMO ATRIBUIBLE A USUARIO ANTERIOR DEL SUMINISTRO</option>
+                                                <option value="13">CONSUMO ATRIBUIBLE A OTRO SUMINISTRO</option>
+                                                <option value="14">REFACTURACION</option>
                                             </optgroup>
                                             <optgroup label="PROBLEMAS EN LA TARIFA APLICADA AL USUARIO">
-                                                <option value="9">TIPO DE TARIFA</option>
+                                                <option value="15">TIPO DE TARIFA</option>
                                             </optgroup>
                                             <optgroup label="PROBLEMAS EN OTROS CONCEPTOS FACTURADOS AL USUARIO">
-                                                <option value="10">CONCEPTOS EMITIDOS</option>
-                                                <option value="11">NUMERO DE UNIDADES DE USO MAYOR AL QUE CORRESPONDE</option>
+                                                <option value="16">CONCEPTOS EMITIDOS</option>
+                                                <option value="17">NUMERO DE UNIDADES DE USO MAYOR AL QUE CORRESPONDE</option>
                                             </optgroup>
                                         </select>
                                     </div>
@@ -341,6 +354,41 @@
                                             <span class="input-group-text font-weight-bold"><i class="fa fa-calendar"></i></span>
                                         </div>
                                         <input type="time" id="hourIns" name="hourIns" class="form-control hourIns">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="col-lg-12"></div>
+                                <div class="form-group col-lg-6">
+                                    <label class="m-0">Citacion a reunion: <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text font-weight-bold"><i class="fas fa-id-card"></i></span>
+                                        </div>
+                                        <input type="text" id="fechaReu" name="fechaReu" class="form-control flatpickr input" placeholder="Selecciona una fecha">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary checkAvailabilityReu validate" type="button"><i class="fa fa-search"></i> Verificar disponibilidad</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 conteinerHoursAvailableReu" style="display: none;">
+                                    <label for="hoursAvailableReu" class="m-0">Horas dispnibles:</label>
+                                    <select id="hoursAvailableReu" name="hoursAvailableReu" class="form-control hoursAvailableReu">
+                                        <option value="0" selected disabled>Seleccione una opcion</option>
+                                        {{-- <option value="08:00AM - 10:00AM">08:00AM - 10:00AM</option>
+                                        <option value="09:00AM - 11:00AM">09:00AM - 11:00AM</option>
+                                        <option value="10:00AM - 12:00AM">10:00AM - 12:00AM</option>
+                                        <option value="11:00AM - 01:00PM">11:00AM - 01:00PM</option>
+                                        <option value="02:00PM - 03:30PM">02:00PM - 03:30PM</option> --}}
+                                    </select>
+                                </div>
+                                <div class="col-lg-12"></div>
+                                <div class="form-group col-lg-6">
+                                    <label class="m-0">Fecha maxima de notificacion de la resolucion: <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text font-weight-bold"><i class="fa fa-envelope"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control input" id="fechaNot" name="fechaNot" disabled="disabled">
                                     </div>
                                 </div>
                                 <div class="col-lg-12"></div>
@@ -460,40 +508,25 @@
     var ppp;
     var hourSelected = null;
     var validateCarPod=false;
+
     $(document).ready( function () {
+        fechaMaxNotificacion()
         $('.validate').attr('disabled',true)
         $('.overlayAllPage').css("display","none");
         $('.overlayForm').css("display","none");
         initFv('fvclaim',rules());
-        flatpickr("#fechaIns", {
-            dateFormat: "Y-m-d" // Formato de fecha
+        // flatpickr("#fechaReu", {
+        //     dateFormat: "Y-m-d"
+        // });
+        // $('#buscarHorarios').on('click',function(){
+        //     var fecha = $('#fechaIns').val();
+        //     var hora = $('#hora').val();
+        // })
+        getDate();
+        tippy('#ihorasInspeccion', {
+            arrow: true,
+            content: "El horario de inspecciones es de 8am - 12pm y de 1:30pm a 5pm",
         });
-        $('#buscarHorarios').on('click',function(){
-            var fecha = $('#fechaIns').val();
-            var hora = $('#hora').val();
-        })
-        jQuery.ajax({
-            url: "{{ url('ins/getdate') }}",
-            method: 'get',
-            success: function (r) {
-                console.log(r)
-                flatpickr("#fechaIns", {
-                    dateFormat: "Y-m-d",
-                    disable: r.data,
-                    // onChange: function(selectedDates, dateStr) {
-                    //     obtenerHorarios(dateStr); // Obtener horarios disponibles
-                    // }
-                });
-            },
-            error: function (xhr, status, error) {
-                // alert("Algo salio mal, porfavor contactese con el Administrador.");
-                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
-            }
-        });
-tippy('#ihorasInspeccion', {
-  arrow: true,
-  content: "El horario de inspecciones es de 8am - 12pm y de 1:30pm a 5pm",
-});
     });
     $('.hourIns').on('change', function() {
         if(hourSelected==null)
@@ -501,9 +534,66 @@ tippy('#ihorasInspeccion', {
         else
             validateHourAvailable(this)
     });
-    $('#ins').on('blur',function(){
-        // alert('verificr')
+    function getDate()
+    {
+        jQuery.ajax({
+            url: "{{ url('ins/getdate') }}",
+            method: 'get',
+            success: function (r) {
+                // ---
+                let tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                let minDate = tomorrow.toISOString().split('T')[0];
+                // ---
+                flatpickr("#fechaIns", {
+                    dateFormat: "Y-m-d",
+                    disable: r.data,
+                    minDate: minDate,
+                    maxDate: $("#fechaNot").val()
+                });
+            },
+            error: function (xhr, status, error)
+            {msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')}
+        });
+    }
+    // $('#ins').on('blur',function(){
+    //     // alert('verificr')
+    // });
+    $(document).ready(function () {
+        function getNextBusinessDays(count, skipDays)
+        {
+            let dates = [];
+            let date = new Date(); // Fecha de hoy
+            let addedDays = 0;
+            let skipped = 0;
+            while (addedDays < count)
+            {
+                date.setDate(date.getDate() + 1); // Avanzar un día
+                let day = date.getDay(); // 0 = Domingo, 6 = Sábado
+                if (day !== 0 && day !== 6)
+                { // Solo lunes a viernes
+                    if (skipped < skipDays)
+                        skipped++; // Saltar los primeros 3 días hábiles
+                    else
+                    {
+                        dates.push(date.toISOString().split('T')[0]); // Guardar en formato YYYY-MM-DD
+                        addedDays++;
+                    }
+                }
+            }
+
+            return dates;
+        }
+
+        let availableDates = getNextBusinessDays(7, 3); // Obtener los próximos 10 días hábiles, omitiendo los 3 primeros
+
+        flatpickr("#fechaReu", {
+            dateFormat: "Y-m-d",
+            enable: availableDates // Solo permitir las fechas calculadas
+        });
     });
+
+
     function validateHour(ele)
     {
     console.log('llego a validateHour')
@@ -589,6 +679,33 @@ tippy('#ihorasInspeccion', {
         hourSelected = $(this).val();
         $('#hourIns').val('')
     });
+    $('.checkAvailabilityReu').on('click',function()
+    {
+        $('.conteinerHoursAvailableReu').css('display','none')
+        // $('.conteinerHoursAvailable').css('display','none');
+        jQuery.ajax({
+            url: "{{ url('reu/getavailable') }}",
+            method: 'get',
+            data: {dateReu:$('#fechaReu').val()},
+            dataType: 'json',
+            success: function (r) {
+                // hourSelected = null;
+                if(r.data.length>0)
+                    $('.conteinerHoursAvailableReu').css('display','block');
+                else
+                    $('.conteinerHoursAvailableReu').css('display','none')
+                let select = $('#hoursAvailableReu');
+                select.empty().append('<option value="0" selected disabled>Seleccione una opción</option>');
+                $.each(r.data, function (index, value) {
+                    select.append(`<option value="${value}">${value}</option>`);
+                });
+                console.log(r)
+            },
+            error: function (xhr, status, error) {
+                msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
+            }
+        });
+    });
     $('.checkAvailability').on('click',function(){
         $('.conteinerHourIns').css('display','none')
         $('.conteinerHoursAvailable').css('display','none');
@@ -621,6 +738,64 @@ tippy('#ihorasInspeccion', {
             }
         });
     });
+
+    function fechaMaxNotificacion()
+    {
+        var fecha = new Date();
+        let dias = 30;
+        let contador = 0;
+        while (contador < dias)
+        {
+            fecha.setDate(fecha.getDate() + 1);
+            let diaSemana = fecha.getDay();
+            if (diaSemana !== 0 && diaSemana !== 6)
+                contador++;
+        }
+        let fechaFormateada = fecha.toISOString().split('T')[0];
+        $('#fechaNot').val(fechaFormateada);
+        // defineIntervalIns()
+    }
+    // function defineIntervalIns()
+    // {
+    //     // Obtener la fecha de reunión establecida en #fechaReu
+    //     let fechaNot = $("#fechaNot").val();
+    //     // Si la fecha de reunión está definida
+    //     if (fechaNot)
+    //     {
+    //         let tomorrow = new Date();
+    //         tomorrow.setDate(tomorrow.getDate() + 1); // Día siguiente
+    //         let minDate = tomorrow.toISOString().split('T')[0];
+
+    //         // Configurar flatpickr para #fechaIns
+    //         flatpickr("#fechaIns", {
+    //             dateFormat: "Y-m-d",
+    //             minDate: minDate,  // Permitir selección desde mañana
+    //             maxDate: fechaNot  // Hasta la fecha de reunión
+    //         });
+    //     } else {
+    //         console.warn("No se ha definido una fecha en date not.");
+    //     }
+    // }
+    // function defineIntervalIns() {
+    //     let fechaNot = $("#fechaNot").val(); // Obtener la fecha de notificación
+
+    //     if (!fechaNot) {
+    //         console.warn("No se ha definido una fecha en #fechaNot.");
+    //         return;
+    //     }
+
+    //     let tomorrow = new Date();
+    //     tomorrow.setDate(tomorrow.getDate() + 1);
+    //     let minDate = tomorrow.toISOString().split('T')[0];
+
+    //     flatpickr("#fechaIns", {
+    //         dateFormat: "Y-m-d",
+    //         minDate: minDate,
+    //         maxDate: fechaNot
+    //     });
+    // }
+
+
     function getAvailableHours(fecha)
     {
         jQuery.ajax({
@@ -837,6 +1012,7 @@ tippy('#ihorasInspeccion', {
         formData.append('app',$('#app').val());
         formData.append('apm',$('#apm').val());
         formData.append('validateCarPod',validateCarPod);
+        formData.append('notificacion',$('#fechaNot').val());
         $('.save').prop('disabled',true);
         $('.overlayForm').css("display","flex");
         jQuery.ajax({
