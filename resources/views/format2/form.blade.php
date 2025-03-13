@@ -437,10 +437,15 @@
                     </td>
                 </tr> --}}
                 <tr>
-                    <td colspan="3" class="align-middle"><strong style="font-size: .8rem">CITACION A REUNION DE CONCILIACION, FECHA:</strong></td>
+                    <td colspan="3" class="align-middle">
+                        <strong style="font-size: .8rem">
+                            <a class="btn btn-link p-0 changeReunion" style="display: none;"><i class="fa fa-edit fa-2x text-info"></i></a>
+                            CITACION A REUNION DE CONCILIACION, FECHA:
+                        </strong>
+                    </td>
                     <td colspan="5" class="align-middle p-1"><input type="date" name="reunion" id="reunion" class="form-control w-100 input"></td>
                     <td colspan="2" class="align-middle"><strong style="font-size: .8rem">HORA:</strong></td>
-                    <td colspan="2" class="align-middle p-1"><input type="time" id="horaReunion" name="horaReunion" class="form-control w-100 input"></td>
+                    <td colspan="2" class="align-middle p-1"><input type="text" id="horaReunion" name="horaReunion" class="form-control w-100 input"></td>
                 </tr>
                 <tr>
                     <td colspan="9" class="align-middle"><strong>FECHA MAXIMA DE NOTIFICACION DE LA RESOLUCION</strong></td>
@@ -483,6 +488,7 @@
     </div>
 </div>
 @include('format2.changeInspection')
+@include('format2.changeReunion')
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -1023,10 +1029,18 @@
                 // $('.hourInspection').html(r.ins.startTime+'-'+r.ins.endTime)
                 $('#startTime').val(r.ins.startTime+'-'+r.ins.endTime)
                 $('#startTime').prop('disabled', true);
+                // ---
+                $('#reunion').val(r.fo2.reunion)
+                $('#reunion').prop('disabled', true);
+                $('#horaReunion').val(r.fo2.horaReunion)
+                $('#horaReunion').prop('disabled', true);
+                // ---
                 $('#suministro').val(r.data.PreMzn+'-'+r.data.PreLote)
                 $('.urbanizacion').val(r.data.CalTip+' '+r.data.CalDes)
 
                 $('.changeInspections').css("display","inline");
+                $('.changeReunion').css("display","inline");
+
                 $('.overlayAllPage').css("display","none");
                 $('.oveCard').css("display","none");
 

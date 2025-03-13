@@ -409,7 +409,6 @@
         });
     });
     $('.changeInspections').on('click',function(){
-        // $('#changeInspectionsModal').modal('show')
         jQuery.ajax(
         {
             url: "{{ url('ins/getdate') }}",
