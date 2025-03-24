@@ -75,7 +75,55 @@
 
     </div>
 </div>
-
+<div class="modal fade" id="mFileFormat2" tabindex="-1" role="dialog" aria-labelledby="mFileFormat2Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="overlay olFile" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="mFileFormat2Label"><i class="fa fa-file"></i> FORMATO 6: Resumen del acta de inspeccion externa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fvfile">
+                    <input type="hidden" class="fileidFo2" id="fileidFo2">
+                    {{-- <input type="hidden" class="fileins" id="fileins"> --}}
+                    <div class="row">
+                        <div class="px-1 conteinerMessageFile">
+                            <div class="row">
+                                <div class="col-lg-9 mb-1">
+                                    <div class="callout callout-warning py-2">
+                                        <h5 class="font-weight-bold">Ten en cuenta!</h5>
+                                        <p>Este formato es para resumir el acta
+                                            de inspeccion interna, en caso de actualizar el formato 5, subo otro archivo el cual reemplazara el actual.</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mb-1 d-flex justify-content-center align-items-center">
+                                    <a class="btn btn-link py-1 font-weight-bold linkFile" target="_blank" href=""><i class="fa fa-file"></i> Archivo de inspeccion</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
+                                <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE INSPECCION</h5>
+                                <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
+                                <p class="m-auto"><i class="fa fa-upload fa-2x"></i></p>
+                            </div>
+                            <input type="file" id="fileFormat2Full" name="fileFormat2Full" class="pdfFile" style="display: none;" data-name="ARCHIVO DE INSPECCION">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary saveFile">Guardar archivo</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -87,6 +135,7 @@
         fillRecords();
         $('.overlayAllPage').css("display","none");
     });
+    $('.saveFile').on('click',function(){saveFile();})
     function fillRecords()
     {
         $('.containerRecords').css('display','block');
@@ -120,6 +169,7 @@
                             '<span class="badge badge-info">Recibido</span><button type="button" class="btn text-info py-0 pr-0" title="Enviar a actas de inspeccion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>';
                         options = r.data[i].process >= '2'?
                             '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>':
+                            '<button type="button" class="btn text-info" title="Subir formato 2" onclick="mFileFormat2(\''+r.data[i].idFo2+'\');"><i class="fa fa-upload"></i></button>'+
                             '<button type="button" class="btn text-info" title="Formato 3" onclick="format3(\''+r.data[i].pnumIns+'\');"><i class="fa fa-file-pdf"></i></button>'+
                             '<button type="button" class="btn text-info" title="Editar registro" onclick="edit(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'+
                             '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="deleteRecords(\''+r.data[i].pnumIns+'\');"><i class="fa fa-trash"></i></button>';
@@ -159,6 +209,111 @@
         });
     }
 
+    function saveFile()
+    {
+        if($('#fileFormat2Full')[0].files.length==0)
+        {alert("No se subio el documento del format 2.");return;}
+        var formData = new FormData($("#fvfile")[0]);
+        formData.append('idFo2',$('#fileidFo2').val());
+        // formData.append('fileins',$('#fileins').val());
+        $('.saveFile').prop('disabled',true);
+        $('.olFile').css("display","flex");
+        jQuery.ajax({
+            url: "{{ url('format2/saveFileFormat2Full') }}",
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                console.log(r)
+                if (r.state)
+                {
+                    $('.saveFile').prop('disabled',false);
+                    $('#mFileFormat2').modal('hide');
+                    // $('#fileidFo2').val()
+                    // $('.'+$('#fileidFo2').val()).find('.f5').html('<i class="fa fa-file"></i> F5');
+                    // if(r.load)
+                    // {
+                    //     buildTable();
+                    //     fillRecords();
+                    // }
+                }
+                msgForm(r);
+                $('.olFile').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.olFile').css("display","none");
+                $('.saveFile').prop('disabled',false);
+            }
+        });
+    }
+    function mFileFormat2(idFo2)
+    {
+        cleanFile();
+        // $('#mFileFormat2').modal('show')
+        jQuery.ajax({
+            url: "{{ url('format2/fileFormat2Full') }}",
+            method: 'POST',
+            data: {idFo2:idFo2},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                $('.conteinerMessageFile').css('display','none');
+                if(r.data.fileFormat2Full!==null)
+                {
+                    $('.conteinerMessageFile').css('display','block');
+                    let href = "{{ url('format2/showFileFormat2Full') }}"
+                    $('.linkFile').attr("href",href+"/"+r.data.idFo2)
+                }
+                $('#mFileFormat2').modal('show')
+                $('#fileidFo2').val(idFo2)
+                // $('#fileins').val(ins)
+            },
+            error: function (xhr, status, error) {
+                alert("Algo salio mal, porfavor contactese con el Administrador.");
+                console.log(error)
+                $('.overlayForm').css("display","none");
+            }
+        });
+    }
+    function cleanFile()
+    {
+        loadFile($('#fileFormat2Full'),false);
+    }
+    function loadFile(ele,ban)
+    {
+        if(ban)
+        {
+            let nameFile = $(ele).val().split('\\').pop();
+            if (/\.(pdf)$/i.test(nameFile))
+            {
+                $(ele).parent().find('.nameFile').html($(ele).attr('data-name')+': '+nameFile);
+                // $(ele).parent().find('.msgClick').remove();
+                $(ele).parent().find('.msgClick').css('display','none');
+                $(ele).parent().find('i').removeClass('fa fa-upload fa-lg');
+                $(ele).parent().find('i').addClass('fa fa-file-pdf fa-lg');
+                $(ele).parent().find('.boxFile').css('border','4px solid #000');
+            }
+            else
+            {
+                $(ele).val('');
+                alert('Selecciona un archivo PDF válido.');
+            }
+        }
+        else
+        {
+            $(ele).parent().find('.nameFile').html('ARCHIVO DE FORMATO');
+            $(ele).parent().find('.msgClick').css('display','block');
+            $(ele).parent().find('i').removeClass('fa fa-file-pdf fa-lg');
+            $(ele).parent().find('i').addClass('fa fa-upload fa-lg');
+            $(ele).parent().find('.boxFile').css('border','4px dashed #000');
+            $(ele).val('');
+        }
+    }
     function deleteRecords(codRec)
     {
         event.preventDefault();
@@ -239,5 +394,42 @@
         window.location.href = '{{ url('format2/edit') }}';
     }
 </script>
-
+<script>
+    $('.boxFile').on('click',function(){
+        $(this).parent().find('input.pdfFile').click();
+    });
+    $('.pdfFile').on('change',function(){
+        loadFile(this,true);
+    });
+    function loadFile(ele,ban)
+    {
+        if(ban)
+        {
+            let nameFile = $(ele).val().split('\\').pop();
+            if (/\.(pdf)$/i.test(nameFile))
+            {
+                $(ele).parent().find('.nameFile').html($(ele).attr('data-name')+': '+nameFile);
+                // $(ele).parent().find('.msgClick').remove();
+                $(ele).parent().find('.msgClick').css('display','none');
+                $(ele).parent().find('i').removeClass('fa fa-upload fa-lg');
+                $(ele).parent().find('i').addClass('fa fa-file-pdf fa-lg');
+                $(ele).parent().find('.boxFile').css('border','4px solid #000');
+            }
+            else
+            {
+                $(ele).val('');
+                alert('Selecciona un archivo PDF válido.');
+            }
+        }
+        else
+        {
+            $(ele).parent().find('.nameFile').html('ARCHIVO DE FORMATO');
+            $(ele).parent().find('.msgClick').css('display','block');
+            $(ele).parent().find('i').removeClass('fa fa-file-pdf fa-lg');
+            $(ele).parent().find('i').addClass('fa fa-upload fa-lg');
+            $(ele).parent().find('.boxFile').css('border','4px dashed #000');
+            $(ele).val('');
+        }
+    }
+</script>
 @endsection

@@ -8,7 +8,7 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Conciliaciones</h1></div>
             <div class="col-sm-6">
-                <a href="{{url('format2/form')}}" class="btn btn-success float-right"><i class="fa fa-plus"></i> Nueva reclamo</a>
+                {{-- <a href="{{url('format2/form')}}" class="btn btn-success float-right"><i class="fa fa-plus"></i> Nueva reclamo</a> --}}
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard v3</li>
@@ -141,6 +141,30 @@
                                 <textarea name="disagreement" id="disagreement" class="form-control input" rows="3" placeholder="Ingrese la propuesta aki . . ."></textarea>
                             </div>
                         </div>
+                        <div class="form-group col-lg-12">
+                            <label for="obs" class="m-0">Observaciones del reclamante o de la empresa prestadora:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-arrow-right"></i></span>
+                                </div>
+                                <textarea name="obs" id="obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
+                            </div>
+                        </div>
+                        {{-- <div class="form-group row"> --}}
+                        <div class="col-lg-12">
+                            <label class="d-block">¿Subsiste el reclamo?:Si el reclamante marca la casilla "NO" implica el desistimiento del reclamo, bajo las condiciones expresadas en el siguiente documento.</label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="subsisteSi" name="subsisteReclamo" class="custom-control-input" value="si">
+                                <label class="custom-control-label" for="subsisteSi">SI</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="subsisteNo" name="subsisteReclamo" class="custom-control-input" value="no">
+                                <label class="custom-control-label" for="subsisteNo">NO</label>
+                            </div>
+                        </div>
+                          {{-- </div> --}}
+
+
                         {{-- <div class="px-1 conteinerMessageF4">
                             <div class="row">
                                 <div class="col-lg-9 mb-1">
@@ -508,6 +532,9 @@
                     $('#proRec').val(r.data.proRec);
                     $('#agreement').val(r.data.agreement);
                     $('#disagreement').val(r.data.disagreement);
+                    $('#obs').val(r.data.obs);
+                    $('#subsisteSi').prop('checked',r.data.subsisteReclamo=='si'?true:false);
+                    $('#subsisteNo').prop('checked',r.data.subsisteReclamo=='no'?true:false);
                     // $('.conteinerMessageF4').css('display','block');
                     // let href = "{{ url('format5/file') }}"
                     // $('.linkFileF5').attr("href",href+"/"+r.data.idFo5)

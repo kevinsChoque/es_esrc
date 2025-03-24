@@ -24,6 +24,8 @@ class TFormat4 extends Model
         'subsistes',
         'url',
         'stateConciliation',
+        'obs',
+        'subsisteReclamo',
     ];
 }
 

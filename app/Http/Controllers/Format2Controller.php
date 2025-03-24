@@ -78,6 +78,7 @@ class Format2Controller extends Controller
         $codRec = Carbon::now()->year.'-'.$codRecNum;
         $nameFile = $codRec.'_evidencias.pdf';
         $pathFile = 'reclamos/'.$codRec;
+        // dd($files,$pathFile,$nameFile);
         if(!$this->combinePDFs($files,$pathFile,$nameFile))
             return response()->json(['state' => false, 'message' => 'No fue posible guardar los archivos.']);
         $pathFile .= '/' . $nameFile;
@@ -800,6 +801,55 @@ class Format2Controller extends Controller
         else
             abort(404);
     }
+    public function actFileFormat2Full(Request $r)
+    {
+        try {
+            $f2 = TFormat2::find($r->idFo2);
+            if (!$f2)
+                return response()->json(['state' => false, 'message' => 'El reclamo no fue encontrado.'], 404);
+            // $f2 = TFormat2::where('idFo2', $pro->idFo2)->where('pnumIns', $r->ins)->where('process', '<', 9)->first();
+            // if (!$f2)
+            //     return response()->json(['state' => false, 'message' => 'No se encontró un formato que cumpla las condiciones.'], 404);
+            return response()->json(['state' => true, 'data' => $f2]);
+        } catch (\Exception $e) {
+            return response()->json(['state' => false, 'message' => 'Ocurrió un error inesperado: ' . $e->getMessage()], 500);
+        }
+    }
+    public function actSaveFileFormat2Full(Request $r)
+    {
+        // dd($r->all());
+        try {
+            if (!$r->hasFile('fileFormat2Full') || $r->file('fileFormat2Full')->getClientMimeType() !== 'application/pdf')
+                return response()->json(['state' => false, 'message' => 'Ingrese un archivo válido en formato PDF.']);
+            // $pro = TProcess::findOrFail($r->fileidPro);
+            // Obtener el registro del formato 2
+            $f2 = TFormat2::findOrFail($r->idFo2); // Usar findOrFail para manejo automático de errores si no se encuentra
+            $nameFile = $f2->codRec.'_formato2.'.$r->file('fileFormat2Full')->getClientOriginalExtension();
+            $pathFile = 'reclamos/' . $f2->codRec;
+            DB::beginTransaction();
+            if ($f2->fileFormat2Full && Storage::exists('public/' . $f2->fileFormat2Full))
+                Storage::delete('public/' . $f2->fileFormat2Full);
+            $newFilePath = $this->saveFileReg($r, 'fileFormat2Full', $nameFile, $pathFile);
+            $f2->update(['fileFormat2Full' => $newFilePath]);
+            DB::commit();
+            return response()->json(['state' => true, 'message' => 'Archivo subido correctamente.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function actShowFileFormat2Full(Request $r,$idFo2)
+    {
+    	$f2 = TFormat2::find($idFo2);
+        $pathFile = storage_path('app/public/'.$f2->fileFormat2Full);
+        if (file_exists($pathFile))
+            return response()->file($pathFile);
+        else
+            abort(404);
+    }
+
+
+
 
 
 

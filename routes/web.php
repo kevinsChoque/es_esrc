@@ -26,7 +26,9 @@ use App\Http\Controllers\F9Controller;
 use App\Http\Controllers\Format8Controller;
 use App\Http\Controllers\F8Controller;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\TecnicalController;
 use App\Http\Controllers\MeetingsController;
+use App\Http\Controllers\Form3Controller;
 
 
 // portal
@@ -43,6 +45,11 @@ Route::post('format2/searchInscription',[Format2Controller::class, 'actSearchIns
 Route::post('pformat2/verifyData', [Pformat2Controller::class, 'actVerifyData']);
 //
 // Route::get('format2/show',[Format2Controller::class, 'actShow']);
+// tecnicos
+Route::get('tecnical/show', [TecnicalController::class, 'actShow']);
+Route::get('tecnical/list', [TecnicalController::class, 'actList']);
+Route::post('tecnical/saveList', [TecnicalController::class, 'actSaveList']);
+Route::post('tecnical/startRegister', [TecnicalController::class, 'actStartRegister']);
 
 // users
 Route::get('users/show', [UsersController::class, 'actShow']);
@@ -72,12 +79,13 @@ Route::post('format2/searchIns', [Format2Controller::class, 'actSearchIns']);
 Route::get('format2/showEvidence/{idFo2?}',[Format2Controller::class, 'actShowEvidence'])->name('detalle-archivo');
 Route::post('format2/changeProcess',[Format2Controller::class, 'actChangeProcess']);
 Route::post('format2/loadClaim',[Format2Controller::class, 'actLoadClaim']);
+Route::post('format2/fileFormat2Full',[Format2Controller::class, 'actFileFormat2Full']);
+Route::post('format2/saveFileFormat2Full',[Format2Controller::class, 'actSaveFileFormat2Full']);
+Route::get('format2/showFileFormat2Full',[Format2Controller::class, 'actShowFileFormat2Full']);
+Route::get('format2/showFileFormat2Full/{idFo2}', [Format2Controller::class, 'actShowFileFormat2Full']);
 
 
 Route::get('format2/f2/{idFo2?}',[F2Controller::class, 'actF2'])->name('f2');
-
-
-
 
 
 
@@ -100,7 +108,9 @@ Route::get('format3/show/{ins}',[Format3Controller::class, 'actShow']);
 Route::get('inspection/show',[InspectionController::class, 'actShow']);
 Route::get('inspection/list', [InspectionController::class, 'actList']);
 Route::post('inspection/changeProcess', [InspectionController::class, 'actChangeProcess']);
-
+Route::post('inspection/saveDerivo', [InspectionController::class, 'actSaveDerivo']);
+Route::post('inspection/fileDerivo', [InspectionController::class, 'actFileDerivo']);
+Route::get('inspection/showFileDerivo/{idPro}', [InspectionController::class, 'actShowFileDerivo']);
 // formato 5
 
 Route::post('format5/save', [Format5Controller::class, 'actSave']);
@@ -113,6 +123,10 @@ Route::post('format6/save', [Format6Controller::class, 'actSave']);
 Route::post('format6/f6', [Format6Controller::class, 'actF6']);
 Route::get('format6/file/{idFo6}', [Format6Controller::class, 'actFile'])->name('format6-file');
 Route::get('format6/f6/{idPro?}',[F6Controller::class, 'actF6'])->name('f6');
+// formulario 3
+Route::post('form3/save', [Form3Controller::class, 'actSave']);
+Route::post('form3/f3', [Form3Controller::class, 'actF3']);
+
 // formato 4 acta de conciliacion
 
 Route::get('format4/show',[Format4Controller::class, 'actShow']);

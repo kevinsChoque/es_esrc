@@ -38,15 +38,16 @@ class Format4Controller extends Controller
             ->get();
         return response()->json(['data' => $list]);
     }
-    public function actSave(Request $request)
+    public function actSave(Request $r)
     {
+        // dd($r->all());
         DB::beginTransaction();
         try {
-            $pro = TProcess::findOrFail($request->f4idPro);
+            $pro = TProcess::findOrFail($r->f4idPro);
             $format2 = TFormat2::findOrFail($pro->idFo2);
             $format4 = TFormat4::updateOrCreate(
-                ['idPro' => $request->f4idPro],
-                $request->only(['hourStart', 'hourEnd', 'proEps', 'proRec', 'agreement', 'disagreement'])
+                ['idPro' => $r->f4idPro],
+                $r->only(['hourStart', 'hourEnd', 'proEps', 'proRec', 'agreement', 'disagreement','obs','subsisteReclamo'])
             );
             if ($format4->wasRecentlyCreated || $format4->wasChanged())
             {

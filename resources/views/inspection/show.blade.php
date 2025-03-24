@@ -115,6 +115,15 @@
                                 <textarea name="f5obs" id="f5obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
                             </div>
                         </div>
+                        <div class="form-group col-lg-12">
+                            <label for="f5obsIns" class="m-0">Observaciones de la persona presente en la inspeccion: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-arrow-right"></i></span>
+                                </div>
+                                <textarea name="f5obsIns" id="f5obsIns" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
+                            </div>
+                        </div>
                         {{-- <div class="px-1 conteinerMessageF5">
                             <div class="row">
                                 <div class="col-lg-9 mb-1">
@@ -189,6 +198,15 @@
                                     <span class="input-group-text font-weight-bold"><i class="fa fa-arrow-right"></i></span>
                                 </div>
                                 <textarea name="f6obs" id="f6obs" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label for="f6obsIns" class="m-0">Observaciones de la persona presente en la inspeccion: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-arrow-right"></i></span>
+                                </div>
+                                <textarea name="f6obsIns" id="f6obsIns" class="form-control input" rows="3" placeholder="Ingrese la observacion aki . . ."></textarea>
                             </div>
                         </div>
                         {{-- <div class="px-1 conteinerMessageF6">
@@ -347,6 +365,8 @@
         </div>
     </div>
 </div>
+@include('inspection.includeFormulario3')
+@include('inspection.includeDerivo')
 <script>
     localStorage.setItem("sbd",0);
     localStorage.setItem("sba",2);
@@ -356,11 +376,31 @@
         tableRecords=$('.containerRecords').html();
         fillRecords();
         $('.overlayAllPage').css("display","none");
+        initFv('fvf5',rulesF5());
+        initFv('fvf6',rulesF6());
     });
     $('.saveF5').on('click',function(){saveF5();})
     $('.saveF6').on('click',function(){saveF6();})
     $('.saveF7').on('click',function(){saveF7();})
     $('.saveFile').on('click',function(){saveFile();})
+    function rulesF5()
+    {
+        return {
+            f5date: {required: true,},
+            f5hora: {required: true,},
+            f5obs: {required: true,},
+            f5obsIns: {required: true,},
+        };
+    }
+    function rulesF6()
+    {
+        return {
+            f6date: {required: true,},
+            f6hora: {required: true,},
+            f6obs: {required: true,},
+            f6obsIns: {required: true,},
+        };
+    }
     function saveFile()
     {
         if($('#fileInspection')[0].files.length==0)
@@ -563,6 +603,7 @@
                     iconoF5 = r.data[i].idFo5===null?'plus':'file';
                     iconoF6 = r.data[i].idFo6===null?'plus':'file';
                     iconoF7 = r.data[i].idFo7===null?'plus':'file';
+                    iconoF3 = r.data[i].idF3===null?'plus':'file';
                     change = r.data[i].f5 == '1' && r.data[i].f6 == '1'
                         ?'<button class="btn text-info py-0 pr-0" title="Enviar a conciliacion" onclick="changeProcess(\''+r.data[i].codRec+'\');"><i class="fa fa-edit"></i></button>'
                         :'';
@@ -581,12 +622,15 @@
                             '<a class="btn btn-secondary py-0 px-1" target="_blank" href="'+'{{ route('f7') }}/'+r.data[i].idPro+'"><i class="fa fa-file-pdf"></i> F7</a>' +
                         '</td>' +
                         '<td class="align-middle text-center">' +
-                            '<div class="btn-group btn-group-sm" role="group">'+
-                                '<button class="btn text-info f5" title="Formato 5" onclick="mf5(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
-                                '<button class="btn text-info f6" title="Formato 6" onclick="mf6(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button>'+
-                                '<button class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
-                                '<button class="btn text-info" onclick="mloadfile(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
-                            '</div>'+
+                            // '<div class="btn-group btn-group-sm" role="group">'+
+                                '<button class="btn text-info px-2 f5" title="Formato 5" onclick="mf5(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF5+'"></i> F5</button>'+
+                                '<button class="btn text-info px-2 f6" title="Formato 6" onclick="mf6(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF6+'"></i> F6</button><br>'+
+                                // '<button class="btn text-info f7" title="Formato 7" onclick="mf7(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF7+'"></i> F7</button>'+
+                                '<button class="btn text-info px-2" title="Formulario 3" onclick="mf3(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-'+iconoF3+'"></i> Form3</button>'+
+                                '<button class="btn text-info px-2" title="Devivar documento" onclick="mDerivar(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-plus"></i> Der</button>'+
+                                '<button class="btn text-info px-2" onclick="mloadfile(\''+r.data[i].idPro+'\',\''+r.data[i].pnumIns+'\');"><i class="fa fa-upload"></i></button>'+
+
+                            // '</div>'+
                         '</td>' +
                         '</tr>';
                 }

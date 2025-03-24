@@ -19,12 +19,15 @@ class TProcess extends Model
         'inscription',
         'f5',
         'f6',
+        'f3',
         'f7',
         'f4',
         'f8',
         'f9',
         'fileIns',
         'fileRes',
+        'oficina',
+        'fileDerivo',
     ];
 }
 

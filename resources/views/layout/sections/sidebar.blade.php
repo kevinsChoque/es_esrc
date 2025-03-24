@@ -50,7 +50,11 @@
                         <i class="nav-icon fas fa-building"></i><p>Formato a</p>
                     </a>
                 </li> --}}
-
+                <li class="nav-item">
+                    <a href="{{url('tecnical/show')}}" class="nav-link sba6">
+                        <i class="nav-icon fas fa-hard-hat"></i><p>Gestion de tecnicos</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{url('users/show')}}" class="nav-link sba6">
                         <i class="nav-icon fas fa-users"></i><p>Gestion de usuarios</p>

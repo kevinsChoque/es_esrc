@@ -70,6 +70,7 @@ class TFormat2 extends Model
         'fileIns',
         'fileRes',
         'endProcess',
+        'fileFormat2Full'
     ];
 }
 

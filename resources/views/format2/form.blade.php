@@ -1043,7 +1043,8 @@
 
                 $('.overlayAllPage').css("display","none");
                 $('.oveCard').css("display","none");
-
+                $('#notificacion').val(r.fo2.notificacion)
+// alert('entro aki');
                 // $.each(r.data,function(indice,fila){
                 //     $('#reclaimPortal').append("<option value='"+fila.idFo2+"'>"+fila.app+' '+fila.apm+' '+fila.nombres+"</option>");
                 // });

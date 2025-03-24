@@ -142,6 +142,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <p>aka tambien ingresar la resolucion el check box y creo q es mejor ingresar por documento uno a uno con el nombre y el plugin</p>
                 <form id="fvf8">
                     <input type="hidden" name="f8idPro" id="f8idPro">
                     {{-- <input type="hidden" name="f4ins" id="f4ins"> --}}
