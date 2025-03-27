@@ -19,6 +19,7 @@ class TIns extends Model
         'dateIns',
         'startTime',
         'endTime',
+        'horario',
     ];
 }
 

@@ -14,6 +14,49 @@ class InspectionsController extends Controller
 {
     public function obtenerHorariosDisponiblesPorHora(Request $r)
     {
+        // Definir los horarios fijos
+        $horariosFijos = [
+            '08:00AM - 10:00AM',
+            '10:00AM - 12:00AM',
+            '02:00PM - 04:00PM',
+            '03:00PM - 05:00PM',
+        ];
+
+        // Obtener los técnicos
+        // $listTecnical = DB::table('tecnical')->get();
+        $listTecnical = DB::table('tecnical')->where('disponibilidadDia','1')->get();
+
+        // Obtener inspecciones programadas para esa fecha
+        $horariosOcupados = DB::table('inspections')
+            ->where('dateIns', $r->dateIns)
+            ->get();
+
+        $horariosDisponibles = [];
+
+        foreach ($listTecnical as $tecnico) {
+            // Obtener inspecciones del técnico en esa fecha
+            $inspeccionesTecnico = $horariosOcupados->where('idTec', $tecnico->idTec);
+
+            // Contar inspecciones por horario
+            $conteoPorHorario = $inspeccionesTecnico->groupBy('horario')->map->count();
+
+            // Revisar cada horario fijo
+            foreach ($horariosFijos as $horario) {
+                // Verificar si el técnico tiene menos de 2 inspecciones en ese horario
+                if ($conteoPorHorario->get($horario, 0) < 2) {
+                    $horariosDisponibles[] = [
+                        'tecnical' => $tecnico->idTec,
+                        'horario' => $horario
+                    ];
+                }
+            }
+        }
+
+        return response()->json(['data' => $horariosDisponibles]);
+    }
+
+    public function obtenerHorariosDisponiblesPorHora_last(Request $r)
+    {
         // dd($this->startWork->format('H:i:s'),$this->endWork->format('H:i'));
         // Obtener horarios ocupados desde la base de datos
         $horariosOcupados = DB::table('inspections')
@@ -74,31 +117,133 @@ class InspectionsController extends Controller
         }
         return response()->json(['data' => $horariosDisponibles]);
     }
-//con error, pero es el que se esta usando
-    public function obtenerFechasOcupadas_last()
-    {
-        // Obtener el número total de técnicos
-        $totalTecnicos = DB::table('tecnical')->count();
-
-        // Obtener las fechas donde todos los técnicos están ocupados completamente de 9am a 4pm
-        $fechasOcupadas = DB::table('inspections')
-            ->select('dateIns')
-            ->where(function($query) {
-                // Filtrar solo las inspecciones dentro del horario de trabajo 9am a 4pm
-                $query->whereTime('startTime', '>=', $this->startWork->format('H:i:s'))
-                    ->whereTime('endTime', '<=', $this->endWork->format('H:i:s'));
-            })
-            ->groupBy('dateIns')
-            ->havingRaw('SUM(TIMESTAMPDIFF(HOUR, startTime, endTime)) >= ?', [7]) // 7 horas cubiertas
-            ->havingRaw('COUNT(DISTINCT idTec) >= ?', [$totalTecnicos]) // Todos los técnicos están ocupados
-            ->get()
-            ->pluck('dateIns');
-// dd($fechasOcupadas,$this->startWork->format('H:i:s'),$this->endWork->format('H:i:s'));
-        // return response()->json($fechasOcupadas);
-        return response()->json(['data' =>$fechasOcupadas]);
-    }
-    //nuevo ultimo
     public function obtenerFechasOcupadas()
+    {
+        // Obtener la fecha actual y los próximos 2 días
+        $today = Carbon::today();
+        $twoDaysLater = $today->copy()->addDays(2);
+        // Horarios clave
+        $horariosClave = [
+            '08:00AM - 10:00AM',
+            '10:00AM - 12:00AM',
+            '02:00PM - 04:00PM',
+            '03:00PM - 05:00PM',
+        ];
+        // Obtener fechas de inspecciones dentro del rango de los dos días siguientes
+        $fechasInspecciones = DB::table('inspections')
+            ->select('dateIns')
+            ->distinct()
+            ->whereBetween('dateIns', [$today, $twoDaysLater])
+            ->pluck('dateIns');
+        // Obtener técnicos disponibles
+        $tecnicosDisponibles = DB::table('tecnical')->where('disponibilidadDia', '1')->count();
+        $fechasOcupadas = [];
+        foreach ($fechasInspecciones as $fecha)
+        {
+            $tecnicosEnFecha = DB::table('inspections')
+                ->where('dateIns', $fecha)
+                ->select('idTec', 'horario')
+                ->get()
+                ->groupBy('idTec');
+            if ($tecnicosEnFecha->count() < $tecnicosDisponibles)
+                continue; // Si no están todos los técnicos disponibles, la fecha no está ocupada
+            $fechaOcupada = true;
+            foreach ($tecnicosEnFecha as $inspecciones)
+            {
+                $inspeccionesPorHorario = array_fill_keys($horariosClave, 0);
+                foreach ($inspecciones as $inspeccion)
+                {
+                    if (array_key_exists($inspeccion->horario, $inspeccionesPorHorario))
+                        $inspeccionesPorHorario[$inspeccion->horario]++;
+                }
+                // Verificar que el técnico tenga dos inspecciones en cada horario clave
+                if (!collect($inspeccionesPorHorario)->every(fn($count) => $count >= 2))
+                {
+                    $fechaOcupada = false;
+                    // break;
+                }
+            }
+            if ($fechaOcupada)
+                $fechasOcupadas[] = $fecha;
+        }
+        return response()->json(['data' => $fechasOcupadas]);
+    }
+
+    public function obtenerFechasOcupadas_unmomento()
+    {
+        // Horarios laborales y almuerzo
+        $startWork = '08:00:00';
+        $lunchStart = '12:00:00';
+        $lunchEnd = '14:00:00';
+        $endWork = '17:00:00';
+        // Obtener la fecha de hoy y los próximos dos días
+        $hoy = Carbon::today();
+        $pasadoManana = Carbon::today()->addDays(2);
+
+        // Obtener las fechas de inspecciones solo de los próximos dos días
+        $fechasInspecciones = DB::table('inspections')
+            ->select('dateIns')
+            ->whereBetween('dateIns', [$hoy, $pasadoManana])
+            ->distinct()
+            ->pluck('dateIns');
+        foreach ($fechasInspecciones as $fecha)
+        {
+            $tecnicosEnFecha = DB::table('inspections')
+                ->where('dateIns', $fecha)
+                ->select('idTec', 'startTime', 'endTime')
+                ->orderBy('startTime')
+                ->get()
+                ->groupBy('idTec');
+            // $tecnicosEnFecha = $this->tecnicosEnFecha(true);
+            $fechaOcupada = true;
+            foreach ($tecnicosEnFecha as $idTec => $inspecciones)
+            {
+                // Calcular los intervalos libres del técnico
+                $intervalosLibres = [];
+                // Inicializar con el inicio del día laboral
+                $ultimoFin = $startWork;
+                foreach ($inspecciones as $inspeccion) {
+                    // Si hay un espacio antes del almuerzo
+                    if ($ultimoFin < $lunchStart && $inspeccion->startTime > $ultimoFin)
+                    {
+                        $finIntervalo = min($lunchStart, $inspeccion->startTime);
+                        $intervalosLibres[] = [$ultimoFin, $finIntervalo];
+                    }
+                    // Si hay un espacio después del almuerzo
+                    if ($inspeccion->endTime < $lunchEnd)
+                        $ultimoFin = $lunchEnd;
+                    else
+                        $ultimoFin = max($ultimoFin, $inspeccion->endTime);
+                }
+                // Agregar el intervalo final hasta el final del día laboral
+                if ($ultimoFin < $endWork)
+                    $intervalosLibres[] = [$ultimoFin, $endWork];
+                // Verificar si existe al menos un intervalo libre de 2 horas
+                $tieneEspacio = false;
+                foreach ($intervalosLibres as [$inicio, $fin])
+                {
+                    $duracion = (strtotime($fin) - strtotime($inicio)) / 3600; // En horas
+                    if ($duracion >= 2)
+                    {
+                        $tieneEspacio = true;
+                        break;
+                    }
+                }
+                if ($tieneEspacio)
+                {
+                    $fechaOcupada = false;
+                    break;
+                }
+            }
+            if ($fechaOcupada)
+                $fechasOcupadas[] = $fecha;
+        }
+        // $fechasOcupadas[] = '2024-12-09';
+        return response()->json(['data' => $fechasOcupadas]);
+    }
+
+    //esto esta funcionando antes, se cambiara solo por los 2 dias siguientes
+    public function obtenerFechasOcupadas_last()
     {
         // Horarios laborales y almuerzo
         $startWork = '08:00:00';
@@ -168,49 +313,37 @@ class InspectionsController extends Controller
         // $fechasOcupadas[] = '2024-12-09';
         return response()->json(['data' => $fechasOcupadas]);
     }
-
-
-    public function obtenerFechasOcupadas_new()
-{
-    // Definir las horas de trabajo
-    $horaInicioTrabajo = $this->startWork->format('H:i:s');
-    $horaFinTrabajo = $this->endWork->format('H:i:s');
-    $horaInicioAlmuerzo = '12:00:00';
-    $horaFinAlmuerzo = '13:30:00';
-
-    // Obtener el número total de técnicos
-    $totalTecnicos = DB::table('tecnical')->count();
-
-    // Obtener las fechas donde todos los técnicos están ocupados completamente en el horario de trabajo
-    $fechasOcupadas = DB::table('inspections')
-        ->select('dateIns')
-        ->where(function($query) use ($horaInicioTrabajo, $horaFinTrabajo, $horaInicioAlmuerzo, $horaFinAlmuerzo) {
-            // Considerar solo las inspecciones dentro del horario de trabajo, excluyendo el tiempo de almuerzo
-            $query->where(function($subquery) use ($horaInicioTrabajo, $horaInicioAlmuerzo) {
-                // Horas antes del almuerzo
-                $subquery->whereTime('startTime', '>=', $horaInicioTrabajo)
-                         ->whereTime('endTime', '<=', $horaInicioAlmuerzo);
-            })
-            ->orWhere(function($subquery) use ($horaFinAlmuerzo, $horaFinTrabajo) {
-                // Horas después del almuerzo
-                $subquery->whereTime('startTime', '>=', $horaFinAlmuerzo)
-                         ->whereTime('endTime', '<=', $horaFinTrabajo);
-            });
-        })
-        ->groupBy('dateIns')
-        ->havingRaw('SUM(TIMESTAMPDIFF(HOUR, startTime, endTime)) >= ?', [7.5]) // Asegurar 7.5 horas de trabajo (excluyendo el almuerzo)
-        ->havingRaw('COUNT(DISTINCT idTec) >= ?', [$totalTecnicos]) // Asegurar que todos los técnicos están ocupados
-        ->get()
-        ->pluck('dateIns');
-dd($fechasOcupadas);
-    return response()->json(['data' => $fechasOcupadas]);
-}
-
-    public function tecnicosDisponibles(Request $r)
+    public function actGetTecnicalavailable(Request $r)
+    {
+        $fecha = $r->dateIns;
+        $limites = [
+            '08:00AM - 10:00AM' => 2,
+            '10:00AM - 12:00AM' => 2,
+            '02:00PM - 04:00PM' => 2,
+            '03:00PM - 05:00PM' => 2,
+        ];
+        // Consultar la base de datos para contar las reuniones ya registradas por cada horario en el día seleccionado
+        $ocupados = DB::table('inspections')
+            ->select('horario', DB::raw('COUNT(*) as cantidad'))
+            ->whereDate('dateIns', $fecha)
+            ->groupBy('horario')
+            ->pluck('cantidad', 'horario'); // Devuelve un array [hora => cantidad]
+        // Filtrar las opciones disponibles
+        $disponibles = [];
+        foreach ($limites as $hora => $max)
+        {
+            if (!isset($ocupados[$hora]) || $ocupados[$hora] < $max)
+                $disponibles[] = $hora;
+        }
+        // return response()->json($disponibles);
+        return response()->json(['data' => $disponibles]);
+    }
+    // esto se usaba antes
+    public function tecnicosDisponibles_last(Request $r)
     {
         // Rango de horas de trabajo (8am a 5pm)
-        $horaInicio = $this->startWork->format('H:i:s');
-        $horaFin = $this->endWork->format('H:i:s');
+        // $horaInicio = $this->startWork->format('H:i:s');
+        // $horaFin = $this->endWork->format('H:i:s');
 
         // Obtener todos los técnicos
         $tecnicos = DB::table('tecnical')->get();
@@ -242,6 +375,26 @@ dd($fechasOcupadas);
         session(['tecnicosDisponibles' => $tecnicosDisponibles]);
         // dd($tecnicosDisponibles);
         // Devolver la lista de técnicos disponibles
+        return response()->json(['data' => $tecnicosDisponibles]);
+    }
+    public function tecnicosDisponibles(Request $r)
+    {
+        $tecnicos = DB::table('tecnical')->where('disponibilidadDia','1')->get();
+        $inspecciones = DB::table('inspections')
+            ->where('dateIns', $r->dateIns)
+            ->get();
+        $tecnicosDisponibles = [];
+        // Revisar cada técnico para ver si tiene disponibilidad
+        foreach ($tecnicos as $tecnico) {
+            // Obtener las inspecciones del técnico en esa fecha
+            $inspeccionesTecnico = $inspecciones->where('idTec', $tecnico->idTec);
+            // Revisar disponibilidad del técnico
+            $disponible = $inspeccionesTecnico->isEmpty()?true:false;
+            // Si está disponible, agregar a la lista
+            if ($disponible)
+                $tecnicosDisponibles[] = $tecnico;
+        }
+        session(['tecnicosDisponibles' => $tecnicosDisponibles]);
         return response()->json(['data' => $tecnicosDisponibles]);
     }
     public function obtenerInspecciones(Request $r)

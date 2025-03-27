@@ -98,55 +98,7 @@ class Format2Controller extends Controller
             return response()->json(['state' => false, 'message' => $e->getMessage()],500);
         }
     }
-    // posiblemente esta funcion mejore la anterior funcion
-    public function actSavePortal_old_borrar(Request $r)
-    {
-        try {
-            DB::beginTransaction();
-            // Validaciones iniciales
-            if (!$this->validateUserRegistration($r))
-                return response()->json(['state' => false, 'message' => 'Usuario no válido o reclamo en proceso.']);
-            if (!$this->validateUploadedFiles($r))
-                return response()->json(['state' => false, 'message' => 'Archivos no válidos.']);
 
-            // Generar código de reclamo
-            $codRecNum = $this->getNumberClaim();
-            if (!$codRecNum) {
-                throw new \Exception('No fue posible generar el código de reclamo.');
-            }
-            $codRec = Carbon::now()->year . '-' . $codRecNum;
-            // Combinar archivos PDF
-            $files = array_filter([
-                $r->file('fileDocPer'),
-                $r->file('fileCarPod'),
-                $r->file('fileEvidence')
-            ],fn($file) => $file && $file->isValid());
-
-            $nameFile = $codRec . '_evidencias.pdf';
-            $pathFile = 'reclamos/' . $codRec;
-
-            if (!self::combinePDFs($files, $pathFile, $nameFile)) {
-                throw new \Exception('No fue posible combinar los archivos PDF.');
-            }
-
-            $pathFile .= '/' . $nameFile;
-
-            // Guardar el reclamo en la base de datos
-            // $this->saveClaim($r, $codRec, $pathFile);
-            $idFo2 = $this->saveClaim($r, $codRec, $pathFile);
-
-            // Programar inspección técnica
-            $this->scheduleInspection($r, $idFo2, $codRecNum);
-
-            DB::commit();
-
-            return response()->json(['state' => true, 'message' => 'Reclamo registrado correctamente.']);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error en actSavePortal: ' . $e->getMessage());
-            return response()->json(['state' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
     private function validateUserRegistration(Request $r): bool
     {
         $conSql = $this->connectionSql();
@@ -216,24 +168,32 @@ class Format2Controller extends Controller
     private function scheduleInspection(Request $request, string $idFo2,string $codRecNum)
     {
         // $ids = DB::table('tecnical')->pluck('idTec')->toArray();
+
         $ids = array_map(function ($tecnico) {
             return $tecnico->idTec; // Cambia 'idTec' por el nombre real del campo de ID si es diferente
         },session('tecnicosDisponibles'));
-        // dd($ids);
-        $selectedTechnician = $request->hoursAvailable
-            ? explode('-', $request->hoursAvailable)[0]
-            : $ids[array_rand($ids)];
+        // dd(gettype($request->tecnicosDisponibles));
 
+        $selectedTechnician = $request->tecnicosDisponibles=='true'
+            ? $ids[array_rand($ids)]
+            : explode('-', $request->hoursAvailable)[0];
+        // dd('llego aki');
+        $hoursAvailable = $request->tecnicosDisponibles=='true'
+            ? $request->hoursAvailable
+            : explode('-', $request->hoursAvailable, 2)[1];
         $inspection = new TIns([
             'idFo2' => $idFo2,
             'idTec' => $selectedTechnician,
             'dateIns' => $request->fechaIns,
-            'startTime' => $request->hourIns,
-            'endTime' => Carbon::createFromFormat('H:i', $request->hourIns)->addHours(env('HOURS_INSPECTION'))->format('H:i'),
+            'horario' => $hoursAvailable,
+            // 'startTime' => $request->hourIns,
+            // 'endTime' => Carbon::createFromFormat('H:i', $request->hourIns)->addHours(env('HOURS_INSPECTION'))->format('H:i'),
         ]);
+        // dd($inspection);
         if (!$inspection->save() || !$this->updateNumberClaim($codRecNum)) {
             throw new \Exception('No fue posible programar la inspección técnica.');
         }
+        // dd('llego aki');
     }
     public function actSaveClaim(Request $r)
     {

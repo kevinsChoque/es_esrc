@@ -30,9 +30,11 @@ use App\Http\Controllers\TecnicalController;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\Form3Controller;
 
-
 // portal
-Route::get('/', [PortalController::class, 'actReclamoComercial']);
+Route::middleware(['verificarTecnicos'])->group(function () {
+    Route::get('/', [PortalController::class, 'actReclamoComercial']);
+});
+
 // login
 Route::get('login/login',[LoginController::class, 'actLogin']);
 Route::post('login/sigin',[LoginController::class, 'actSigin']);
@@ -98,7 +100,9 @@ Route::get('ins/getavailable',[InspectionsController::class, 'tecnicosDisponible
 Route::get('ins/obtenerInspecciones', [InspectionsController::class, 'obtenerInspecciones']);
 Route::get('ins/obtenerHorariosDisponiblesPorMes', [InspectionsController::class, 'obtenerHorariosDisponiblesPorMes']);
 Route::post('ins/saveChangeIns',[InspectionsController::class, 'actSaveChangeIns']);
+Route::get('ins/getTecnicalavailable',[InspectionsController::class, 'actGetTecnicalavailable']);
 
+// -----------------
 Route::get('reu/getavailable',[MeetingsController::class, 'actGetavailable']);
 
 // formato3
@@ -169,4 +173,8 @@ Route::get('opciones/list', [OpcionesController::class, 'actList']);
 Route::post('opciones/changeProcessEnd', [OpcionesController::class, 'actChangeProcessEnd']);
 Route::post('opciones/quickSolution', [OpcionesController::class, 'actQuickSolution']);
 Route::post('opciones/investigate', [OpcionesController::class, 'actInvestigate']);
+
+Route::get('page/disposicionTecnicos', function () {
+    return view('page/mantenimiento');
+})->name('page.mantenimiento');
 

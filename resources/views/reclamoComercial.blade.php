@@ -344,8 +344,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-3 conteinerHoursAvailable" style="display: none;">
-                                    <label for="hoursAvailable" class="m-0">Horas dispnibles:</label>
-                                    <select id="hoursAvailable" name="hoursAvailable" class="form-control hoursAvailable"></select>
+                                    <label for="hoursAvailable" class="m-0">Horas disponibles:</label>
+                                    <select id="hoursAvailable" name="hoursAvailable" class="form-control hoursAvailable">
+                                        <option disabled selected>Seleccione una opción</option>
+                                        <option value="08:00AM - 10:00AM">08:00AM - 10:00AM</option>
+                                        <option value="10:00AM - 12:00AM">10:00AM - 12:00AM</option>
+                                        <option value="02:00PM - 04:00PM">02:00PM - 04:00PM</option>
+                                        <option value="03:00PM - 05:00PM">03:00PM - 05:00PM</option>
+                                    </select>
                                 </div>
                                 <div class="form-group col-lg-3 conteinerHourIns" style="display: none;">
                                     <label for="hourIns" class="m-0">Hora (rango de 2 horas): <span class="text-danger">*</span> <i class="fa fa-info-circle text-info" id="ihorasInspeccion"></i></label>
@@ -490,7 +496,8 @@
 <script src="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <style>
     .flatpickr-day.flatpickr-disabled {
-    background-color: red !important;
+    /* background-color: red !important; */
+    background-color: rgba(255,0,0,.5) !important;
     color: white !important;
     opacity: 0.8;
 }
@@ -508,6 +515,7 @@
     var ppp;
     var hourSelected = null;
     var validateCarPod=false;
+    var tecnicosDisponibles = false;
 
     $(document).ready( function () {
         fechaMaxNotificacion()
@@ -545,12 +553,33 @@
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 let minDate = tomorrow.toISOString().split('T')[0];
                 // ---
+                // flatpickr("#fechaIns", {
+                //     dateFormat: "Y-m-d",
+                //     disable: r.data,
+                //     minDate: minDate,
+                //     maxDate: $("#fechaNot").val()
+                // });
                 flatpickr("#fechaIns", {
                     dateFormat: "Y-m-d",
-                    disable: r.data,
+                    disable: [
+                        ...r.data, // Bloquea las fechas que vienen del backend
+                        function(date) {
+                            // Calcula dos días después de hoy
+                            let today = new Date();
+                            let maxDate = new Date(today);
+                            maxDate.setDate(today.getDate() + 2);
+                            maxDate.setHours(0, 0, 0, 0);
+                            // Bloquea cualquier fecha después de maxDate
+                            // return date > maxDate;
+                            // Bloquea cualquier fecha después de maxDate o si es domingo
+                            return date > maxDate || date.getDay() === 0;
+                        }
+                    ],
+                    dateFormat: "Y-m-d",
                     minDate: minDate,
                     maxDate: $("#fechaNot").val()
                 });
+
             },
             error: function (xhr, status, error)
             {msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')}
@@ -720,13 +749,17 @@
                 hourSelected = null;
                 if(r.data.length>0)
                 {
-                    $('.conteinerHourIns').css('display','block');
-                    $('.conteinerHoursAvailable').css('display','none');
+                    // $('.conteinerHourIns').css('display','block');
+                    // $('.conteinerHoursAvailable').css('display','none');
+                    $('.conteinerHourIns').css('display','none')
+                    $('.conteinerHoursAvailable').css('display','block');
+                    tecnicosDisponibles=true;
                 }
                 else
                 {
                     $('.conteinerHourIns').css('display','none')
                     $('.conteinerHoursAvailable').css('display','block');
+                    tecnicosDisponibles=false;
                     getAvailableHours($('#fechaIns').val());
                 }
                 // getAvailableHours($('#fechaIns').val());
@@ -737,6 +770,7 @@
                 msgImportantShow("Algo salio mal, porfavor contactese con el Administrador.",'Administrador','error')
             }
         });
+
     });
 
     function fechaMaxNotificacion()
@@ -813,8 +847,8 @@
                     horarioSelect.append("<option value='0' disabled selected>Seleccione un horario de inspeccion disponible</option>");
                     $.each(r.data, function(index, horario) {
                         var option = $('<option></option>')
-                            .val(`${horario.tecnical}-${horario.hora_inicio}-${horario.hora_fin}`)
-                            .text(`Tecnico ${horario.tecnical} | ${horario.hora_inicio} a ${horario.hora_fin}`);
+                            .val(`${horario.tecnical}-${horario.horario}`)
+                            .text(`Tecnico ${horario.tecnical} | ${horario.horario}`);
                         horarioSelect.append(option);
                     });
                 } else {
@@ -1013,6 +1047,7 @@
         formData.append('apm',$('#apm').val());
         formData.append('validateCarPod',validateCarPod);
         formData.append('notificacion',$('#fechaNot').val());
+        formData.append('tecnicosDisponibles',tecnicosDisponibles);
         $('.save').prop('disabled',true);
         $('.overlayForm').css("display","flex");
         jQuery.ajax({
@@ -1048,8 +1083,8 @@
         {msgImportant({'state':false,'message':'Seleccione los meses de reclamo.'});return true;}
         if(isEmpty($('#fechaIns').val()))
         {msgImportant({'state':false,'message':'Ingrese la fecha de inspeccion.'});return true;}
-        if(isEmpty($('#hourIns').val()))
-        {msgImportant({'state':false,'message':'Ingrese la hora de inspeccion.'});return true;}
+        // if(isEmpty($('#hourIns').val()))
+        // {msgImportant({'state':false,'message':'Ingrese la hora de inspeccion.'});return true;}
         if($('#fileDocPer')[0].files.length==0)
         {msgImportantShow("No se subio los Documentos Personales.",'Reclamo','warning');return true;}
         if(validateCarPod && $('#fileCarPod')[0].files.length==0)
@@ -1074,7 +1109,7 @@
             meses: {required: true,},
             referencia: {required: true,},
             fundamento: {required: true,},
-            hourIns: {required: true,},
+            // hourIns: {required: true,},
         };
     }
     function cleanForm()

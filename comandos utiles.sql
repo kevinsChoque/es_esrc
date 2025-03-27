@@ -8,3 +8,6 @@ DELETE FROM format8;
 DELETE FROM format9;
 DELETE FROM inspections;
 DELETE FROM process;
+
+delete from form3;
+delete from tecnicosdias;
